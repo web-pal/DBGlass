@@ -1,0 +1,45 @@
+pre {
+  border: none;
+  background-color: transparent;
+  overflow: visible;
+  margin: 0;
+}
+
+.query-list-wrapper {
+  position: absolute;
+  background-color:  #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  line-height: normal;
+  z-index: 999;
+  box-shadow: 0 0 10px -4px;
+  top: -400px;
+  right: 24px;
+  height: 400px;
+  width: 500px;
+  overflow: auto;
+}
+
+.query-list {
+  margin-bottom: 0px;
+  padding-left:27px;
+  position: relative;
+  .query-list-item {
+    &:nth-child(odd) {
+      background-color: rgba(0, 0, 0, .03);
+    }
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, .06);
+    }
+  }
+}
+
+.query-list__divider {
+  position: absolute;
+  min-height: 398px;
+  height: 100%;
+  width: 1px;
+  background-color: #c4c4c4;
+  left: 27px;
+}

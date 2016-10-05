@@ -242,6 +242,7 @@ app.on('ready', async () => {
     }];
     menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
+    mainWindow.toggleDevTools();
   } else {
     template = [{
       label: '&View',
