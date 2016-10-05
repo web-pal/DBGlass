@@ -1,0 +1,81 @@
+.btn {
+  color: #333333;
+  border-radius: 3px !important;
+  height: 29px;
+  padding: 6px 15px 10px;
+  transition: .3s;
+}
+
+.btn.btn-navy {
+  span.fa {
+    margin-right: 9px;
+  }
+  color: @navy;
+  background-color: transparent;
+  border: 1px solid @navy-opaque;
+  border-radius: 3px;
+}
+
+.btn.btn-empty {
+  color: white;
+  background: @blueish;
+}
+
+.btn.btn-stnd {
+  height: 29px;
+}
+
+.btn.btn-big {
+  height: 36px;
+  padding-top: 10px;
+}
+
+.btn:active, .btn:visited, .btn:hover, .btn:link, .btn:focus {
+  text-decoration: none;
+  outline: none !important;
+}
+
+.btn.btn-primary {
+  background-color: @navy;
+  color: white;
+  border: none;
+}
+
+.btn-block {
+  width: auto !important;
+}
+
+.btn-block > button {
+  margin-right: 10px;
+}
+
+.btn-block :last-child {
+  margin-right: 0px;
+}
+
+.btn.btn-danger {
+  color: white;
+}
+
+.btn-group > .btn:not(:last-child) {
+  margin-right: 10px;
+}
+
+.btn.btn-link {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.btn.btn-plain {
+  border: none;
+  background-color: transparent;
+  color: @navy;
+}
+
+.ladda-spinner:focus {
+  outline: 0 !important;
+}
+
+.btn > i.fa:not(:last-child) {
+  margin-right: 4px;
+}

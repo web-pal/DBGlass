@@ -1,0 +1,181 @@
+.form-wrapper {
+  background: #f0f0f0;
+  width: 100%;
+  position: relative;
+  overflow: auto;
+  .webpal-logo {
+    position: absolute;
+    bottom: 5%;
+  }
+  #madeby {
+    position: absolute;
+    bottom: 9.20%;
+    transform: translateX(-110%);
+    font-weight: 400;
+    font-size: 15px;
+    color: #a1a1a1;
+  }
+  .form {
+    margin-top: 5%;
+    height: 450px;
+    z-index: 5;
+    box-shadow: 1px 1px 27px 0.00px rgba(59, 59, 63, 0.2);
+    background: white;
+    min-width: 777px;
+    padding: 43px 36px 39px 43px;
+    .sshSwitch {
+      margin-bottom: 5px;
+    }
+    .form-panel > div > .flex-row :first-child {
+      margin-right: 8px;
+    }
+    .right-padded {
+      margin-right: 39px;
+    }
+    .btn-block {
+      margin-bottom: 10px;
+    }
+    .form-group {
+      &.right-padded {
+        margin-right: 8px;
+      }
+      margin-bottom: 12px;
+      input.form-control{
+        position: relative;
+        &:focus{
+          border-left: 3px solid #2F4050;
+        }
+        &:focus + .back-input{
+          background: rgba(0, 0, 0, 0.5)
+        }
+      }
+      .radio {
+        margin: 0px 17px 0px 0px;
+      }
+      label {
+        line-height: 22px;
+        font-size: 14px;
+      }
+      label.btn-block{
+        width: 254px;
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+      &.radio-group {
+        margin-top: 37px;
+        margin-bottom: 15px;
+      }
+    .checkbox {
+      float: left;
+      width: 170px;
+      margin: 0 0 20px;
+      label {
+        float: left;
+      }
+    }
+      & > input {
+        max-height: 31px;
+        border-radius: 3px;
+        color: rgba(0, 0, 0, .69);
+      }
+    }
+  }
+}
+
+.form-control-height {
+  height: 31px;
+}
+
+.form-control-error {
+  border: 1px solid #ff6f6f;
+  box-shadow: 0 0 6px #ff6f6f;
+}
+
+.checkbox-label {
+  display: inline;
+  margin-bottom: 0;
+  margin-right: 11px;
+  font-size: 14px;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #f0f0f0;
+  border: 1px solid rgba(0, 0, 0, .15);
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 2px;
+  bottom: 1px;
+  background-color: #00b494;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #fff;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #fff;
+}
+
+input:checked + .slider:before {
+  transform: translateX(16px);
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+.radio input {display:none;}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 19px;
+}
+
+.custom-radio {
+  position: relative;
+  display: inline-block;
+  margin-right: 13px;
+  width: 15px;
+  height: 15px;
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: 50%;
+  &:before {
+    position:absolute;
+    content: "";
+    border-radius: 50%;
+    height: 9px;
+    width: 9px;
+    left: 2px;
+    bottom: 2px;
+    background-color: #00b494;
+    opacity: 0;
+    transition: .4s;
+  }
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 36px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+input[type="radio"]:checked + .custom-radio:before {
+  opacity: 1;
+}

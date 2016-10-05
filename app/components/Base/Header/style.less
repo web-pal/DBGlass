@@ -1,0 +1,55 @@
+.sidebar-head {
+  min-width: 210px;
+  z-index: 2001;
+  height: 52px;
+  background-color: #232323;
+  color: white;
+  padding: 16px 10px 18px 21px;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 16px;
+}
+
+.bar-top {
+  width: 100%;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+  padding: 9px 10px;
+  background-color: #fff;
+  min-height: 55px;
+  .logo {
+    height: 23px;
+    box-sizing: content-box;
+    margin-top: 8px;
+  }
+}
+
+.favSwitcher-wrapper {
+  position: absolute;
+  top: 0;
+  left: -297px;
+  width: 297px;
+  background-color: #f0f0f0;
+  box-shadow: 1px 2px 13px 0.00px rgba(0, 0, 0, 0.17);
+  z-index: 20;
+  border-radius: 3px;
+  transition: left .3s ease-out;
+  &.favSwitcher-wrapper--active {
+    left: 210px;
+  }
+  & > .btn-block {
+    height: 56px;
+    position: relative;
+    .btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate( -50%, -50% );
+    }
+  }
+  hr {
+    margin-top: 10px;
+    margin-bottom: 0px;
+    border-top: 1px solid rgba( 0, 0, 0, 0.17 );
+  }
+}

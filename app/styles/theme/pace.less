@@ -1,0 +1,67 @@
+.react-progress-bar{
+  pointer-events: none;
+  user-select: none;
+}
+
+.pace-inactive {
+  display: none;
+}
+
+@keyframes load {
+  100% {
+    width: 100%;
+  }
+}
+
+.react-progress-bar > .react-progress-bar-percent {
+  &.react-progress-bar-percent--load-in {
+    width: 95%;
+    opacity: 1;
+    transition: opacity 0s, width 5s cubic-bezier(0, .5, 0, .82);
+  }
+  &.react-progress-bar-percent--load-out {
+    width: 0%;
+    opacity: 0;
+    transition: opacity 1s, width 0s;
+  }
+  background: #6386e2;
+  position: fixed;
+  z-index: 2000;
+  top: 0;
+  opacity: 0;
+  height: 4px;
+  /* animation: load 4s cubic-bezier(0,.5,0,.82); */
+}
+
+.react-progress-bar.react-progress-bar-hide {
+  transition: width 0s;
+}
+
+@keyframes move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100px 100px;
+  }
+}
+
+.react-progress-bar > .react-progress-bar-percent:after {
+   content: "";
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background-image: linear-gradient(
+    -45deg, 
+    rgba(255, 255, 255, .3) 25%, 
+    transparent 25%, 
+    transparent 50%, 
+    rgba(255, 255, 255, .3) 50%, 
+    rgba(255, 255, 255, .3) 75%, 
+    transparent 75%, 
+    transparent
+  );
+  z-index: 2000;
+  background-size: 35px 35px;
+  animation: move 2s linear infinite;
+  overflow: hidden;
+}
