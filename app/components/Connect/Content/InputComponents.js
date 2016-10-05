@@ -44,7 +44,7 @@ const renderRadio = ({ input, className, label, type, disabled }) => (
         type={type}
         disabled={disabled}
       />
-      <div className="custom-radio" />
+      <div className={`custom-radio ${disabled ? 'disabled' : ''}`} />
       {label}
     </label>
   </div>
