@@ -1,4 +1,5 @@
 # DBGlass
+[![Code Quality](https://api.codacy.com/project/badge/Grade/caadffe1b9c74253bda61b13b4de688a)](https://www.codacy.com/app/gloosx/DBGlass?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=web-pal/DBGlass&amp;utm_campaign=Badge_Grade)
 
 *Simple cross-platform PostgreSQL client. Built with [Electron](https://github.com/atom/electron).*
 
