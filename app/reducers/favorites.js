@@ -98,7 +98,7 @@ export default function favorites(state = initialState, action) {
 
     case types.REMOVE_FAVORITE : {
       const indexToDelete = state.favorites.findIndex(x => x.get('id') === action.favoriteId);
-      if (indexToDelete) {
+      if (indexToDelete > -1) {
         const newState = state.update(
           'favorites',
           favoritesList => favoritesList.remove(indexToDelete)
