@@ -158,12 +158,12 @@ class EditorModal extends Component {
       <div className="RichEditor-root">
         <BlockStyleControls
           editorState={editorState}
-          disabled={markdownDisabled}
+          disabled={!markdownDisabled}
           onToggle={this.toggleBlockType}
         />
         <InlineStyleControls
           editorState={editorState}
-          disabled={markdownDisabled}
+          disabled={!markdownDisabled}
           onToggle={this.toggleInlineStyle}
         />
         <div className={className} onClick={this.focus}>
@@ -177,7 +177,7 @@ class EditorModal extends Component {
           />
         </div>
         <div className="flex-row">
-          <div className="sshSwitch flex-row">
+          <div className="sshSwitch flex-row flex-item--end">
             <label
               className="checkbox-label"
               htmlFor="markdownSwitch"
@@ -187,17 +187,15 @@ class EditorModal extends Component {
             </label>
             <label
               className="switch"
-              htmlFor="markdownSwitch"
             >
               <input
                 type="checkbox"
-                name="markdownSwitch"
                 onClick={this.toggleMarkdown}
               />
               <div className="slider round" />
             </label>
           </div>
-          <button className="btn btn-primary btn--absolute" onClick={this.saveEdit}>Save</button>
+          <button className="btn btn-primary" onClick={this.saveEdit}>Save</button>
         </div>
       </div>
     );
