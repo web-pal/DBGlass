@@ -158,12 +158,12 @@ class EditorModal extends Component {
       <div className="RichEditor-root">
         <BlockStyleControls
           editorState={editorState}
-          disabled={!markdownDisabled}
+          disabled={markdownDisabled}
           onToggle={this.toggleBlockType}
         />
         <InlineStyleControls
           editorState={editorState}
-          disabled={!markdownDisabled}
+          disabled={markdownDisabled}
           onToggle={this.toggleInlineStyle}
         />
         <div className={className} onClick={this.focus}>
