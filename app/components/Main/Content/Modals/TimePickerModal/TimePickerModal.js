@@ -11,19 +11,13 @@ const propTypes = {
   onChange: PropTypes.func.isRequired
 };
 
-const now = new Date();
-const defaultProps = {
-  defaultDate: now.toISOString().replace('T', ' ')
-    .slice(0, -5)
-};
-
 const TimePickerModal = props => props.open &&
   <Modal onClose={props.onClose} className="time-picker">
     <div className="flex-col">
       <TransitionView>
         <Calendar
           dateFormat="YYYY-MM-DD HH:mm:ss"
-          defaultDate={props.defaultDate}
+          defaultDate={props.defaultDate || ''}
           onChange={(dateString) =>
               props.onChange(dateString)}
         />
@@ -38,6 +32,5 @@ const TimePickerModal = props => props.open &&
   </Modal>;
 
 TimePickerModal.propTypes = propTypes;
-TimePickerModal.defaultProps = defaultProps;
 
 export default TimePickerModal;
