@@ -31,22 +31,21 @@ class InputComponent extends Component {
     };
   }
 
+  componentDidMount() {
+    if (this.props.datatype !== 'boolean') {
+      if (this.input) {
+        this.input.focus();
+        this.input.select();
+      }
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.editor.get('open') && !nextProps.editor.get('open')) {
       this.setState({
         preventBlurSave: false
       });
       this.saveEdit(null, true);
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.editing.mode !== prevProps.editing.mode &&
-        this.props.datatype !== 'boolean') {
-      if (this.input) {
-        this.input.focus();
-        this.input.select();
-      }
     }
   }
 
@@ -129,8 +128,7 @@ class InputComponent extends Component {
       );
     }
 
-    return this.props.editing.mode === 'edit' ?
-      field : <div>{prevValue || ''}</div>;
+    return field;
   }
 }
 

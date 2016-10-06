@@ -392,19 +392,10 @@ export default function currentTable(state = { ...currentTableDefault }, action)
       }
       if (Map.isMap(prevValue)) prevValue = JSON.stringify(prevValue, null, 2);
       if (List.isList(prevValue)) prevValue = `{ ${prevValue.join(', ')} }`;
-      let mode;
-      if (state.editing.rowIndex === rowIndex &&
-          state.editing.columnKey === columnKey &&
-          state.editing.mode === 'highlight') {
-        mode = 'edit';
-      } else {
-        mode = 'highlight';
-      }
       editing = {
         columnKey,
         rowIndex,
-        prevValue,
-        mode
+        prevValue
       };
       return Object.assign({}, state, { edited, editing });
     }
