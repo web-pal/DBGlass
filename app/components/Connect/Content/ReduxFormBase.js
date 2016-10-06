@@ -8,7 +8,7 @@ const ReduxFormBase = () => (
     <div className="form">
       <ReduxFormMain />
     </div>
-    <span id="madeby"> made by </span>
+    <span id="madeby">designed by</span>
     <a
       onClick={() => shell.openExternal('http://web-pal.com', { activate: false })}
       className="webpal-logo"
