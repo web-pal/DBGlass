@@ -176,27 +176,29 @@ class EditorModal extends Component {
             spellCheck
           />
         </div>
-        <div className="sshSwitch flex-row">
-          <label
-            className="checkbox-label"
-            htmlFor="markdownSwitch"
-          >
-             Markdown
-            <br /><br />
-          </label>
-          <label
-            className="switch"
-            htmlFor="markdownSwitch"
-          >
-            <input
-              type="checkbox"
-              name="markdownSwitch"
-              onClick={this.toggleMarkdown}
-            />
-            <div className="slider round" />
-          </label>
+        <div className="flex-row">
+          <div className="sshSwitch flex-row">
+            <label
+              className="checkbox-label"
+              htmlFor="markdownSwitch"
+            >
+               Markdown
+              <br /><br />
+            </label>
+            <label
+              className="switch"
+              htmlFor="markdownSwitch"
+            >
+              <input
+                type="checkbox"
+                name="markdownSwitch"
+                onClick={this.toggleMarkdown}
+              />
+              <div className="slider round" />
+            </label>
+          </div>
+          <button className="btn btn-primary btn--absolute" onClick={this.saveEdit}>Save</button>
         </div>
-        <button className="btn btn-primary" onClick={this.saveEdit}>Save</button>
       </div>
     );
     if (Object.keys(editing).length) {

@@ -29,7 +29,7 @@ const TimePickerModal = props => props.open &&
         />
       </TransitionView>
       <button
-        className="btn btn-primary"
+        className="btn btn-primary btn--absolute"
         onClick={props.onClose}
       >
         Apply
