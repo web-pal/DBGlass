@@ -4,6 +4,7 @@ import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../../../../../../actions/currentTable.js';
+import * as settings from '../../../../../../../settings';
 
 const propTypes = {
   currentPage: PropTypes.number.isRequired,
@@ -19,7 +20,7 @@ class RightFooterBlock extends Component {
   paginate = (side) => {
     const { order, tableName, maxRow, filters } = this.props;
     let page = this.props.currentPage;
-    const maxPage = Math.ceil(maxRow / 100);
+    const maxPage = Math.ceil(maxRow / settings.OFFSET);
     if (maxPage >= page) {
       page += side === 'next' ? 1 : -1;
       const params = {
@@ -38,7 +39,7 @@ class RightFooterBlock extends Component {
     close.hide();
     const { order, filters, tableName, maxRow } = this.props;
     const page = Number(this.pageInput.value);
-    const maxPage = Math.ceil(maxRow / 100);
+    const maxPage = Math.ceil(maxRow / settings.OFFSET);
     if (page <= maxPage && page > 0) {
       const params = {
         page,
@@ -53,7 +54,7 @@ class RightFooterBlock extends Component {
 
   render() {
     const { currentPage, isContent, maxRow } = this.props;
-    const maxPage = Math.ceil(maxRow / 100);
+    const maxPage = Math.ceil(maxRow / settings.OFFSET);
     return (
       <div className="btn-group flex-item--end">
         <button

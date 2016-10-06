@@ -11,7 +11,7 @@ const currentTableDefault = {
     selected: List()
   }),
   editor: Map({ open: false, type: '' }),
-  contextMenu: Map({ open: false, menu: '' }),
+  contextMenu: Map({ open: 0, menu: '' }),
   confirmationModal: Map({ open: false, modal: '' }),
   foreignTable: Map({ open: false }),
   statusVars: Map(),
@@ -896,7 +896,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
       const selectedTable =
         menu === 'table' ? selected : state.selectedTable;
       const contextMenu =
-        state.contextMenu.set('open', !state.contextMenu.get('open')).set('menu', menu);
+        state.contextMenu.set('open', (state.contextMenu.get('open') + 1) % 2).set('menu', menu);
       return Object.assign({}, state,
         {
           contextMenu,

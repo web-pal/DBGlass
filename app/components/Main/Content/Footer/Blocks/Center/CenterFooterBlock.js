@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../../../../../../actions/currentTable';
 import * as TablesActions from '../../../../../../actions/tables';
+import * as settings from '../../../../../../../settings';
 
 import { ThreeBounceSpinner } from '../../../../../Base/Spinners/Spinners';
 import Button from '../../../Button/Button';
@@ -23,9 +24,9 @@ const CenterFooterBlock = props => {
     maxRow, currentPage, rowsCount,
     tableName
   } = props;
-  const rows = rowsCount < 100 ?
+  const rows = rowsCount < settings.OFFSET ?
     `1 - ${currentPage}` :
-    `${1 + (currentPage - 1) * 100} - ${currentPage * 100}`;
+    `${1 + (currentPage - 1) * settings.OFFSET} - ${currentPage * settings.OFFSET}`;
   return isContent && (
     <div className="currentRow flex-item--center" >
       {isFetching ?

@@ -30,7 +30,7 @@ class ContextMenu extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.contextMenu.get('open')) {
+    if (nextProps.contextMenu.get('open') + 1) {
       this.popup(nextProps.contextMenu.get('menu'));
     }
   }
@@ -43,9 +43,6 @@ class ContextMenu extends Component {
     };
     const cloneRow = () => {
       this.props.cloneRow();
-    };
-    const openEditor = () => {
-      this.props.toggleEditor('cell', true);
     };
     const dropTable = () => {
       this.props.toggleConfirmationModal('drop');
@@ -65,12 +62,6 @@ class ContextMenu extends Component {
         cloneRow();
       },
     });
-    const openEditorItem = new MenuItem({
-      label: 'Open in Editor',
-      click() {
-        openEditor();
-      }
-    });
     const dropTableItem = new MenuItem({
       label: 'Drop table',
       click() {
@@ -85,7 +76,6 @@ class ContextMenu extends Component {
     });
     this.rowMenu.append(deleteRowItem);
     this.rowMenu.append(cloneRowItem);
-    this.rowMenu.append(openEditorItem);
     this.tableMenu.append(dropTableItem);
     this.tableMenu.append(truncateTableItem);
   }
