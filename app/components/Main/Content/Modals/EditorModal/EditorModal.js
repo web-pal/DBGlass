@@ -191,6 +191,7 @@ class EditorModal extends Component {
               <input
                 type="checkbox"
                 onClick={this.toggleMarkdown}
+                checked={!markdownDisabled}
               />
               <div className="slider round" />
             </label>
