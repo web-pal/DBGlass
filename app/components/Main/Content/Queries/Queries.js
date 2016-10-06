@@ -18,8 +18,8 @@ const propTypes = {
 };
 
 class QueriesComponent extends Component {
-  undoEdit = edit => {
-    this.props.undoEdit(edit);
+  undoEdit = editId => {
+    this.props.undoEdit(editId);
   }
 
   render() {
@@ -31,7 +31,7 @@ class QueriesComponent extends Component {
     if (Object.keys(tableNameEdited).length) edits.push(tableNameEdited);
     //
     const list = edits.map((edit, i) =>
-      <li key={i} className="query-list-item" onClick={() => this.undoEdit(edit)}>
+      <li key={i} className="query-list-item" onClick={() => this.undoEdit(edit.editId)}>
         <SyntaxHighlighter language="sql" style={gruvboxLight}>
           {edit.query.replace(/\n/g, '')}
         </SyntaxHighlighter>

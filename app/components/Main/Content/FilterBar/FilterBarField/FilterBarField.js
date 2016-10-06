@@ -123,12 +123,14 @@ class FilterBarField extends Component {
         }
       },
       className: 'form-control filter-element',
-      ref: 'thirdInput',
       name: 'value'
     };
 
     let thirdInput = (
-      <input type="text" {...thirdInputProps} />
+      <input
+        type="text" {...thirdInputProps}
+        ref={(c) => { this.thirdInput = c; }}
+      />
     );
 
     switch (columnType.substr(0, 4)) {
@@ -141,7 +143,10 @@ class FilterBarField extends Component {
       case 'bool':
         options = [...boolOptions];
         thirdInput = (
-          <select {...thirdInputProps} >
+          <select
+            {...thirdInputProps}
+            ref={(c) => { this.thirdInput = c; }}
+          >
             <option value="True">True</option>
             <option value="False">False</option>
           </select>
@@ -150,14 +155,20 @@ class FilterBarField extends Component {
       case 'inte':
         options = [...numOptions];
         thirdInput = (
-          <input type="number" {...thirdInputProps} />
+          <input
+            type="number" {...thirdInputProps}
+            ref={(c) => { this.thirdInput = c; }}
+          />
         );
         break;
       case 'time':
         options = [...numOptions];
         thirdInput = (
           <div className="relative">
-            <input {...thirdInputProps} />
+            <input
+              {...thirdInputProps}
+              ref={(c) => { this.thirdInput = c; }}
+            />
             <i className="fa fa-calendar" onClick={this.toggleTimePicker} />
           </div>
         );

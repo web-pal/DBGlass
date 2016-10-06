@@ -326,10 +326,10 @@ export function saveData(params = [{ data: '', id: '', columnKey: '', tableName:
   };
 }
 
-export function undoEdit(edit) {
+export function undoEdit(editId) {
   return {
     type: types.UNDO_EDIT,
-    edit
+    editId
   };
 }
 
