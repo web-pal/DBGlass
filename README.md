@@ -1,8 +1,9 @@
 # DBGlass
+[![Code Quality](https://api.codacy.com/project/badge/Grade/caadffe1b9c74253bda61b13b4de688a)](https://www.codacy.com/app/gloosx/DBGlass?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=web-pal/DBGlass&amp;utm_campaign=Badge_Grade)
 
 *Simple cross-platform PostgreSQL client. Built with [Electron](https://github.com/atom/electron).*
 
-![](https://www.evernote.com/shard/s18/sh/ed5ba0df-9d64-4077-a3fa-05b5d98840f3/7866c4205281c881/res/068519f7-ba08-4fb7-8cb0-67d69d706050/skitch.png)
+![](https://s3-us-west-2.amazonaws.com/web-pal-landing/DBGlass_demo2.gif)
 ## Features ([CHANGELOG](CHANGELOG.md))
 - Straightforward and easy UI for creating, reading, updating and deleting your data without writing queries
 - Rich markdown editor for your text data

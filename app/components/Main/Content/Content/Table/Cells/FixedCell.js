@@ -147,7 +147,7 @@ class FixedCell extends Component {
       <Cell
         height={45}
         width={width}
-        onClick={() => {
+        onDoubleClick={() => {
           this.handleCellEdit(columnName, row.get(primaryKey), rowIndex);
         }}
         onContextMenu={() => {

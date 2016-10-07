@@ -19,6 +19,7 @@ const propTypes = {
   tableName: PropTypes.string,
   filters: PropTypes.object.isRequired,
   edited: PropTypes.array.isRequired,
+  highlightedRow: PropTypes.number,
   toggleRowHighlight: PropTypes.func.isRequired,
   rowsCount: PropTypes.number.isRequired,
   structureTable: PropTypes.object.isRequired,
@@ -105,15 +106,21 @@ class FixedTable extends Component {
     setTimeout(() => this.setState({ overflowY: 'auto' }), 100);
   }
 
+  handleRowClick = (rowIndex) => {
+    if (this.props.highlightedRow !== rowIndex) {
+      this.props.toggleRowHighlight(rowIndex);
+    }
+  }
+
 
   render() {
-    const { rowsCount, toggleRowHighlight } = this.props;
+    const { rowsCount } = this.props;
     const { tableHeight, tableWidth, columns, scrollTop, overflowY } = this.state;
 
     return (
       <Table
         rowsCount={rowsCount}
-        onRowClick={(...args) => toggleRowHighlight(args[1])}
+        onRowClick={(...args) => this.handleRowClick(args[1])}
         headerHeight={51}
         rowHeight={45}
         scrollTop={scrollTop}
@@ -134,6 +141,7 @@ function mapStateToProps(state) {
   return {
     tableName: state.currentTable.tableName,
     isFetching: state.currentTable.isFetching,
+    highlightedRow: state.currentTable.highlightedRow,
     showFilter: state.currentTable.showFilter,
     filters: state.currentTable.filters,
     refresh: state.currentTable.refresh,

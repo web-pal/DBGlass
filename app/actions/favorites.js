@@ -1,4 +1,5 @@
 import * as types from '../constants/favoriteConstants.js';
+
 const storage = require('electron-json-storage');
 
 export function addFavorite(favorite, currentId = false, callback) {

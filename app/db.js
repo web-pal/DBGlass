@@ -1,4 +1,5 @@
 import { List } from 'immutable';
+import * as settings from '../settings';
 
 const ipcRenderer = require('electron').ipcRenderer;
 const pg = require('electron').remote.require('pg');
@@ -291,7 +292,7 @@ WHERE attname = '${column.get('columnname')}' AND attrelid = ${oid}`;
   static getTableContent(params) {
     return new Promise((resolve, reject) => {
       const page = params.page || 1;
-      const offset = (page - 1) * 100;
+      const offset = (page - 1) * settings.OFFSET;
       let totalCount = 0;
 
       //* SORTING *//
@@ -339,7 +340,7 @@ WHERE attname = '${column.get('columnname')}' AND attrelid = ${oid}`;
         totalCount = parseInt(result.rows[0].count, 10);
         const query = `
         SELECT * FROM "${params.tableName}" ${filterQuery} ${orderQuery}
-        LIMIT 100 OFFSET ${offset}`;
+        LIMIT ${settings.OFFSET} OFFSET ${offset}`;
         this.client.query(query, (error, res) => {
           if (error) {
             reject(error);

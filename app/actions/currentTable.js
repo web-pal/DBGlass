@@ -139,9 +139,12 @@ export function initTable(params = { page: 1, order: [], filters: [] }) {
     let nextParams;
     let interruptProcess = false;
     dispatch(startFetching(params.tableName));
-    DB.getPrimaryKey(params.tableName)
+    DB.getTableIndexes(params.tableName)
       .then(
-        primaryKey => {
+        () => DB.getPrimaryKeys(params.tableName)
+      )
+      .then(
+        primaryKeys => {
           const fetchingTable = getState().currentTable.fetchingTable || params.tableName;
           if (fetchingTable !== params.tableName) {
             interruptProcess = true;
@@ -149,26 +152,22 @@ export function initTable(params = { page: 1, order: [], filters: [] }) {
           }
           nextParams = { ...params };
           if (!params.order) nextParams.order = [];
-          if (primaryKey && primaryKey.length) {
+          if (primaryKeys && primaryKeys.length) {
             nextParams.order.push(
               {
-                index: primaryKey,
+                index: primaryKeys[0].column_name,
                 sortType: 'ASC'
               }
             );
           }
           dispatch({
-            type: types.GET_PRIMARY_KEY,
-            primaryKey
+            type: types.GET_PRIMARY_KEYS,
+            primaryKeys
           });
           return DB.getTableStructure(params.tableName);
         },
         () => {
           if (!params.order) nextParams.order = [];
-          dispatch({
-            type: types.GET_PRIMARY_KEY,
-            primaryKey: ''
-          });
           return DB.getTableStructure(params.tableName);
         }
       )
@@ -205,9 +204,16 @@ export function initTable(params = { page: 1, order: [], filters: [] }) {
   };
 }
 
+export function openForeignModal() {
+  return {
+    type: types.OPEN_FOREIGN_MODAL
+  };
+}
+
 export function initForeignTable(params) {
   return dispatch => {
     let returnParams = {};
+    dispatch(openForeignModal());
     DB.getTableStructure(params.tableName)
       .then(
         structureTable => {
@@ -224,7 +230,6 @@ export function initForeignTable(params) {
             type: types.GET_FOREIGN_TABLE,
             ...returnParams
           });
-          dispatch(stopFetching());
         }
       );
   };
@@ -321,10 +326,10 @@ export function saveData(params = [{ data: '', id: '', columnKey: '', tableName:
   };
 }
 
-export function undoEdit(edit) {
+export function undoEdit(editId) {
   return {
     type: types.UNDO_EDIT,
-    edit
+    editId
   };
 }
 
@@ -345,12 +350,11 @@ export function editStructureRow(columnName, property) {
   };
 }
 
-export function saveEdits(columnKey, rowIndex, primaryKey, data) {
+export function saveEdits(columnKey, rowIndex, data) {
   return {
     type: types.SAVE_EDITS,
     columnKey,
     rowIndex,
-    primaryKey,
     data
   };
 }
@@ -413,6 +417,12 @@ export function deleteRow() {
 }
 
 // UTILITY //
+export function selectNextRow(dir) {
+  return {
+    type: types.SELECT_NEXT_ROW,
+    dir
+  };
+}
 export function inputChange(value) {
   return {
     type: types.INPUT_CHANGE,

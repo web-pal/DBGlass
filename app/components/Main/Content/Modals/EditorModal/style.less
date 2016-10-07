@@ -6,7 +6,7 @@
   }
   min-width: 530px;
   max-width: 530px;
-  .btn {
+  .btn.btn--absolute {
     position: absolute;
     bottom: 20px;
     right: 20px;
@@ -18,9 +18,8 @@
     cursor: not-allowed;
   }
   .sshSwitch {
-    position: absolute;
-    bottom: 5px;
-    right: 100px;
+    margin-right: 5px;
+    transform: translateY(20%);
     .checkbox-label {
       font-weight: 100;
       font-family: Harmonia Sans;
@@ -30,9 +29,7 @@
 
 .time-picker {
   .btn {
-    position: absolute;
     z-index: 20;
-    right: 70px;
     bottom: 20px;
   }
 }

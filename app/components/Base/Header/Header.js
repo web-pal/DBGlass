@@ -43,12 +43,18 @@ class Header extends Component {
 
 const SideBarTop = (props) => {
   const { favorites, selectedFavorite, isConnected } = props;
+
+  const favorite = favorites.get(selectedFavorite - 1);
+  const connectionName = favorite
+    ? favorite.get('connectionName')
+    : '';
+
   return isConnected ?
     <div
       className="sidebar-head flex-row flex--s-between cursor-pointer"
       onClick={props.toggleFavoriteSwitcher}
     >
-      {favorites.get(selectedFavorite - 1).get('connectionName')}
+      {connectionName}
       <i className="fa fa-chevron-right vertical-center" />
     </div> :
     <div

@@ -1,5 +1,4 @@
 import Immutable, { List, Map } from 'immutable';
-import _ from 'lodash';
 
 import * as types from '../constants/currentTableConstants.js';
 
@@ -12,7 +11,7 @@ const currentTableDefault = {
     selected: List()
   }),
   editor: Map({ open: false, type: '' }),
-  contextMenu: Map({ open: false, menu: '' }),
+  contextMenu: Map({ open: 0, menu: '' }),
   confirmationModal: Map({ open: false, modal: '' }),
   foreignTable: Map({ open: false }),
   statusVars: Map(),
@@ -108,7 +107,6 @@ export default function currentTable(state = { ...currentTableDefault }, action)
       let newStructureTable = state.structureTable;
       let tableName = state.tableName;
       for (const update of action.update) {
-        if (!update.updated) break;
         switch (update.type) {
           case 'DELETE':
             updatedRows = updatedRows.delete(
@@ -117,6 +115,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
             );
             break;
           case 'UPDATE': { // format time and update the rows
+            if (!update.updated) break;
             let index = updatedRows.findKey(row =>
                 row.get(state.primaryKey) === update.updated[state.primaryKey]);
             if (typeof index === 'undefined') { // if edited primary key of related stuff...
@@ -135,6 +134,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
             break;
           }
           case 'INSERT': { // format time and insert into rows
+            if (!update.updated) break;
             const timeCols =
               state.structureTable.filter(column => column.get('datatype').startsWith('time'));
             for (const filteredColumn of timeCols.values()) {
@@ -173,12 +173,12 @@ export default function currentTable(state = { ...currentTableDefault }, action)
                   if (/nn|key/.test(edit.suffix)) {
                     savedConstraintIndex =
                       newStructureTable.getIn([editedColumnIndex, 'constraints'])
-                        .findKey(constraint =>
+                        .findLastKey(constraint =>
                             constraint.get('type') === edit.suffix);
                   } else {
                     savedConstraintIndex =
                       newStructureTable.getIn([editedColumnIndex, 'constraints'])
-                        .findKey(constraint =>
+                        .findLastKey(constraint =>
                             constraint.get('name') === edit.constraintName);
                   }
                   const keyPath = [
@@ -392,19 +392,10 @@ export default function currentTable(state = { ...currentTableDefault }, action)
       }
       if (Map.isMap(prevValue)) prevValue = JSON.stringify(prevValue, null, 2);
       if (List.isList(prevValue)) prevValue = `{ ${prevValue.join(', ')} }`;
-      let mode;
-      if (state.editing.rowIndex === rowIndex &&
-          state.editing.columnKey === columnKey &&
-          state.editing.mode === 'highlight') {
-        mode = 'edit';
-      } else {
-        mode = 'highlight';
-      }
       editing = {
         columnKey,
         rowIndex,
-        prevValue,
-        mode
+        prevValue
       };
       return Object.assign({}, state, { edited, editing });
     }
@@ -424,6 +415,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
         structureEdited.push({
           ...action,
           type: 'DROP_TABLE_CONSTRAINT',
+          editId: 0,
           query
         });
       } else {
@@ -441,6 +433,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
           if (i === structureEdited.length - 1 && flag) {
             structureEdited.push({
               ...action,
+              editId: structureEdited.length + edited.length,
               type: 'DROP_TABLE_CONSTRAINT',
               query
             });
@@ -484,6 +477,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
     case types.SAVE_CONSTRAINT: {
       structureEdited.push({
         ...action.data,
+        editId: structureEdited.length + edited.length,
         type: 'SAVE_CONSTRAINT'
       });
       const rowIndex =
@@ -536,6 +530,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
         type: 'REMOVE_COLUMN',
         columnName: action.columnName,
         tableName: state.tableName,
+        editId: structureEdited.length + edited.length,
         query: `ALTER TABLE ${state.tableName} DROP COLUMN ${action.columnName}`
       });
       return Object.assign({}, state, { structureEdited });
@@ -569,6 +564,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
         query: `INSERT INTO ${state.tableName} DEFAULT VALUES RETURNING *`,
         values,
         insertIndex: newInserted.count(insert => insert) - 1,
+        editId: structureEdited.length + edited.length,
         rowIndex: 0 - newInserted.size
       });
       return Object.assign({}, state, {
@@ -597,6 +593,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
         dataType: 'text',
         defaultValue: '',
         constraints: '',
+        editId: structureEdited.length + edited.length,
         query: `ALTER TABLE ${state.tableName}
  ADD COLUMN new_column${newColumnCount} text`
       });
@@ -606,11 +603,13 @@ export default function currentTable(state = { ...currentTableDefault }, action)
       });
     }
     case types.UNDO_EDIT: {
-      const { edit } = action;
+      const { editId } = action;
+      const edit =
+        [...edited, ...structureEdited].find(e => e.editId === editId);
       let newStructureTable = state.structureTable;
       if (edit.query.startsWith('ALTER')) {
         structureEdited.some((item, i) => {
-          if (_.isEqual(edit, item)) {
+          if (item.editId === action.editId) {
             structureEdited.splice(i, 1);
             return true;
           }
@@ -621,21 +620,17 @@ export default function currentTable(state = { ...currentTableDefault }, action)
               key === edit.key);
         }
         if (edit.type === 'SAVE_CONSTRAINT') {
-          // TODO: later...... . .. . .
-          // const [i, oldStructureRow] =
-      // state.structureTable.findEntry(column => column.get('columnname') === edit.columnName);
-          // console.log('1: ', i, oldStructureRow.toJS());
-          // const deletedConstraintKey =
-            // oldStructureRow.get('constraints')
-              // .findKey(constraint => constraint.name === edit.name);
-          // console.log('2: ', deletedConstraintKey);
-      // const newStructureRow = oldStructureRow.deleteIn(['constraints', deletedConstraintKey]);
-          // console.log('3: ', newStructureRow.toJS())
-          // newStructureTable = newStructureTable.setIn(i, newStructureRow);
+          const [i, oldStructureRow] =
+            state.structureTable.findEntry(column => column.get('columnname') === edit.columnName);
+          const deletedConstraintKey =
+            oldStructureRow.get('constraints')
+            .findKey(constraint => constraint.get('name') === edit.name);
+          const newStructureRow = oldStructureRow.deleteIn(['constraints', deletedConstraintKey]);
+          newStructureTable = newStructureTable.set(i, newStructureRow);
         }
       } else {
         edited.some((item, i) => {
-          if (_.isEqual(edit, item)) {
+          if (item.editId === action.editId) {
             edited.splice(i, 1);
             return true;
           }
@@ -750,6 +745,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
           columnKey: action.columnKey,
           data: action.data,
           tableName: state.tableName,
+          editId: structureEdited.length + edited.length,
           query
         });
       }
@@ -761,6 +757,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
         type: 'TABLE_RENAME',
         oldTableName: action.oldTableName,
         newTableName: action.newTableName,
+        editId: structureEdited.length + edited.length,
         query
       };
       structureEdited.some((edit, i) => {
@@ -822,7 +819,12 @@ export default function currentTable(state = { ...currentTableDefault }, action)
           default:
             query = '';
         }
-        structureEdited.push({ ...action, type: 'EDIT_COLUMN', query });
+        structureEdited.push({
+          ...action,
+          editId: structureEdited.length + edited.length,
+          type: 'EDIT_COLUMN',
+          query
+        });
       }
       return Object.assign({}, state, {
         structureEdited,
@@ -845,6 +847,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
  (${structureTable.map(column => column.columnname).join(',')})
  VALUES (${valuesString}) RETURNING *`,
         values,
+        editId: structureEdited.length + edited.length,
         insertIndex: state.selectedRow + 1
       });
       const newInserted = state.rowsState.get('inserted')
@@ -893,7 +896,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
       const selectedTable =
         menu === 'table' ? selected : state.selectedTable;
       const contextMenu =
-        state.contextMenu.set('open', !state.contextMenu.get('open')).set('menu', menu);
+        state.contextMenu.set('open', (state.contextMenu.get('open') + 1) % 2).set('menu', menu);
       return Object.assign({}, state,
         {
           contextMenu,
@@ -925,6 +928,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
         edited.push({
           type: 'DELETE_ROW',
           rowIndex,
+          editId: structureEdited.length + edited.length,
           query: `DELETE FROM ${state.tableName} WHERE ${primaryKeysQuery} RETURNING *`
         });
       }
