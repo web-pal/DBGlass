@@ -1,5 +1,6 @@
 import React from 'react';
 import ReduxFormMain from './ReduxFormMain';
+import check from './UpdatesModal/versionCheck.js';
 
 const { shell } = require('electron');
 
