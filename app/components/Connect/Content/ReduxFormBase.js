@@ -15,8 +15,9 @@ const ReduxFormBase = () => (
       href=""
     >
       <img
-        src="styles/images/webpal.png"
+        src="styles/images/WebPal.svg"
         role="presentation"
+        style={{ width: '100px' }}
       />
     </a>
   </div>
