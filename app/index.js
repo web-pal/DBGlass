@@ -6,8 +6,10 @@ import './styles/main.less';
 import '../node_modules/fixed-data-table/dist/fixed-data-table.min.css';
 import DB from './db';
 import BaseComponent from './components/Base/BaseComponent';
+import check from './components/Connect/Content/UpdatesModal/versionCheck.js';
 
 const store = configureStore();
+check();
 
 render(
   <Provider store={store}>

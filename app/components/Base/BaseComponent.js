@@ -7,6 +7,7 @@ import ReduxFormBase from '../Connect/Content/ReduxFormBase';
 import MainContent from '../Main/Content/MainContent';
 import Header from '../Base/Header/Header';
 import ContextMenu from '../Base/ContextMenu/ContextMenu';
+import UpdatesModal from '../Connect/Content/UpdatesModal/UpdatesModal';
 
 const propTypes = {
   isConnected: PropTypes.bool
@@ -26,6 +27,7 @@ const BaseComponent = props =>
       <div className="flex-col max-height">
         <Header />
         <div className="flex-row max-height">
+          <UpdatesModal />
           <ConnectSidebar />
           <ReduxFormBase />
         </div>

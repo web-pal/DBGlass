@@ -1,7 +1,7 @@
 {
   "name": "DBGlass",
   "productName": "DBGlass",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Cross platform GUI PostgreSQL client",
   "main": "main.js",
   "scripts": {
@@ -95,15 +95,15 @@
     "draft-js-export-markdown": "^0.2.0",
     "draft-js-import-markdown": "^0.1.6",
     "electron-json-storage": "^2.0.0",
+    "fixed-data-table": "0.6.3",
+    "font-awesome": "^4.6.3",
     "immutable": "^3.8.1",
     "joi": "^9.1.0",
     "joi-validation-strategy": "^0.3.3",
-    "font-awesome": "^4.6.3",
     "jwt-simple": "^0.5.0",
     "ladda": "^1.0.0",
     "lodash": "^4.16.3",
     "open-ssh-tunnel": "^0.3.1",
-    "fixed-data-table": "0.6.3",
     "pg": "^6.1.0",
     "pg-native": "^1.10.0",
     "react": "^15.3.2",
@@ -122,8 +122,10 @@
     "redux": "^3.6.0",
     "redux-form": "6.0.5",
     "redux-thunk": "^2.1.0",
-    "source-map-support": "^0.4.3",
-    "revalidate": "git://github.com/web-pal/revalidate.git#forTemUsage"
+    "request": "^2.75.0",
+    "revalidate": "git://github.com/web-pal/revalidate.git#forTemUsage",
+    "semver": "^5.3.0",
+    "source-map-support": "^0.4.3"
   },
   "devEngines": {
     "node": "4.x || 5.x || 6.x",

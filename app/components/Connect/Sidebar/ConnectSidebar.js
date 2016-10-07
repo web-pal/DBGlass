@@ -36,7 +36,7 @@ class ConnectSidebar extends Component {
     const { favorites, selectedFavorite } = this.props;
 
     return (
-      <nav className="sidebar">
+      <nav className="sidebar connect">
         {(favorites.size > 0) &&
           <ul className="nav">
             {favorites.map((item) =>
