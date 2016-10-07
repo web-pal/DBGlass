@@ -4,7 +4,7 @@
 *Simple cross-platform PostgreSQL client. Built with [Electron](https://github.com/atom/electron), [React](https://facebook.github.io/react/), [Redux](https://github.com/reactjs/redux), [FixedDataTable](https://facebook.github.io/fixed-data-table/).*
 
 ![](https://s3-us-west-2.amazonaws.com/web-pal-landing/DBGlass_demo2.gif)
-## Features ([CHANGELOG](CHANGELOG.md))
+## Features
 - Straightforward and easy UI for creating, reading, updating and deleting your data without writing queries
 - Rich markdown editor for your text data
 - Simple constraint editor
