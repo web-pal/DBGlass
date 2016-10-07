@@ -1,7 +1,7 @@
 # DBGlass
 [![Code Quality](https://api.codacy.com/project/badge/Grade/caadffe1b9c74253bda61b13b4de688a)](https://www.codacy.com/app/gloosx/DBGlass?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=web-pal/DBGlass&amp;utm_campaign=Badge_Grade)
 
-*Simple cross-platform PostgreSQL client. Built with [Electron](https://github.com/atom/electron).*
+*Simple cross-platform PostgreSQL client. Built with [Electron](https://github.com/atom/electron), [React](https://facebook.github.io/react/), [Redux](https://github.com/reactjs/redux), [FixedDataTable](https://facebook.github.io/fixed-data-table/).*
 
 ![](https://s3-us-west-2.amazonaws.com/web-pal-landing/DBGlass_demo2.gif)
 ## Features ([CHANGELOG](CHANGELOG.md))
