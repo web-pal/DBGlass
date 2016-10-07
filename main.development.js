@@ -226,17 +226,17 @@ app.on('ready', async () => {
       submenu: [{
         label: 'Learn More',
         click() {
-          shell.openExternal('https://github.com/mic-fadeev/postglass');
+          shell.openExternal('http://dbglass.web-pal.com');
         }
       }, {
-        label: 'Hire me!',
+        label: 'Hire us!',
         click() {
-          shell.openExternal('https://www.upwork.com/freelancers/~019739a15313b8bd52');
+          shell.openExternal('http://web-pal.com');
         }
       }, {
         label: 'Search Issues',
         click() {
-          shell.openExternal('https://github.com/mic-fadeev/postglass/issues');
+          shell.openExternal('https://github.com/web-pal/DBGlass/issues');
         }
       }]
     }];
@@ -275,17 +275,17 @@ app.on('ready', async () => {
       submenu: [{
         label: 'Learn More',
         click() {
-          shell.openExternal('https://github.com/mic-fadeev/postglass');
+          shell.openExternal('http://dbglass.web-pal.com');
         }
       }, {
-        label: 'Hire me!',
+        label: 'Hire us!',
         click() {
-          shell.openExternal('https://www.upwork.com/freelancers/~019739a15313b8bd52');
+          shell.openExternal('http://web-pal.com');
         }
       }, {
         label: 'Search Issues',
         click() {
-          shell.openExternal('https://github.com/mic-fadeev/postglass/issues');
+          shell.openExternal('https://github.com/web-pal/DBGlass/issues');
         }
       }]
     }];
