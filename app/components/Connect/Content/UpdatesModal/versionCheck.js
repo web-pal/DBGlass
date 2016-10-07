@@ -3,10 +3,7 @@ const request = require('request');
 const semver = require('semver');
 
 export default function checkVersion(callback) {
-  let currentVersion;
-  fs.readFile('./VERSION', 'utf8', (err, result) => {
-    currentVersion = String(result).slice(0, -1);
-  });
+  const currentVersion = 'v0.1.0-beta.1';
 
   const options = {
     url: 'https://api.github.com/repos/web-pal/DBGlass/releases/latest',

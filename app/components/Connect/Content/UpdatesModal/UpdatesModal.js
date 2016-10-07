@@ -39,8 +39,9 @@ class UpdatesModal extends Component {
     });
   }
 
-  handleClick = () => {
-    shell.openExternal(this.state.updateUrl, { activate: false });
+  handleClick = (ev) => {
+    ev.preventDefault();
+    shell.openExternal(this.state.updateUrl);
   }
 
   render() {
