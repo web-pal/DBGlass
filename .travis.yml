@@ -1,4 +1,5 @@
 language: node_js
+sudo: required
 node_js:
   - "6.1"
   - "5.11"
@@ -7,6 +8,8 @@ branches:
   - master
   - development
 before_script:
+  - sudo apt-get install postgresql libpq-dev libpq5 postgresql-client-common postgresql-common
+  - sudo /etc/init.d/postgresql start
   - npm install
 script:
   - ./package.js
