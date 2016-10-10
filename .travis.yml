@@ -10,7 +10,6 @@ branches:
 addons:
   apt:
     packages:
-    - postgresql
     - libpq-dev
     - libpq5
     - postgresql-client-common
