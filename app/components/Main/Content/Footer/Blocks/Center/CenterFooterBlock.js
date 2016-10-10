@@ -24,7 +24,9 @@ const CenterFooterBlock = props => {
     maxRow, currentPage, rowsCount,
     tableName
   } = props;
-  const rows = `${settings.OFFSET * (currentPage - 1) + 1} - ${settings.OFFSET * (currentPage - 1) + rowsCount}` ;
+  const rows =
+    `${settings.OFFSET * (currentPage - 1) + (rowsCount === 0 ? 0 : 1)} - ${settings.OFFSET * (currentPage - 1) + rowsCount}` ;
+
   return isContent && (
     <div className="currentRow flex-item--center" >
       {isFetching ?
