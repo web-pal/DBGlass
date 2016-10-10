@@ -20,8 +20,10 @@
     <script>
       (function() {
         const script = document.createElement('script');
+        //script.async = true;
         script.src = (process.env.HOT) ? 'http://localhost:3000/dist/bundle.js' : '../dist/bundle.js';
-        document.write(script.outerHTML);
+        let s0 = document.getElementsByTagName('script')[0];
+        s0.parentNode.insertBefore(script, s0);
       }());
     </script>
   </body>
