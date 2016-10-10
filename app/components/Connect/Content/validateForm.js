@@ -21,7 +21,6 @@ function ifUseSSH(validators) {
 const validate = combineValidators({
   connectionName: isRequired('Connection name'),
   user: isRequired('User'),
-  password: isRequired('Password'),
   address: isRequired('Address'),
   database: isRequired('Database'),
   port: composeValidators(
