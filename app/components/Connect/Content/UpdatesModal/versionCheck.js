@@ -2,7 +2,7 @@ const request = require('request');
 const semver = require('semver');
 
 export default function checkVersion(callback) {
-  const currentVersion = 'v0.1.0-beta.1';
+  const currentVersion = 'v0.1.0-beta.2';
 
   const options = {
     url: 'https://api.github.com/repos/web-pal/DBGlass/releases/latest',
