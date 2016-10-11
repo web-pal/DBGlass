@@ -10,7 +10,6 @@ const INLINE_STYLES = [
 
 const propTypes = {
   editorState: PropTypes.object,
-  onToggle: PropTypes.func,
   disabled: PropTypes.bool
 };
 

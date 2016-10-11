@@ -16,11 +16,10 @@ const BLOCK_TYPES = [
 
 const propTypes = {
   editorState: PropTypes.object,
-  onToggle: PropTypes.func,
   disabled: PropTypes.bool
 };
 
-const BlockStyleControls = props => {
+const BlockStyleControls = (props) => {
   const { editorState } = props;
   const selection = editorState.getSelection();
   const blockType = editorState
@@ -30,7 +29,7 @@ const BlockStyleControls = props => {
 
   return (
     <div className="RichEditor-controls">
-      {BLOCK_TYPES.map((type) =>
+      {BLOCK_TYPES.map(type =>
         <StyleButton
           key={type.label}
           active={type.style === blockType}

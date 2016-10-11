@@ -10,7 +10,7 @@ const propTypes = {
   handleCheckBox: PropTypes.func.isRequired
 };
 
-const ConfirmationModalContent = props => {
+const ConfirmationModalContent = (props) => {
   const {
     modal, handleClose,
     selectedTable, tableName,

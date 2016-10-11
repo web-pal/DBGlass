@@ -11,11 +11,9 @@ const propTypes = {
   getTables: PropTypes.func.isRequired,
   setCurrentTable: PropTypes.func.isRequired,
   clearFilter: PropTypes.func.isRequired,
-  tableName: PropTypes.string,
   createTable: PropTypes.func.isRequired,
   isContent: PropTypes.bool.isRequired,
   changeMode: PropTypes.func.isRequired,
-  structureTable: PropTypes.object.isRequired,
   initTable: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
   toggleContextMenu: PropTypes.func.isRequired
@@ -26,7 +24,7 @@ class MainSidebar extends Component {
   componentWillMount() {
     this.props.getTables()
       .then(
-        table => {
+        (table) => {
           this.props.setCurrentTable(table);
           this.props.initTable({ tableName: table });
         }
@@ -36,7 +34,7 @@ class MainSidebar extends Component {
   createTableRecursively = (tableName, j = 0) => {
     this.props.createTable(tableName, j)
       .then(
-        result => {
+        (result) => {
           this.props.setCurrentTable(result);
           this.props.initTable({ tableName: result });
           const nav = document.getElementById('sidebar0');
@@ -45,7 +43,7 @@ class MainSidebar extends Component {
             this.props.changeMode(false, result);
           }
         },
-        reject => {
+        (reject) => {
           this.createTableRecursively(`${tableName}_${j}`, reject);
         }
       );

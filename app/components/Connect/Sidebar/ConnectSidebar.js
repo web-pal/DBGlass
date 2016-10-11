@@ -27,7 +27,7 @@ class ConnectSidebar extends Component {
   }
 
   setCurrent = id =>
-    e => {
+    (e) => {
       e.preventDefault();
       this.props.setCurrent(id);
     };
@@ -39,7 +39,7 @@ class ConnectSidebar extends Component {
       <nav className="sidebar connect">
         {(favorites.size > 0) &&
           <ul className="nav">
-            {favorites.map((item) =>
+            {favorites.map(item =>
               <ConnectSidebarItem
                 key={item.get('id')}
                 id={item.get('id')}

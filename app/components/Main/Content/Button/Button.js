@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-const Button = props => {
+const Button = (props) => {
   const { onClick, className, icon, label, display } = props;
   let show = display;
   if (typeof display === 'undefined') {

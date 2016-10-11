@@ -61,7 +61,7 @@ class EditComponent extends Component {
         defaultValue={prevValue}
         autoFocus={prevValue && String(prevValue).startsWith('new_column')}
         className="editable-input editable-input__structure"
-        ref={c => { this.input = c; }}
+        ref={(c) => { this.input = c; }}
         onBlur={this.saveEdit}
         onKeyDown={this.onKeyDown}
       />

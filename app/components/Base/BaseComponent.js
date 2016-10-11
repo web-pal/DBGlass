@@ -24,14 +24,14 @@ const BaseComponent = props =>
         </div>
         <MainContent />
       </div> :
-      <div className="flex-col max-height">
-        <Header />
-        <div className="flex-row max-height">
-          <UpdatesModal />
-          <ConnectSidebar />
-          <ReduxFormBase />
+        <div className="flex-col max-height">
+          <Header />
+          <div className="flex-row max-height">
+            <UpdatesModal />
+            <ConnectSidebar />
+            <ReduxFormBase />
+          </div>
         </div>
-      </div>
     }
   </div>;
 

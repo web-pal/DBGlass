@@ -1,6 +1,8 @@
-import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'; // eslint-disable-line import/extensions
+
 const openSshTunnel = require('open-ssh-tunnel');
 const readFileSync = require('fs').readFileSync;
+
 let menu;
 let template;
 let mainWindow = null;
@@ -62,10 +64,10 @@ ipcMain.on('ssh-connect', (event, params) => {
   } else {
     opts.password = params.sshPassword;
   }
-  openSshTunnel(opts).then(server => {
+  openSshTunnel(opts).then((server) => {
     sshServer = server;
     event.sender.send('ssh-connect', true);
-  }).catch(err => {
+  }).catch((err) => {
     event.sender.send('ssh-connect', false, `SSH ${err.level} error`);
   });
 });

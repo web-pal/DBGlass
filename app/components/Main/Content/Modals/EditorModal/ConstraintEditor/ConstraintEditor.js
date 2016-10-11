@@ -6,18 +6,17 @@ import { Map } from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import DB from '../../../../../../db.js';
+import DB from '../../../../../../db';
 import {
   renderField,
   renderSelect,
 } from '../../../../../Connect/Content/InputComponents';
-import * as TablesActions from '../../../../../../actions/tables.js';
+import * as TablesActions from '../../../../../../actions/tables';
 import * as Actions from '../../../../../../actions/currentTable';
 
 const propTypes = {
   tableName: PropTypes.string.isRequired,
   structureEditing: PropTypes.object.isRequired,
-  formValues: PropTypes.object.isRequired,
   saveConstraint: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   constraintType: PropTypes.object,
@@ -49,11 +48,11 @@ class ConstraintEditor extends Component {
     }
   }
 
-  getColumnOptions = props => {
+  getColumnOptions = (props) => {
     const tableName = props.refTable.value || props.tables[0].table_name;
     DB.getTableStructure(tableName)
       .then(
-        structureTable => {
+        (structureTable) => {
           const columnsSelectOptions = structureTable.map(column =>
             ({ value: column.columnname, label: column.columnname }));
           this.setState({ ...this.state, columnsSelectOptions });
@@ -61,7 +60,7 @@ class ConstraintEditor extends Component {
       );
   }
 
-  buildQuery = props => {
+  buildQuery = (props) => {
     const {
       tableName, constraintType, structureEditing,
       constraintName, expression, refTable, refColumn
@@ -107,7 +106,7 @@ class ConstraintEditor extends Component {
     this.props.toggleEditor(null, false);
     return promise.then(
       () => getTables(),
-      err => {
+      (err) => {
         if (err) {
           this.setState({ error: err });
           throw new SubmissionError({
@@ -147,9 +146,8 @@ class ConstraintEditor extends Component {
             <Field
               label="Constraint type"
               name="constraintType"
-              className="form-control"
               options={options}
-              className="flex-item--grow-1"
+              className="form-control flex-item--grow-1"
               component={renderSelect}
             />
             <Field
@@ -181,16 +179,16 @@ class ConstraintEditor extends Component {
                 component={renderSelect}
               />
             </div> :
-            <Field
-              label={constraintType && constraintType.label || 'Column'}
-              disabled={sourceFieldDisabled}
-              placeholder={constraintType && constraintType.label === 'Reference'
-                ? 'table_name (column)'
-                : 'condition'}
-              name="expression"
-              type="text"
-              component={renderField}
-            />
+              <Field
+                label={constraintType && constraintType.label || 'Column'}
+                disabled={sourceFieldDisabled}
+                placeholder={constraintType && constraintType.label === 'Reference'
+                  ? 'table_name (column)'
+                  : 'condition'}
+                name="expression"
+                type="text"
+                component={renderField}
+              />
           }
           <div className="block-label">
             Query

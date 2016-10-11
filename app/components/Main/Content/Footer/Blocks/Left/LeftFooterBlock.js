@@ -9,8 +9,6 @@ import * as CurrentTableActions from '../../../../../../actions/currentTable';
 const propTypes = {
   isContent: PropTypes.bool.isRequired,
   changeMode: PropTypes.func.isRequired,
-  tableName: PropTypes.string,
-  structureTable: PropTypes.object.isRequired,
   showFilter: PropTypes.bool.isRequired,
   structureEdited: PropTypes.array.isRequired,
   highlightedRow: PropTypes.number,
@@ -19,7 +17,6 @@ const propTypes = {
   toggleFilter: PropTypes.func.isRequired,
   addColumn: PropTypes.func.isRequired,
   editStructureRow: PropTypes.func.isRequired,
-  refreshTable: PropTypes.func.isRequired,
   undoEdits: PropTypes.func.isRequired,
   selectNextRow: PropTypes.func.isRequired,
   toggleRowHighlight: PropTypes.func.isRequired
@@ -31,7 +28,7 @@ class LeftFooterBlock extends Component {
     document.onkeydown = this.handleKeyDown;
   }
 
-  handleKeyDown = e => {
+  handleKeyDown = (e) => {
     if (e.ctrlKey || e.metaKey) {
       switch (e.keyCode) {
         case 70: // 'F'
@@ -83,7 +80,7 @@ class LeftFooterBlock extends Component {
     }
   }
 
-  changeViewMode = mode => {
+  changeViewMode = (mode) => {
     this.props.changeMode(mode);
     document.getElementById('wrapper').scrollTop = 0;
   }

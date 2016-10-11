@@ -182,7 +182,7 @@ class Structure extends Component {
                         }
                         fields.push(
                           <td
-                            key={++keyA}
+                            key={keyA += 1}
                             style={{ position: 'relative' }}
                             onClick={
                               header !== 'constraints' ?

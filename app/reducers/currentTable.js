@@ -1,6 +1,6 @@
 import Immutable, { List, Map } from 'immutable';
 
-import * as types from '../constants/currentTableConstants.js';
+import * as types from '../constants/currentTableConstants';
 
 /* eslint-disable new-cap */
 const currentTableDefault = {
@@ -60,7 +60,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
         const structureIter =
           state.structureTable.filter(column => column.get('datatype').startsWith('time'));
         for (const filteredColumn of structureIter) {
-          action.rows.forEach(row => {
+          action.rows.forEach((row) => {
             const time = row[filteredColumn.get('columnname')];
             let dateString = new Date(time);
             const timeZoneOffset = dateString.getTimezoneOffset() * 60000;
@@ -148,7 +148,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
           }
           case 'ALTER ':
             // eslint-disable-next-line no-loop-func
-            structureEdited.forEach(edit => {
+            structureEdited.forEach((edit) => {
               const editedColumnIndex =
                 newStructureTable.findKey(row => row.get('columnname') === edit.columnName);
               switch (edit.type) {
@@ -246,7 +246,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
         const structureIter =
           structure.filter(column => column.get('datatype').startsWith('time'));
         for (const filteredColumn of structureIter) {
-          action.rows.forEach(row => {
+          action.rows.forEach((row) => {
             const time = new Date(row[filteredColumn.get('columnname')]);
             // eslint-disable-next-line no-param-reassign
             row[filteredColumn.get('columnname')] =
@@ -551,7 +551,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
       }
       const updatedRows = state.rows.unshift(emptyRow);
       const values = {};
-      structureTable.forEach(column => {
+      structureTable.forEach((column) => {
         if (!{}.hasOwnProperty.call(values, column.columnname)) {
           values[column.columnname] = 'DEFAULT';
         }
@@ -837,7 +837,7 @@ export default function currentTable(state = { ...currentTableDefault }, action)
       cloneRow = cloneRow.set(state.primaryKey, structureTable[0].defaultvalue);
       const updatedRows = state.rows.insert(state.selectedRow + 1, cloneRow);
       const values = cloneRow.toJS();
-      const valuesString = structureTable.map(column => {
+      const valuesString = structureTable.map((column) => {
         if (!column.datatype.startsWith('int')) return `'${values[column.columnname]}'`;
         return values[column.columnname];
       }).join(',');

@@ -1,5 +1,5 @@
 import DB from '../db';
-import * as types from '../constants/currentTableConstants.js';
+import * as types from '../constants/currentTableConstants';
 
 // INITIALIZE //
 export function connectDB(params, callback) {
@@ -47,7 +47,7 @@ export function initStructure() {
     const { tableName, structureTable } = getState().currentTable;
     DB.getTableConstraints(tableName)
       .then(
-        constraints => {
+        (constraints) => {
           dispatch({
             type: types.GET_TABLE_CONSTRAINTS,
             constraints
@@ -59,7 +59,7 @@ export function initStructure() {
         tables => DB.getNotNullConstraints(structureTable, tables[0].oid)
       )
       .then(
-        constraints => {
+        (constraints) => {
           dispatch({
             type: types.GET_TABLE_CONSTRAINTS,
             constraints,
@@ -116,7 +116,7 @@ export function getTableContent(params = { page: 1, order: [], filters: [] }) {
     dispatch(startFetching());
     DB.getTableContent(params)
       .then(
-        result => {
+        (result) => {
           returnParams = { ...result };
           returnParams.tableName = params.tableName;
           if (params.filters && getState().currentTable.showFilter) {
@@ -144,7 +144,7 @@ export function initTable(params = { page: 1, order: [], filters: [] }) {
         () => DB.getPrimaryKeys(params.tableName)
       )
       .then(
-        primaryKeys => {
+        (primaryKeys) => {
           const fetchingTable = getState().currentTable.fetchingTable || params.tableName;
           if (fetchingTable !== params.tableName) {
             interruptProcess = true;
@@ -172,7 +172,7 @@ export function initTable(params = { page: 1, order: [], filters: [] }) {
         }
       )
       .then(
-        structureTable => {
+        (structureTable) => {
           if (!interruptProcess) {
             dispatch({
               type: types.GET_TABLE_STRUCTURE,
@@ -184,7 +184,7 @@ export function initTable(params = { page: 1, order: [], filters: [] }) {
         }
       )
       .then(
-        result => {
+        (result) => {
           if (!interruptProcess) {
             const fetchingTable = getState().currentTable.fetchingTable;
             if (fetchingTable === params.tableName) {
@@ -211,18 +211,18 @@ export function openForeignModal() {
 }
 
 export function initForeignTable(params) {
-  return dispatch => {
+  return (dispatch) => {
     let returnParams = {};
     dispatch(openForeignModal());
     DB.getTableStructure(params.tableName)
       .then(
-        structureTable => {
+        (structureTable) => {
           returnParams.structureTable = structureTable;
           return DB.getTableContent({ ...params, order: [] });
         }
       )
       .then(
-        result => {
+        (result) => {
           returnParams = { ...returnParams, ...result };
           returnParams.tableName = params.tableName;
           returnParams.firstColumn = params.firstColumn;
@@ -316,10 +316,10 @@ export function saveData(params = [{ data: '', id: '', columnKey: '', tableName:
   return (dispatch) => {
     DB.updateCells(params)
       .then(
-        update => {
+        (update) => {
           dispatch(getUpdatedContent(update));
         },
-        error => {
+        (error) => {
           dispatch(catchError(error));
         }
       );

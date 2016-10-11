@@ -5,20 +5,18 @@ import { gruvboxLight } from 'react-syntax-highlighter/dist/styles';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as CurrentTableActions from '../../../../actions/currentTable.js';
+import * as CurrentTableActions from '../../../../actions/currentTable';
 
 const propTypes = {
   showQueries: PropTypes.bool.isRequired,
-  viewQueries: PropTypes.func.isRequired,
   edited: PropTypes.array.isRequired,
   structureEdited: PropTypes.array.isRequired,
-  isContent: PropTypes.bool.isRequired,
   tableNameEdited: PropTypes.object.isRequired,
   undoEdit: PropTypes.func.isRequired
 };
 
 class QueriesComponent extends Component {
-  undoEdit = editId => {
+  undoEdit = (editId) => {
     this.props.undoEdit(editId);
   }
 
