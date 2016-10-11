@@ -11,21 +11,17 @@ import * as TablesActions from '../../../../../actions/tables';
 
 const propTypes = {
   getTableContent: PropTypes.func.isRequired,
-  isFetching: PropTypes.bool.isRequired,
   showFilter: PropTypes.bool.isRequired,
-  refresh: PropTypes.bool.isRequired,
   order: PropTypes.array.isRequired,
   page: PropTypes.number.isRequired,
   tableName: PropTypes.string,
-  filters: PropTypes.object.isRequired,
   edited: PropTypes.array.isRequired,
   highlightedRow: PropTypes.number,
   toggleRowHighlight: PropTypes.func.isRequired,
   rowsCount: PropTypes.number.isRequired,
   structureTable: PropTypes.object.isRequired,
   tables: PropTypes.array.isRequired,
-  rows: PropTypes.object.isRequired,
-  isContent: PropTypes.bool.isRequired
+  rows: PropTypes.object.isRequired
 };
 
 class FixedTable extends Component {

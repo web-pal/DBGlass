@@ -50,7 +50,7 @@ class FilterBarField extends Component {
     };
   }
 
-  onChange = e => {
+  onChange = (e) => {
     this.handleFilterChange(e.target.name, e.target.value);
   }
 
@@ -63,7 +63,7 @@ class FilterBarField extends Component {
       this.thirdInput.focus();
     }
     if (name === 'column') {
-      const column = structureTable.find((item) => item.get('columnname') === value);
+      const column = structureTable.find(item => item.get('columnname') === value);
       if (column) {
         columnType = column.get('datatype');
       }
@@ -100,7 +100,7 @@ class FilterBarField extends Component {
     });
   }
 
-  handleTimePickerChange = value => {
+  handleTimePickerChange = (value) => {
     this.handleFilterChange('value', value);
   }
 
@@ -117,7 +117,7 @@ class FilterBarField extends Component {
     const thirdInputProps = {
       value: filter.get('value'),
       onChange: this.onChange,
-      onKeyDown: e => {
+      onKeyDown: (e) => {
         if (e.keyCode === 13) {
           applyFilters();
         }
@@ -213,7 +213,7 @@ class FilterBarField extends Component {
         <div>
           <select
             name="operator"
-            ref={c => { this.operator = c; }}
+            ref={(c) => { this.operator = c; }}
             onChange={this.onChange}
             className="form-control filter-element"
             onKeyDown={(e) => {

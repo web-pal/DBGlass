@@ -16,7 +16,6 @@ const propTypes = {
   dropTable: PropTypes.func.isRequired,
   getTables: PropTypes.func.isRequired,
   setCurrentTable: PropTypes.func.isRequired,
-  tables: PropTypes.array,
   initTable: PropTypes.func.isRequired,
   getTableContent: PropTypes.func.isRequired,
   selectedTable: PropTypes.string,
@@ -39,7 +38,7 @@ class ConfirmationModal extends Component {
     this.props.toggleConfirmationModal();
     this.props.getTables()
       .then(
-        table => {
+        (table) => {
           this.props.setCurrentTable(table);
           this.props.initTable({ tableName: table });
         }

@@ -18,20 +18,20 @@ const propTypes = {
   returnTable: PropTypes.object
 };
 
-const CenterFooterBlock = props => {
+const CenterFooterBlock = (props) => {
   const {
     isContent, isFetching, insertRow,
     maxRow, currentPage, rowsCount,
     tableName
   } = props;
   const rows =
-    `${settings.OFFSET * (currentPage - 1) + (rowsCount === 0 ? 0 : 1)} - ${settings.OFFSET * (currentPage - 1) + rowsCount}` ;
+    `${settings.OFFSET * (currentPage - 1) + (rowsCount === 0 ? 0 : 1)} - ${settings.OFFSET * (currentPage - 1) + rowsCount}`;
 
   return isContent && (
     <div className="currentRow flex-item--center" >
       {isFetching ?
         <ThreeBounceSpinner /> :
-        <span> {rows} of {maxRow} </span>
+          <span> {rows} of {maxRow} </span>
       }
       {!rowsCount && !isFetching &&
         <div

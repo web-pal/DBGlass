@@ -1,4 +1,4 @@
-import * as types from '../constants/tablesConstants.js';
+import * as types from '../constants/tablesConstants';
 
 export default function tables(tablesDefault = [], action) {
   switch (action.type) {
@@ -19,7 +19,7 @@ export default function tables(tablesDefault = [], action) {
       }
       return tablesDefault.slice();
     case types.CHANGE_TABLE_NAME:
-      tablesDefault.forEach(item => {
+      tablesDefault.forEach((item) => {
         if (item.isCurrent) {
           window.localStorage.setItem('currentTable', action.newTableName);
           item.table_name = action.newTableName;

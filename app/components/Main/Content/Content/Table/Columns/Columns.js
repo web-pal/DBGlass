@@ -30,7 +30,7 @@ export default function buildTableColumns(props) {
   for (const column of structureTable.values()) {
     const columnName = column.get('columnname');
     let maxWidth = 0;
-    rows.forEach(row => {
+    rows.forEach((row) => {
       const width = getTextWidth(row.get(columnName));
       if (width > maxWidth) maxWidth = width;
     });

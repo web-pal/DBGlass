@@ -121,7 +121,7 @@ export default function favorites(state = initialState, action) {
 }
 
 function saveSelectedFavorite(selectedFavorite) {
-  storage.set('selected_favorite', selectedFavorite, err => {
+  storage.set('selected_favorite', selectedFavorite, (err) => {
     if (err) throw err;
   });
 }
@@ -135,7 +135,7 @@ function saveFavorites(nextfavorites, callback) {
       favorit.sshPassword = jwt.encode(favorit.sshPassword, key);
     }
   }
-  storage.set('postglass_favorites', nextfavorites, error => {
+  storage.set('postglass_favorites', nextfavorites, (error) => {
     if (error) throw error;
     if (callback) callback();
   });

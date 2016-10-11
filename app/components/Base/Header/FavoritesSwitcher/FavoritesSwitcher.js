@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as Actions from '../../../../actions/currentTable.js';
-import * as FavoritesActions from '../../../../actions/favorites.js';
+import * as Actions from '../../../../actions/currentTable';
+import * as FavoritesActions from '../../../../actions/favorites';
 
 const propTypes = {
   favorites: PropTypes.object.isRequired,
@@ -28,7 +28,7 @@ class FavSwitcherComponent extends Component {
     this.props.dropConnection();
   }
 
-  handleOuterClick = e => {
+  handleOuterClick = (e) => {
     const wrapper = document.getElementById('favSwitcher');
     const condition =
       e.clientX > wrapper.offsetLeft &&
@@ -55,7 +55,7 @@ class FavSwitcherComponent extends Component {
           <i className="fa fa-times cursor-pointer" onClick={toggleFavoriteSwitcher} />
         </strong>
         <ul className="plainlist">
-          {favorites.map((item) =>
+          {favorites.map(item =>
             <li
               key={item.get('id')}
               data-id={item.get('id')}

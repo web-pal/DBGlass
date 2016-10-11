@@ -1,4 +1,5 @@
 /* eslint strict: 0, no-shadow: 0, no-unused-vars: 0, no-console: 0 */
+
 'use strict';
 
 require('babel-polyfill');
@@ -79,14 +80,14 @@ function startPack() {
   build(electronCfg)
     .then(() => build(cfg))
     .then(() => del('release'))
-    .then(paths => {
+    .then((paths) => {
       if (shouldBuildAll) {
         // build for all platforms
         const archs = ['ia32', 'x64'];
         const platforms = ['linux', 'win32', 'darwin'];
 
-        platforms.forEach(plat => {
-          archs.forEach(arch => {
+        platforms.forEach((plat) => {
+          archs.forEach((arch) => {
             pack(plat, arch, log(plat, arch));
           });
         });
@@ -95,7 +96,7 @@ function startPack() {
         pack(os.platform(), os.arch(), log(os.platform(), os.arch()));
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
     });
 }

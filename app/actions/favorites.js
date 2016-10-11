@@ -1,9 +1,9 @@
-import * as types from '../constants/favoriteConstants.js';
+import * as types from '../constants/favoriteConstants';
 
 const storage = require('electron-json-storage');
 
 export function addFavorite(favorite, currentId = false, callback) {
-  return dispatch => {
+  return (dispatch) => {
     if (currentId) {
       dispatch(setCurrent(currentId));
     }
@@ -35,7 +35,7 @@ export function setCurrent(currentId) {
 }
 
 export function getFavorites() {
-  return dispatch => {
+  return (dispatch) => {
     storage.get('postglass_favorites', (error, favorites) => {
       if (error) throw error;
       storage.get('selected_favorite', (error2, selectedFavorite) => {

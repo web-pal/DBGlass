@@ -148,7 +148,7 @@ export default class DB {
         if (err) {
           reject(err);
         }
-        tablesWithRefs.forEach(table => {
+        tablesWithRefs.forEach((table) => {
           // eslint-disable-next-line no-param-reassign
           table.foreignKeys = res.rows.filter(row => row.tablename === table.table_name);
         });
@@ -358,7 +358,7 @@ WHERE attname = '${column.get('columnname')}' AND attrelid = ${oid}`;
   }
 
   static getTableStructure(tableName) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const structureQuery = `
             SELECT COLUMN_NAME AS ColumnName, DATA_TYPE AS DataType,
             CHARACTER_MAXIMUM_LENGTH AS CharacterLength, COLUMN_DEFAULT as DefaultValue

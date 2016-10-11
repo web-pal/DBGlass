@@ -9,7 +9,7 @@ const propTypes = {
 };
 
 export default class StyleButton extends Component {
-  onToggle = e => {
+  onToggle = (e) => {
     if (!this.props.disabled) {
       const { onToggle, style } = this.props;
       e.preventDefault();

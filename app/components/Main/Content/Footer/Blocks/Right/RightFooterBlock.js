@@ -3,7 +3,7 @@ import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as Actions from '../../../../../../actions/currentTable.js';
+import * as Actions from '../../../../../../actions/currentTable';
 import * as settings from '../../../../../../../settings';
 
 const propTypes = {
@@ -65,7 +65,7 @@ class RightFooterBlock extends Component {
           <i className="fa fa-chevron-left" />
         </button>
         <OverlayTrigger
-          ref={c => { this.trigger = c; }}
+          ref={(c) => { this.trigger = c; }}
           disabled={maxPage < 2 || !isContent}
           trigger="click"
           rootClose
@@ -76,7 +76,7 @@ class RightFooterBlock extends Component {
                 type="text"
                 size="8"
                 placeholder={currentPage}
-                ref={c => { this.pageInput = c; }}
+                ref={(c) => { this.pageInput = c; }}
               />
               <button
                 className="btn btn-link"

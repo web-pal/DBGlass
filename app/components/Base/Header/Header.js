@@ -8,8 +8,6 @@ import { toggleFavoriteSwitcher, setCurrent } from '../../../actions/favorites';
 import FavoritesSwitcher from '../../Base/Header/FavoritesSwitcher/FavoritesSwitcher';
 
 const propTypes = {
-  favorites: PropTypes.object,
-  selectedFavorite: PropTypes.number,
   favSwitcherOpen: PropTypes.bool,
   toggleFavoriteSwitcher: PropTypes.func,
   isConnected: PropTypes.bool,
@@ -57,11 +55,9 @@ const SideBarTop = (props) => {
       {connectionName}
       <i className="fa fa-chevron-right vertical-center" />
     </div> :
-    <div
-      className="sidebar-head"
-    >
-      Favorites
-    </div>;
+      <div className="sidebar-head" >
+        Favorites
+      </div>;
 };
 
 const BarTop = (props) => {
@@ -74,13 +70,18 @@ const BarTop = (props) => {
         &#160;New Connection
       </button>
     </div> :
-    <div className="bar-top flex-row flex--s-between">
-      <img role="presentation" className="logo" src="styles/images/logo.svg" />
-    </div>;
+      <div className="bar-top flex-row flex--s-between">
+        <img role="presentation" className="logo" src="styles/images/logo.svg" />
+      </div>;
 };
 
 Header.propTypes = propTypes;
-SideBarTop.propTypes = propTypes;
+SideBarTop.propTypes = {
+  favorites: PropTypes.object,
+  selectedFavorite: PropTypes.number,
+  toggleFavoriteSwitcher: PropTypes.func,
+  isConnected: PropTypes.bool
+};
 BarTop.propTypes = {
   isConnected: PropTypes.bool.isRequired,
   handleClick: PropTypes.func.isRequired

@@ -18,7 +18,7 @@ const TimePickerModal = props => props.open &&
         <Calendar
           dateFormat="YYYY-MM-DD HH:mm:ss"
           defaultDate={props.defaultDate || ''}
-          onChange={(dateString) =>
+          onChange={dateString =>
               props.onChange(dateString)}
         />
       </TransitionView>

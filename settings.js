@@ -1,1 +1,2 @@
-export const OFFSET = 500;
+const OFFSET = 100;
+export default { OFFSET };

@@ -21,7 +21,7 @@ class ReduxFormSSH extends Component {
     };
   }
 
-  showDialog = event => {
+  showDialog = (event) => {
     event.preventDefault();
     const defaultPath = path.join(os.homedir(), '.ssh');
     dialog.showOpenDialog({ defaultPath, properties: ['openFile'] }, (file) => {
@@ -93,48 +93,48 @@ class ReduxFormSSH extends Component {
             />
           </div>
           :
-          <div>
-            <Field
-              label="SSH server"
-              name="sshServer"
-              type="text"
-              placeholder="SSH server"
-              disabled={!useSSH}
-              component={renderField}
-            />
-            <Field
-              label="SSH port"
-              name="sshPort"
-              type="text"
-              placeholder="SSH port"
-              disabled={!useSSH}
-              component={renderField}
-            />
-            <div className="flex-row">
+            <div>
               <Field
-                label="Key password"
-                name="passphrase"
-                type="password"
-                placeholder="Key password"
+                label="SSH server"
+                name="sshServer"
+                type="text"
+                placeholder="SSH server"
                 disabled={!useSSH}
                 component={renderField}
               />
-              <label
-                htmlFor="privateKey"
-                className="btn btn-primary flex-item--end form-control-height"
-              >
+              <Field
+                label="SSH port"
+                name="sshPort"
+                type="text"
+                placeholder="SSH port"
+                disabled={!useSSH}
+                component={renderField}
+              />
+              <div className="flex-row">
                 <Field
-                  name="privateKey"
-                  type="file"
-                  className="hide"
-                  component="input"
-                  onClick={this.showDialog}
+                  label="Key password"
+                  name="passphrase"
+                  type="password"
+                  placeholder="Key password"
+                  disabled={!useSSH}
+                  component={renderField}
                 />
-                Private key
-              </label>
+                <label
+                  htmlFor="privateKey"
+                  onClick={this.showDialog}
+                  className="btn btn-primary flex-item--end form-control-height"
+                >
+                  <Field
+                    name="privateKey"
+                    type="file"
+                    className="hide"
+                    component="input"
+                  />
+                  Private key
+                </label>
+              </div>
+              <span>{sshKey}</span>
             </div>
-            <span>{sshKey}</span>
-          </div>
         }
       </div>
     );

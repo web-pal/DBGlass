@@ -3,11 +3,9 @@ import React, { Component, PropTypes } from 'react';
 const propTypes = {
   setCurrentTable: PropTypes.func.isRequired,
   initTable: PropTypes.func.isRequired,
-  clearFilter: PropTypes.func.isRequired,
   className: PropTypes.string.isRequired,
   toggleContextMenu: PropTypes.func.isRequired,
-  tableName: PropTypes.string.isRequired,
-  isFetching: PropTypes.bool.isRequired
+  tableName: PropTypes.string.isRequired
 };
 
 class SidebarItemComponent extends Component {

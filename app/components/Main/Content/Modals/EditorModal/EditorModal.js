@@ -60,7 +60,7 @@ class EditorModal extends Component {
     }
   }
 
-  onTab = e => {
+  onTab = (e) => {
     const maxDepth = 4;
     this.handleDraftChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
   }
@@ -81,7 +81,7 @@ class EditorModal extends Component {
     }
   }
 
-  handleKeyCommand = command => {
+  handleKeyCommand = (command) => {
     const { editorState } = this.state;
     const newState = RichUtils.handleKeyCommand(editorState, command);
     if (newState) {
@@ -91,7 +91,7 @@ class EditorModal extends Component {
     return false;
   }
 
-  toggleBlockType = blockType => {
+  toggleBlockType = (blockType) => {
     this.handleDraftChange(
       RichUtils.toggleBlockType(
         this.state.editorState,
@@ -100,7 +100,7 @@ class EditorModal extends Component {
     );
   }
 
-  toggleInlineStyle = inlineStyle => {
+  toggleInlineStyle = (inlineStyle) => {
     this.handleDraftChange(
       RichUtils.toggleInlineStyle(
         this.state.editorState,
@@ -113,13 +113,13 @@ class EditorModal extends Component {
     this.props.toggleEditor(null, false);
   }
 
-  handleCalendarChange = dateString => {
+  handleCalendarChange = (dateString) => {
     this.setState({
       value: dateString
     });
   }
 
-  handleDraftChange = editorState => {
+  handleDraftChange = (editorState) => {
     const value = editorState.getCurrentContent();
     this.setState({ editorState, value: stateToMarkdown(value) });
   }
@@ -185,9 +185,7 @@ class EditorModal extends Component {
                Markdown
               <br /><br />
             </label>
-            <label
-              className="switch"
-            >
+            <label className="switch" htmlFor="toggleMarkdown">
               <input
                 type="checkbox"
                 onClick={this.toggleMarkdown}
@@ -211,7 +209,7 @@ class EditorModal extends Component {
                 <Calendar
                   dateFormat="YYYY-MM-DD HH:mm:ss"
                   defaultDate={editing.prevValue}
-                  onChange={(dateString) =>
+                  onChange={dateString =>
                       this.handleCalendarChange(dateString)}
                 />
               </TransitionView>

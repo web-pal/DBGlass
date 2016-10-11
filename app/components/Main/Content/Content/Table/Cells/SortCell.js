@@ -5,7 +5,7 @@ import { Cell } from 'fixed-data-table';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import * as CurrentTableActions from '../../../../../../actions/currentTable.js';
+import * as CurrentTableActions from '../../../../../../actions/currentTable';
 
 const propTypes = {
   label: PropTypes.string.isRequired,

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as Actions from '../../../../../actions/currentTable.js';
+import * as Actions from '../../../../../actions/currentTable';
 
 import Modal from '../Modal';
 

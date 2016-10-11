@@ -1,6 +1,6 @@
 import DB from '../db';
 
-import * as types from '../constants/tablesConstants.js';
+import * as types from '../constants/tablesConstants';
 
 export function setCurrentTable(tableName) {
   return {
@@ -28,7 +28,7 @@ export function createTable(tableName, i = -1) {
           });
           resolve(tableName);
         },
-        error => {
+        (error) => {
           // if tableName is occupied it sends reject with
           // incremented counter to pick new table name
           // recursively
@@ -42,7 +42,7 @@ export function createTable(tableName, i = -1) {
 }
 
 export function dropTable(tableName) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch({
       type: 'tables/DROP_TABLE'
     });
@@ -51,7 +51,7 @@ export function dropTable(tableName) {
 }
 
 export function truncateTable(tableName, restartIdentity) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch({
       type: 'tables/TRUNCATE_TABLE'
     });
@@ -67,7 +67,7 @@ export function getTables(clear = undefined) {
     DB.getTables()
       .then(
         tables => DB.getTableOid(tables),
-        error => {
+        (error) => {
           reject(error);
         }
       )
@@ -75,7 +75,7 @@ export function getTables(clear = undefined) {
         tables => DB.getForeignKeys(tables)
       )
       .then(
-        tables => {
+        (tables) => {
           dispatch({
             type: types.GET_TABLES,
             tables

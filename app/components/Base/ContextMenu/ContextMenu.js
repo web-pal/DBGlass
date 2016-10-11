@@ -3,7 +3,7 @@ import { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../../../actions/currentTable';
-import * as TablesActions from '../../../actions/tables.js';
+import * as TablesActions from '../../../actions/tables';
 
 const { remote } = require('electron');
 
@@ -11,16 +11,8 @@ const { Menu, MenuItem } = remote;
 
 const propTypes = {
   deleteRow: PropTypes.func.isRequired,
-  contextMenu: PropTypes.object.isRequired,
   cloneRow: PropTypes.func.isRequired,
-  dropTable: PropTypes.func.isRequired,
-  truncateTable: PropTypes.func.isRequired,
-  selectedTable: PropTypes.string,
-  toggleConfirmationModal: PropTypes.func.isRequired,
-  getTables: PropTypes.func.isRequired,
-  initTable: PropTypes.func.isRequired,
-  setCurrentTable: PropTypes.func.isRequired,
-  toggleEditor: PropTypes.func.isRequired
+  toggleConfirmationModal: PropTypes.func.isRequired
 };
 
 class ContextMenu extends Component {
@@ -80,7 +72,7 @@ class ContextMenu extends Component {
     this.tableMenu.append(truncateTableItem);
   }
 
-  popup = menu => {
+  popup = (menu) => {
     if (menu === 'table') {
       this.tableMenu.popup();
     } else {

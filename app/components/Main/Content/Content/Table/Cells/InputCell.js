@@ -8,10 +8,8 @@ const propTypes = {
   saveEdits: PropTypes.func.isRequired,
   prevValue: PropTypes.string.isRequired,
   originValue: PropTypes.string.isRequired,
-  tableName: PropTypes.string.isRequired,
   rowIndex: PropTypes.number.isRequired,
   stopEditing: PropTypes.func.isRequired,
-  isNewRow: PropTypes.bool.isRequired,
   datatype: PropTypes.string.isRequired,
   editing: PropTypes.object.isRequired,
   toggleEditor: PropTypes.func.isRequired,
@@ -49,7 +47,7 @@ class InputComponent extends Component {
     }
   }
 
-  onKeyDown = e => {
+  onKeyDown = (e) => {
     if (e.keyCode === ENTER_KEY_CODE) {
       this.saveEdit();
     } else if (e.keyCode === ESCAPE_KEY_CODE) {
@@ -82,7 +80,7 @@ class InputComponent extends Component {
     this.setState({ preventBlurSave: true });
   }
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.props.inputChange(e.target.value);
   }
 
@@ -99,7 +97,7 @@ class InputComponent extends Component {
           onKeyDown={this.onKeyDown}
           defaultValue={prevValue}
           className="editable-input"
-          ref={c => { this.input = c; }}
+          ref={(c) => { this.input = c; }}
         />
         <i
           title="Advanced editor"
@@ -119,7 +117,7 @@ class InputComponent extends Component {
           onBlur={this.saveEdit}
           onKeyDown={this.onKeyDown}
           defaultValue={prevValue}
-          ref={c => { this.input = c; }}
+          ref={(c) => { this.input = c; }}
         >
           <option value="true">true</option>
           <option value="false">false</option>
