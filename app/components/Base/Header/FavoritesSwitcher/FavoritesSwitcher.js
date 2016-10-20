@@ -68,8 +68,8 @@ class FavSwitcherComponent extends Component {
         </ul>
         <hr />
         <div className="btn-block">
-          <button className="btn btn-plain btn--block-centered" onClick={this.handleClick}>
-            <i className="fa fa-plus" onClick={toggleFavoriteSwitcher} />
+          <button className="btn btn-plain btn--block-centered" onClick={toggleFavoriteSwitcher}>
+            <i className="fa fa-plus" />
             &#160;New Connection
           </button>
         </div>

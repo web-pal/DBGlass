@@ -4,9 +4,9 @@ import * as types from '../constants/currentTableConstants';
 // INITIALIZE //
 export function connectDB(params, callback) {
   return (dispatch) => {
-    DB.connect(params, (connect, err) => {
+    DB.connect(params, (connect, err, sshError) => {
       dispatch({ type: types.CONNECT, connect, err });
-      callback.apply(null, [connect, err]);
+      callback.apply(null, [connect, err, sshError]);
     });
   };
 }
@@ -396,11 +396,14 @@ export function editTableName() {
 
 // DELETE //
 export function dropConstraint(constraintName, columnName, constraintType) {
-  return {
-    type: types.DROP_CONSTRAINT,
-    constraintName,
-    columnName,
-    constraintType
+  return (dispatch) => {
+    dispatch({
+      type: types.DROP_CONSTRAINT,
+      constraintName,
+      columnName,
+      constraintType
+    });
+    dispatch({ type: types.RESET_STATE });
   };
 }
 export function removeColumn(columnName) {

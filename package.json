@@ -87,13 +87,13 @@
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.8.3",
     "webpack-hot-middleware": "^2.12.2",
-    "webpack-merge": "^0.14.1"
+    "webpack-merge": "^0.15.0"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
     "draft-js": "^0.9.1",
     "draft-js-export-markdown": "^0.2.0",
-    "draft-js-import-markdown": "^0.1.6",
+    "draft-js-import-markdown": "^0.2.0",
     "electron-json-storage": "^2.0.0",
     "fixed-data-table": "0.6.3",
     "font-awesome": "^4.6.3",
@@ -120,7 +120,7 @@
     "react-syntax-highlight": "0.0.2",
     "react-syntax-highlighter": "^2.8.0",
     "redux": "^3.6.0",
-    "redux-form": "6.0.5",
+    "redux-form": "6.1.1",
     "redux-thunk": "^2.1.0",
     "request": "^2.75.0",
     "revalidate": "git://github.com/web-pal/revalidate.git#forTemUsage",

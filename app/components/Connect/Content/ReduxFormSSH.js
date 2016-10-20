@@ -2,6 +2,8 @@ import React, { PropTypes, Component } from 'react';
 import { Field } from 'redux-form/immutable';
 import { renderRadio, renderField } from './InputComponents';
 
+import { mixPanelTrack } from '../../../helpers';
+
 const os = require('electron').remote.require('os');
 const path = require('electron').remote.require('path');
 const { dialog } = require('electron').remote;
@@ -22,6 +24,7 @@ class ReduxFormSSH extends Component {
   }
 
   showDialog = (event) => {
+    mixPanelTrack('Show SSH key dialog');
     event.preventDefault();
     const defaultPath = path.join(os.homedir(), '.ssh');
     dialog.showOpenDialog({ defaultPath, properties: ['openFile'] }, (file) => {

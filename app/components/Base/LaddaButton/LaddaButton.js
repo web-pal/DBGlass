@@ -50,7 +50,10 @@ class LaddaButton extends Component {
   }
 
   render() {
-    const { children, ...laddaProps } = this.props;
+    /* Because loadding prop should be separated from other props  */
+    /* eslint-disable no-unused-vars */
+    const { children, loading, ...laddaProps } = this.props;
+    /* eslint-enable no-unused-vars */
 
     return (
       <button {...laddaProps} ref={(c) => { this.node = c; }}>

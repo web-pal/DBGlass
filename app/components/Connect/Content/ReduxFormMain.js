@@ -16,6 +16,8 @@ import LaddaButton from '../../Base/LaddaButton/LaddaButton';
 
 import { renderField, renderCheckbox } from './InputComponents';
 
+import { mixPanelTrack } from '../../../helpers';
+
 const propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
@@ -51,23 +53,28 @@ class ReduxFormMain extends Component {
   }
 
   handleSubmit = (values) => {
+    mixPanelTrack('Connect click');
+    this.setState({ error: null });
     const data = Object.assign(
       {}, values.toObject(), { privateKey: this.state.sshKey || this.props.sshKey }
     );
-    const promise = new Promise(resolve => this.props.connectDB(data, (flag, err) => {
-      resolve(err);
+    const promise = new Promise(resolve => this.props.connectDB(data, (flag, err, sshError) => {
+      resolve({ err, sshError });
     }));
-    return promise.then((err) => {
-      if (err) {
-        this.setState({ error: err });
-        throw new SubmissionError({
-          database: err, _error: 'Auth failed!' }
-        );
+    return promise.then((result) => {
+      if (result.err) {
+        mixPanelTrack('Connect error', { error: result.err });
+        this.setState({ error: result.err });
+        const errorObj = { _error: 'Auth failed' };
+        throw new SubmissionError(errorObj);
+      } else {
+        mixPanelTrack('Connect success');
       }
     });
   }
 
   handleSave = () => {
+    mixPanelTrack('Save favorite click');
     const data = Object.assign({}, this.props.formValues, { privateKey: this.state.sshKey });
     if (data.id) {
       this.props.updateFavorite(data);
@@ -80,6 +87,7 @@ class ReduxFormMain extends Component {
   }
 
   handleRemove = () => {
+    mixPanelTrack('Remove favorite click');
     this.props.removeFavorite(this.props.formValues.id);
     this.props.setCurrent(null);
   }
@@ -98,7 +106,7 @@ class ReduxFormMain extends Component {
         onSubmit={handleSubmit(this.handleSubmit)}
       >
         <div className="form-panel right-padded flex-col flex--half">
-          <span>{this.state.error}</span>
+          <span style={{ color: 'red' }}>{this.state.error}</span>
           <Field
             type="hidden"
             name="id"

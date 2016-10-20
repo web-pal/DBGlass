@@ -6,6 +6,8 @@ import * as FavoritesActions from '../../../actions/favorites';
 
 import ConnectSidebarItem from './Item/ConnectSidebarItem';
 
+import { mixPanelTrack } from '../../../helpers';
+
 const ipcRenderer = require('electron').ipcRenderer;
 
 const propTypes = {
@@ -29,6 +31,11 @@ class ConnectSidebar extends Component {
   setCurrent = id =>
     (e) => {
       e.preventDefault();
+      if (id === null) {
+        mixPanelTrack('Click new connection');
+      } else {
+        mixPanelTrack('Select favorite', { name: id });
+      }
       this.props.setCurrent(id);
     };
 

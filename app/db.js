@@ -75,7 +75,7 @@ export default class DB {
           const connectUrl = `postgres://${params.user}:${params.password}@${params.address}:5433/${params.database}`;
           this.connectDB(connectUrl, params.database, callback);
         } else {
-          callback.apply(null, [false, err]);
+          callback.apply(null, [false, err, true]);
         }
       });
     } else {
@@ -95,7 +95,7 @@ export default class DB {
         isConnected = false;
         errorMessage = err.message;
       }
-      callback.apply(null, [isConnected, errorMessage]);
+      callback.apply(null, [isConnected, errorMessage, false]);
     });
   }
 
