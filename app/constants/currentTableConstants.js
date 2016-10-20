@@ -57,3 +57,4 @@ export const TOGGLE_ROW_HIGHLIGHT = 'currentTable/TOGGLE_ROW_HIGHLIGHT';
 export const INPUT_CHANGE = 'currentTable/INPUT_CHANGE';
 
 export const RESET_STATE = 'currentTable/RESET_STATE';
+export const CLEAR_TABLE_NAME = 'currentTable/CLEAR_TABLE_NAME';

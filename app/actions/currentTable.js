@@ -40,34 +40,37 @@ export function addColumn() {
 // READ //
 export function initStructure() {
   return (dispatch, getState) => {
-    dispatch({
-      type: types.STRUCTURE_INIT_STATE,
-      finish: true
-    });
-    dispatch(startFetching());
     const { tableName, structureTable } = getState().currentTable;
-    DB.getTableConstraints(tableName)
-      .then(
-        (constraints) => {
-          dispatch({
-            type: types.GET_TABLE_CONSTRAINTS,
-            constraints
-          });
-          return DB.getTableOid([{ table_name: tableName }]);
-        }
-      )
-      .then(
-        tables => DB.getNotNullConstraints(structureTable, tables[0].oid)
-      )
-      .then(
-        (constraints) => {
-          dispatch({
-            type: types.GET_TABLE_CONSTRAINTS,
-            constraints,
-          });
-          dispatch(stopFetching());
-        }
-      );
+    // TODO: define empty database more obviously
+    if (tableName) {
+      dispatch({
+        type: types.STRUCTURE_INIT_STATE,
+        finish: true
+      });
+      dispatch(startFetching());
+      DB.getTableConstraints(tableName)
+        .then(
+          (constraints) => {
+            dispatch({
+              type: types.GET_TABLE_CONSTRAINTS,
+              constraints
+            });
+            return DB.getTableOid([{ table_name: tableName }]);
+          }
+        )
+        .then(
+          tables => DB.getNotNullConstraints(structureTable, tables[0].oid)
+        )
+        .then(
+          (constraints) => {
+            dispatch({
+              type: types.GET_TABLE_CONSTRAINTS,
+              constraints,
+            });
+            dispatch(stopFetching());
+          }
+        );
+    }
   };
 }
 
@@ -91,9 +94,16 @@ function startFetching(tableName) {
   };
 }
 
-function stopFetching() {
+export function stopFetching() {
   return {
     type: types.STOP_FETCHING
+  };
+}
+
+
+export function clearTableName() {
+  return {
+    type: types.CLEAR_TABLE_NAME
   };
 }
 

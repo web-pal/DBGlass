@@ -26,7 +26,9 @@ class MainSidebar extends Component {
       .then(
         (table) => {
           this.props.setCurrentTable(table);
-          this.props.initTable({ tableName: table });
+          if (table) {
+            this.props.initTable({ tableName: table });
+          }
         }
       );
   }

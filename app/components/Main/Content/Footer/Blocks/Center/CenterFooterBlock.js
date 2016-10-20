@@ -31,7 +31,11 @@ const CenterFooterBlock = (props) => {
     <div className="currentRow flex-item--center" >
       {isFetching ?
         <ThreeBounceSpinner /> :
-          <span> {rows} of {maxRow} </span>
+          <span>
+            {tableName &&
+              <span>{rows} of {maxRow}</span>
+            }
+          </span>
       }
       {!rowsCount && !isFetching &&
         <div
@@ -42,14 +46,22 @@ const CenterFooterBlock = (props) => {
             : 100
           }}
         >
-          Table is empty <br />
-          <Button
-            onClick={() => insertRow(tableName)}
-            className="btn btn-link"
-            display={isContent}
-            icon="plus"
-            label="Insert Row"
-          />
+          {tableName ?
+            <span>
+              Table {tableName} is empty
+            </span> :
+              <span> No tables </span>
+          }
+          <br />
+          {tableName &&
+            <Button
+              onClick={() => insertRow(tableName)}
+              className="btn btn-link"
+              display={isContent}
+              icon="plus"
+              label="Insert Row"
+            />
+          }
         </div>
       }
     </div>

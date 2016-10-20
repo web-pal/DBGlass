@@ -53,9 +53,6 @@ class LeftFooterBlock extends Component {
         case 68: // 'D'
           this.props.toggleConfirmationModal('drop');
           break;
-        case 84: // 'T'
-          this.props.toggleConfirmationModal('truncate');
-          break;
         default:
           break;
       }
