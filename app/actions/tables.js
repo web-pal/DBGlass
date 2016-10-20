@@ -1,6 +1,7 @@
 import DB from '../db';
 
 import * as types from '../constants/tablesConstants';
+import { stopFetching } from './currentTable';
 
 export function setCurrentTable(tableName) {
   return {
@@ -66,13 +67,24 @@ export function getTables(clear = undefined) {
     }
     DB.getTables()
       .then(
-        tables => DB.getTableOid(tables),
+        (tables) => {
+          if (tables.length) {
+            return DB.getTableOid(tables);
+          }
+          return tables;
+        },
         (error) => {
           reject(error);
         }
       )
       .then(
-        tables => DB.getForeignKeys(tables)
+        (tables) => {
+          if (tables.length) {
+            return DB.getForeignKeys(tables);
+          }
+          dispatch(stopFetching());
+          return tables;
+        }
       )
       .then(
         (tables) => {
@@ -80,7 +92,7 @@ export function getTables(clear = undefined) {
             type: types.GET_TABLES,
             tables
           });
-          resolve(tables[0].table_name);
+          resolve(tables.length ? tables[0].table_name : '');
         }
       );
   });

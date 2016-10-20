@@ -14,6 +14,8 @@ const propTypes = {
   toggleConfirmationModal: PropTypes.func.isRequired,
   tableName: PropTypes.string,
   dropTable: PropTypes.func.isRequired,
+  changeMode: PropTypes.func.isRequired,
+  clearTableName: PropTypes.func.isRequired,
   getTables: PropTypes.func.isRequired,
   setCurrentTable: PropTypes.func.isRequired,
   initTable: PropTypes.func.isRequired,
@@ -38,9 +40,14 @@ class ConfirmationModal extends Component {
     this.props.toggleConfirmationModal();
     this.props.getTables()
       .then(
-        (table) => {
-          this.props.setCurrentTable(table);
-          this.props.initTable({ tableName: table });
+        (tableName) => {
+          if (tableName) {
+            this.props.setCurrentTable(tableName);
+            this.props.initTable({ tableName });
+          } else {
+            this.props.changeMode('content');
+            this.props.clearTableName();
+          }
         }
       );
   }

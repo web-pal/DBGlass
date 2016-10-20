@@ -934,6 +934,10 @@ export default function currentTable(state = { ...currentTableDefault }, action)
       }
       return Object.assign({}, state, { edited, rowsState: newRowsState });
     }
+    case 'tables/DROP_TABLE':
+      return Object.assign({}, state, { structureTable: List([]) });
+    case types.CLEAR_TABLE_NAME:
+      return Object.assign({}, state, { tableName: null });
     case types.SELECT_NEXT_ROW:
       return Object.assign({}, state, { selectedRow: state.selectedRow + action.value });
     default:

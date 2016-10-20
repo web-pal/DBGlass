@@ -55,3 +55,6 @@ export const TOGGLE_CONTEXT_MENU = 'currentTable/TOGGLE_CONTEXT_MENU';
 export const TOGGLE_EDITOR = 'currentTable/TOGGLE_EDITOR';
 export const TOGGLE_ROW_HIGHLIGHT = 'currentTable/TOGGLE_ROW_HIGHLIGHT';
 export const INPUT_CHANGE = 'currentTable/INPUT_CHANGE';
+
+export const RESET_STATE = 'currentTable/RESET_STATE';
+export const CLEAR_TABLE_NAME = 'currentTable/CLEAR_TABLE_NAME';

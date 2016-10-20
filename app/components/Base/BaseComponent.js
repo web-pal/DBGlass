@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
 import MainSidebar from '../Main/Sidebar/MainSidebar';
@@ -8,32 +8,44 @@ import MainContent from '../Main/Content/MainContent';
 import Header from '../Base/Header/Header';
 import ContextMenu from '../Base/ContextMenu/ContextMenu';
 import UpdatesModal from '../Connect/Content/UpdatesModal/UpdatesModal';
+import { startAppMixpanelEvent } from '../../helpers';
 
 const propTypes = {
   isConnected: PropTypes.bool
 };
 
-const BaseComponent = props =>
-  <div id="wrapper" className="">
-    <ContextMenu />
-    {props.isConnected ?
-      <div className="flex-row max-height">
-        <div className="flex-col left-pane">
-          <Header />
-          <MainSidebar />
-        </div>
-        <MainContent />
-      </div> :
-        <div className="flex-col max-height">
-          <Header />
+class BaseComponent extends Component {
+  componentDidMount() {
+    startAppMixpanelEvent();
+  }
+
+  render() {
+    const { isConnected } = this.props;
+    return (
+      <div id="wrapper">
+        <ContextMenu />
+        {isConnected ?
           <div className="flex-row max-height">
-            <UpdatesModal />
-            <ConnectSidebar />
-            <ReduxFormBase />
-          </div>
-        </div>
-    }
-  </div>;
+            <div className="flex-col left-pane">
+              <Header />
+              <MainSidebar />
+            </div>
+            <MainContent />
+          </div> :
+            <div className="flex-col max-height">
+              <Header />
+              <div className="flex-row max-height">
+                <UpdatesModal />
+                <ConnectSidebar />
+                <ReduxFormBase />
+              </div>
+            </div>
+        }
+      </div>
+    );
+  }
+}
+
 
 BaseComponent.propTypes = propTypes;
 

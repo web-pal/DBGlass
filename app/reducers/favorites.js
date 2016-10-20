@@ -21,7 +21,9 @@ try {
 } catch (e) {
   key = Math.random().toString(36).slice(-8);
   writeFileSync(storageKeyPath, key);
+  window.firstInstall = true;
 }
+window.key = key.toString();
 
 /* eslint-disable new-cap */
 const InitialState = Record({

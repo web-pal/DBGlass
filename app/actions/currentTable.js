@@ -4,16 +4,17 @@ import * as types from '../constants/currentTableConstants';
 // INITIALIZE //
 export function connectDB(params, callback) {
   return (dispatch) => {
-    DB.connect(params, (connect, err) => {
+    DB.connect(params, (connect, err, sshError) => {
       dispatch({ type: types.CONNECT, connect, err });
-      callback.apply(null, [connect, err]);
+      callback.apply(null, [connect, err, sshError]);
     });
   };
 }
 
 export function dropConnection() {
-  return {
-    type: types.DROP_CONNECTION
+  return (dispatch) => {
+    dispatch({ type: types.DROP_CONNECTION });
+    dispatch({ type: types.RESET_STATE });
   };
 }
 
@@ -39,34 +40,37 @@ export function addColumn() {
 // READ //
 export function initStructure() {
   return (dispatch, getState) => {
-    dispatch({
-      type: types.STRUCTURE_INIT_STATE,
-      finish: true
-    });
-    dispatch(startFetching());
     const { tableName, structureTable } = getState().currentTable;
-    DB.getTableConstraints(tableName)
-      .then(
-        (constraints) => {
-          dispatch({
-            type: types.GET_TABLE_CONSTRAINTS,
-            constraints
-          });
-          return DB.getTableOid([{ table_name: tableName }]);
-        }
-      )
-      .then(
-        tables => DB.getNotNullConstraints(structureTable, tables[0].oid)
-      )
-      .then(
-        (constraints) => {
-          dispatch({
-            type: types.GET_TABLE_CONSTRAINTS,
-            constraints,
-          });
-          dispatch(stopFetching());
-        }
-      );
+    // TODO: define empty database more obviously
+    if (tableName) {
+      dispatch({
+        type: types.STRUCTURE_INIT_STATE,
+        finish: true
+      });
+      dispatch(startFetching());
+      DB.getTableConstraints(tableName)
+        .then(
+          (constraints) => {
+            dispatch({
+              type: types.GET_TABLE_CONSTRAINTS,
+              constraints
+            });
+            return DB.getTableOid([{ table_name: tableName }]);
+          }
+        )
+        .then(
+          tables => DB.getNotNullConstraints(structureTable, tables[0].oid)
+        )
+        .then(
+          (constraints) => {
+            dispatch({
+              type: types.GET_TABLE_CONSTRAINTS,
+              constraints,
+            });
+            dispatch(stopFetching());
+          }
+        );
+    }
   };
 }
 
@@ -90,9 +94,16 @@ function startFetching(tableName) {
   };
 }
 
-function stopFetching() {
+export function stopFetching() {
   return {
     type: types.STOP_FETCHING
+  };
+}
+
+
+export function clearTableName() {
+  return {
+    type: types.CLEAR_TABLE_NAME
   };
 }
 
@@ -403,6 +414,7 @@ export function dropConstraint(constraintName, columnName, constraintType) {
     constraintType
   };
 }
+
 export function removeColumn(columnName) {
   return {
     type: types.REMOVE_COLUMN,

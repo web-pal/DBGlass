@@ -12,6 +12,10 @@ if (process.env.NODE_ENV === 'development') {
   require('electron-debug')(); // eslint-disable-line global-require
 }
 
+process.on('uncaughtException', () => {
+  console.log('caught from process'); // eslint-disable-line no-console
+});
+
 
 app.on('window-all-closed', () => {
   if (sshServer) {

@@ -52,10 +52,8 @@ export function getFavorites() {
   };
 }
 
-
 export function toggleFavoriteSwitcher() {
   return {
     type: types.TOGGLE_FAV_SWITCHER
   };
 }
-
