@@ -67,24 +67,31 @@ function formatFilter(filter) {
 }
 
 export default class DB {
+  static createConnectUrl(params) {
+    return `postgres://${params.user}:${params.password}@${params.address}:${params.port}/${params.database}`;
+  }
+
   static connect(params, callback) {
     if (params.useSSH) {
       ipcRenderer.send('ssh-connect', params);
       ipcRenderer.once('ssh-connect', (sender, success, err) => {
         if (success) {
-          const connectUrl = `postgres://${params.user}:${params.password}@${params.address}:5433/${params.database}`;
-          this.connectDB(connectUrl, params.database, callback);
+          this.connectDB(
+            this.createConnectUrl(Object.assign({}, params, { port: 5433 })),
+            params.database,
+            callback
+          );
         } else {
           callback.apply(null, [false, err, true]);
         }
       });
     } else {
-      const connectUrl = `postgres://${params.user}:${params.password}@${params.address}:${params.port}/${params.database}`;
-      this.connectDB(connectUrl, params.database, callback);
+      this.connectDB(this.createConnectUrl(params), params.database, callback);
     }
   }
 
   static connectDB(connectUrl, dbName, callback) {
+    pg.defaults.ssl = true;
     pg.connect(connectUrl, (err, client, done) => {
       let errorMessage = '';
       this.client = client;

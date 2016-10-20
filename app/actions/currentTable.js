@@ -12,8 +12,9 @@ export function connectDB(params, callback) {
 }
 
 export function dropConnection() {
-  return {
-    type: types.DROP_CONNECTION
+  return (dispatch) => {
+    dispatch({ type: types.DROP_CONNECTION });
+    dispatch({ type: types.RESET_STATE });
   };
 }
 
@@ -396,16 +397,14 @@ export function editTableName() {
 
 // DELETE //
 export function dropConstraint(constraintName, columnName, constraintType) {
-  return (dispatch) => {
-    dispatch({
-      type: types.DROP_CONSTRAINT,
-      constraintName,
-      columnName,
-      constraintType
-    });
-    dispatch({ type: types.RESET_STATE });
+  return {
+    type: types.DROP_CONSTRAINT,
+    constraintName,
+    columnName,
+    constraintType
   };
 }
+
 export function removeColumn(columnName) {
   return {
     type: types.REMOVE_COLUMN,
