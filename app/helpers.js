@@ -1,6 +1,6 @@
 const os = require('electron').remote.require('os');
 
-const mixpanelWorkEnv = 'development';
+const mixpanelWorkEnv = 'production';
 
 /* global mixpanel */
 export function mixPanelTrack(name, args) {
