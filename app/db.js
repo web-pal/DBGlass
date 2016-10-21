@@ -78,7 +78,7 @@ export default class DB {
         if (success) {
           this.connectDB(
             this.createConnectUrl(Object.assign({}, params, { port: 5433 })),
-            params.database,
+            params.useSSL,
             callback
           );
         } else {
@@ -86,12 +86,12 @@ export default class DB {
         }
       });
     } else {
-      this.connectDB(this.createConnectUrl(params), params.database, callback);
+      this.connectDB(this.createConnectUrl(params), params.useSSL, callback);
     }
   }
 
-  static connectDB(connectUrl, dbName, callback) {
-    pg.defaults.ssl = true;
+  static connectDB(connectUrl, useSSL, callback) {
+    pg.defaults.ssl = useSSL;
     pg.connect(connectUrl, (err, client, done) => {
       let errorMessage = '';
       this.client = client;

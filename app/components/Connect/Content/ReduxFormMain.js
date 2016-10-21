@@ -154,6 +154,12 @@ class ReduxFormMain extends Component {
             placeholder="Server port"
             component={renderField}
           />
+          <Field
+            label="Use SSL connection"
+            name="useSSL"
+            type="checkbox"
+            component={renderCheckbox}
+          />
         </div>
         <div className="form-panel flex-col flex--half flex--s-between">
           <ReduxFormSSH
@@ -221,7 +227,7 @@ const ReduxFormMainDecorated = reduxForm({
 function mapStateToProps(state) {
   const initData = state.favorites.favorites.find(
       x => x.get('id') === state.favorites.selectedFavorite
-    ) || fromJS({ port: 5432, address: 'localhost', sshPort: 22, sshAuthType: 'password' });
+    ) || fromJS({ port: 5432, address: 'localhost', sshPort: 22, sshAuthType: 'password', useSSL: true });
   return {
     favorites: state.favorites.favorites,
     selectedFavorite: state.favorites.get('selectedFavorite'),
