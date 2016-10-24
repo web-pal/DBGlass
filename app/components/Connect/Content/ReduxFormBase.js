@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReduxFormMain from './ReduxFormMain';
 import { mixPanelTrack } from '../../../helpers';
+import DB from '../../../db';
 
 const { shell } = require('electron');
 
@@ -10,6 +11,10 @@ class ReduxFormBase extends Component {
     ev.preventDefault();
     mixPanelTrack('Open web-pal.com');
     shell.openExternal('http://web-pal.com?ref=dbglass');
+  }
+
+  componentDidMount() {
+    DB.disconnectDB();
   }
 
   render() {

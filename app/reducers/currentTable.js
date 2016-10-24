@@ -714,13 +714,13 @@ export default function currentTable(state = { ...currentTableDefault }, action)
           data = `'${data}'`;
         }
         let rowPrimaryKey = state.rows.get(action.rowIndex).get(state.primaryKey);
-        let primaryKeysQuery = `"${state.primaryKey}" = ${rowPrimaryKey}`;
+        let primaryKeysQuery = `"${state.primaryKey}" = '${rowPrimaryKey}'`;
         if (state.primaryKeys.size - 1) {
           for (const primaryKey of state.primaryKeys.values()) {
             const pKeyColumnName = primaryKey.get('column_name');
             rowPrimaryKey = state.rows.get(action.rowIndex).get(pKeyColumnName);
             primaryKeysQuery = `${primaryKeysQuery} AND
- "${pKeyColumnName}" = ${rowPrimaryKey} `;
+ "${pKeyColumnName}" = '${rowPrimaryKey}' `;
           }
         }
         if (state.primaryKeys.size === 0) {
