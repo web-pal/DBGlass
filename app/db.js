@@ -107,7 +107,9 @@ export default class DB {
   }
 
   static disconnectDB() {
-    pg.end();
+    if (this.client) {
+      this.client.end();
+    }
   }
 
   static getTables() {

@@ -9,6 +9,7 @@
   "rules": {
     "consistent-return": 0,
     "comma-dangle": 0,
+    "no-console": 0,
     "no-use-before-define": 0,
     "import/no-unresolved": [2, { "ignore": ["electron"] }],
     "import/no-extraneous-dependencies": 0,
