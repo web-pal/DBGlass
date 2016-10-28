@@ -121,97 +121,107 @@ export function getUpdatedContent(update = []) {
   };
 }
 
+function internalGetTableContent(dispatch, getState, params = { page: 1, order: [], filters: [] }) {
+  let returnParams;
+  dispatch(startFetching());
+  DB.getTableContent(params)
+    .then(
+      (result) => {
+        returnParams = { ...result };
+        returnParams.tableName = params.tableName;
+        if (params.filters && getState().currentTable.showFilter) {
+          returnParams.filters = params.filters;
+          returnParams.showFilter = true;
+        } else {
+          returnParams.filters = getState().currentTable.filters;
+          returnParams.showFilter = getState().currentTable.showFilter;
+        }
+        dispatch(returnContent({ ...returnParams }));
+        dispatch(stopFetching());
+      }
+    );
+}
+
 export function getTableContent(params = { page: 1, order: [], filters: [] }) {
   return (dispatch, getState) => {
-    let returnParams;
-    dispatch(startFetching());
-    DB.getTableContent(params)
-      .then(
-        (result) => {
-          returnParams = { ...result };
-          returnParams.tableName = params.tableName;
-          if (params.filters && getState().currentTable.showFilter) {
-            returnParams.filters = params.filters;
-            returnParams.showFilter = true;
-          } else {
-            returnParams.filters = getState().currentTable.filters;
-            returnParams.showFilter = getState().currentTable.showFilter;
-          }
-          dispatch(returnContent({ ...returnParams }));
-          dispatch(stopFetching());
-        }
-      );
+    internalGetTableContent(dispatch, getState, params);
   };
+}
+
+export function internalInitTable(
+  dispatch, getState, params = { page: 1, order: [], filters: [] }
+) {
+  let returnParams = {};
+  let nextParams;
+  let interruptProcess = false;
+  dispatch(startFetching(params.tableName));
+  DB.getTableIndexes(params.tableName)
+    .then(
+      () => DB.getPrimaryKeys(params.tableName)
+    )
+    .then(
+      (primaryKeys) => {
+        const fetchingTable = getState().currentTable.fetchingTable || params.tableName;
+        if (fetchingTable !== params.tableName) {
+          interruptProcess = true;
+          return interruptProcess;
+        }
+        nextParams = { ...params };
+        if (!params.order) nextParams.order = [];
+        if (primaryKeys && primaryKeys.length) {
+          nextParams.order.push(
+            {
+              index: primaryKeys[0].column_name,
+              sortType: 'ASC'
+            }
+          );
+        }
+        dispatch({
+          type: types.GET_PRIMARY_KEYS,
+          primaryKeys
+        });
+        return DB.getTableStructure(params.tableName);
+      },
+      () => {
+        if (!params.order) nextParams.order = [];
+        return DB.getTableStructure(params.tableName);
+      }
+    )
+    .then(
+      (structureTable) => {
+        if (!interruptProcess) {
+          dispatch({
+            type: types.GET_TABLE_STRUCTURE,
+            structureTable,
+            tableName: params.tableName
+          });
+          return DB.getTableContent(nextParams);
+        }
+      }
+    )
+    .then(
+      (result) => {
+        if (!interruptProcess) {
+          const fetchingTable = getState().currentTable.fetchingTable;
+          if (fetchingTable === params.tableName) {
+            returnParams = { ...result };
+            returnParams.isFetching = false;
+            returnParams.tableName = params.tableName;
+            if (params.filters) {
+              returnParams.filters = params.filters;
+              returnParams.showFilter = true;
+            }
+            dispatch(returnContent({ ...returnParams }));
+            dispatch(stopFetching());
+          }
+        }
+      }
+    );
 }
 
 export function initTable(params = { page: 1, order: [], filters: [] }) {
   return (dispatch, getState) => {
-    let returnParams = {};
-    let nextParams;
-    let interruptProcess = false;
-    dispatch(startFetching(params.tableName));
-    DB.getTableIndexes(params.tableName)
-      .then(
-        () => DB.getPrimaryKeys(params.tableName)
-      )
-      .then(
-        (primaryKeys) => {
-          const fetchingTable = getState().currentTable.fetchingTable || params.tableName;
-          if (fetchingTable !== params.tableName) {
-            interruptProcess = true;
-            return interruptProcess;
-          }
-          nextParams = { ...params };
-          if (!params.order) nextParams.order = [];
-          if (primaryKeys && primaryKeys.length) {
-            nextParams.order.push(
-              {
-                index: primaryKeys[0].column_name,
-                sortType: 'ASC'
-              }
-            );
-          }
-          dispatch({
-            type: types.GET_PRIMARY_KEYS,
-            primaryKeys
-          });
-          return DB.getTableStructure(params.tableName);
-        },
-        () => {
-          if (!params.order) nextParams.order = [];
-          return DB.getTableStructure(params.tableName);
-        }
-      )
-      .then(
-        (structureTable) => {
-          if (!interruptProcess) {
-            dispatch({
-              type: types.GET_TABLE_STRUCTURE,
-              structureTable,
-              tableName: params.tableName
-            });
-            return DB.getTableContent(nextParams);
-          }
-        }
-      )
-      .then(
-        (result) => {
-          if (!interruptProcess) {
-            const fetchingTable = getState().currentTable.fetchingTable;
-            if (fetchingTable === params.tableName) {
-              returnParams = { ...result };
-              returnParams.isFetching = false;
-              returnParams.tableName = params.tableName;
-              if (params.filters) {
-                returnParams.filters = params.filters;
-                returnParams.showFilter = true;
-              }
-              dispatch(returnContent({ ...returnParams }));
-              dispatch(stopFetching());
-            }
-          }
-        }
-      );
+    internalInitTable(dispatch, getState, params);
   };
 }
 
@@ -494,6 +504,20 @@ export function catchError(error) {
 export function refreshTable() {
   return {
     type: types.REFRESH_TABLE
+  };
+}
+
+export function reloadCurrentTable() {
+  return (dispatch, getState) => {
+    const state = getState().currentTable;
+    const tableName = state.tableName;
+    const order = state.order;
+    const filters = state.filters;
+    internalGetTableContent(dispatch, getState, {
+      tableName,
+      order,
+      filters
+    });
   };
 }
 

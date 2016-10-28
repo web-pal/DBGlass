@@ -1,7 +1,7 @@
 import DB from '../db';
 
 import * as types from '../constants/tablesConstants';
-import { stopFetching } from './currentTable';
+import { stopFetching, internalInitTable } from './currentTable';
 
 export function setCurrentTable(tableName) {
   return {
@@ -60,8 +60,8 @@ export function truncateTable(tableName, restartIdentity) {
   };
 }
 
-export function getTables(clear = undefined) {
-  return dispatch => new Promise((resolve, reject) => {
+function internalGetTables(dispatch, clear) {
+  return new Promise((resolve, reject) => {
     if (clear) {
       dispatch({ type: types.GET_TABLES, tables: [] });
     }
@@ -96,6 +96,33 @@ export function getTables(clear = undefined) {
         }
       );
   });
+}
+
+export function getTables(clear = undefined) {
+  return dispatch => (internalGetTables(dispatch, clear));
+}
+
+export function reloadTables() {
+  return (dispatch, getState) => {
+    const currentTableState = getState().currentTable;
+    const tableName = currentTableState.tableName;
+    dispatch({ type: types.CLEAR_TABLES });
+    internalGetTables(dispatch)
+      .then(
+        () => {
+          if (tableName) {
+            dispatch({
+              type: types.SET_CURRENT_TABLE,
+              tableName
+            });
+            const page = currentTableState.page;
+            const order = currentTableState.order;
+            const filters = currentTableState.filters;
+            internalInitTable(dispatch, getState, { tableName, page, order, filters });
+          }
+        }
+      );
+  };
 }
 
 

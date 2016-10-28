@@ -20,11 +20,6 @@ const propTypes = {
   toggleRowHighlight: PropTypes.func.isRequired,
   rowsCount: PropTypes.number.isRequired,
   structureTable: PropTypes.object.isRequired,
-  getTables: PropTypes.func.isRequired,
-  setCurrentTable: PropTypes.func.isRequired,
-  clearTables: PropTypes.func.isRequired,
-  initTable: PropTypes.func.isRequired,
-  stopRefresh: PropTypes.func.isRequired,
   tables: PropTypes.array.isRequired,
   rows: PropTypes.object.isRequired
 };
@@ -53,18 +48,6 @@ class FixedTable extends Component {
     this.handleResize();
     // TODO: Fix this ugly refresh logic
     if (nextProps.refresh) {
-      this.props.stopRefresh();
-      this.props.clearTables();
-      this.props.getTables()
-        .then(
-          () => {
-            if (this.props.tableName) {
-              this.props.setCurrentTable(this.props.tableName);
-              this.props.initTable({ tableName: this.props.tableName });
-            }
-          }
-        );
-
       this.props.getTableContent({
         tableName: this.props.tableName,
         order: nextProps.order,

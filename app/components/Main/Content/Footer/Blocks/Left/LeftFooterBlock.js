@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import Button from '../../../Button/Button';
 import * as CurrentTableActions from '../../../../../../actions/currentTable';
+import * as TablesActions from '../../../../../../actions/tables';
 
 const propTypes = {
   isContent: PropTypes.bool.isRequired,
@@ -20,7 +21,8 @@ const propTypes = {
   undoEdits: PropTypes.func.isRequired,
   selectNextRow: PropTypes.func.isRequired,
   toggleRowHighlight: PropTypes.func.isRequired,
-  refreshTable: PropTypes.func.isRequired
+  reloadTables: PropTypes.func.isRequired,
+  reloadCurrentTable: PropTypes.func.isRequired
 };
 
 class LeftFooterBlock extends Component {
@@ -33,7 +35,8 @@ class LeftFooterBlock extends Component {
     if (e.ctrlKey || e.metaKey) {
       switch (e.keyCode) {
         case 82: // 'R'
-          this.props.refreshTable();
+          this.props.reloadTables();
+          this.props.reloadCurrentTable();
           break;
         case 70: // 'F'
           this.toggleFilter();
@@ -178,7 +181,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(CurrentTableActions, dispatch);
+  return bindActionCreators({ ...CurrentTableActions, ...TablesActions }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LeftFooterBlock);
