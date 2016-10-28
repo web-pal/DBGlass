@@ -16,7 +16,8 @@ const propTypes = {
   changeMode: PropTypes.func.isRequired,
   initTable: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  toggleContextMenu: PropTypes.func.isRequired
+  toggleContextMenu: PropTypes.func.isRequired,
+  searchTables: PropTypes.func.isRequired
 };
 
 
@@ -58,7 +59,7 @@ class MainSidebar extends Component {
   }
 
   handleSearch = (e) => {
-    this.props.searchTables(e.target.value)
+    this.props.searchTables(e.target.value);
   }
 
   render() {
@@ -77,7 +78,11 @@ class MainSidebar extends Component {
         </div>
         <div className="navbar-bottom-search-word">
           <i className="fa fa-search" />
-          <input type="search" className="form-control filter-element" onChange={this.handleSearch} />
+          <input
+            type="search"
+            className="form-control filter-element"
+            onChange={this.handleSearch}
+          />
         </div>
         <nav className="sidebar" id="sidebar0">
           <ul className="nav ">
