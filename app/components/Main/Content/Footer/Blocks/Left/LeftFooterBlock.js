@@ -19,7 +19,8 @@ const propTypes = {
   editStructureRow: PropTypes.func.isRequired,
   undoEdits: PropTypes.func.isRequired,
   selectNextRow: PropTypes.func.isRequired,
-  toggleRowHighlight: PropTypes.func.isRequired
+  toggleRowHighlight: PropTypes.func.isRequired,
+  refreshTable: PropTypes.func.isRequired
 };
 
 class LeftFooterBlock extends Component {
@@ -31,6 +32,9 @@ class LeftFooterBlock extends Component {
   handleKeyDown = (e) => {
     if (e.ctrlKey || e.metaKey) {
       switch (e.keyCode) {
+        case 82: // 'R'
+          this.props.refreshTable();
+          break;
         case 70: // 'F'
           this.toggleFilter();
           break;

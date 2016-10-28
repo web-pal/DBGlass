@@ -497,6 +497,12 @@ export function refreshTable() {
   };
 }
 
+export function stopRefresh() {
+  return {
+    type: types.STOP_REFRESH
+  };
+}
+
 export function toggleConfirmationModal(modalType) {
   return {
     type: types.TOGGLE_CONFIRMATION_MODAL,

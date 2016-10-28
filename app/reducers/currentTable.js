@@ -876,6 +876,10 @@ export default function currentTable(state = { ...currentTableDefault }, action)
     }
     case types.CLOSE_ERRORS_MODAL:
       return Object.assign({}, state, { errors: currentTableDefault.errors });
+    case types.STOP_REFRESH:
+      return Object.assign({}, state, {
+        refresh: false
+      });
     case types.REFRESH_TABLE:
       return Object.assign({}, state, {
         refresh: true,

@@ -76,14 +76,16 @@ class MainSidebar extends Component {
             &#160;NEW TABLE
           </button>
         </div>
-        <div className="navbar-bottom-search-word">
-          <i className="fa fa-search" />
-          <input
-            type="search"
-            className="form-control filter-element"
-            onChange={this.handleSearch}
-          />
-        </div>
+        {tables.length &&
+          <div className="navbar-bottom-search-word">
+            <i className="fa fa-search" />
+            <input
+              type="search"
+              className="form-control filter-element"
+              onChange={this.handleSearch}
+            />
+          </div>
+        }
         <nav className="sidebar" id="sidebar0">
           <ul className="nav ">
             {

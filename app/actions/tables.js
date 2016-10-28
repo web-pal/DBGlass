@@ -98,6 +98,14 @@ export function getTables(clear = undefined) {
   });
 }
 
+
+export function clearTables() {
+  return {
+    type: types.CLEAR_TABLES
+  };
+}
+
+
 export function searchTables(keyword) {
   return {
     type: types.SEARCH_TABLES,

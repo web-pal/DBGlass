@@ -50,6 +50,7 @@ export const CLOSE_ERRORS_MODAL = 'currentTable/CLOSE_ERRORS_MODAL';
 export const CLOSE_FOREIGN_TABLE = 'currentTable/CLOSE_FOREIGN_TABLE';
 export const VIEW_QUERIES = 'currentTable/VIEW_QUERIES';
 export const REFRESH_TABLE = 'currentTable/REFRESH_TABLE';
+export const STOP_REFRESH = 'currentTable/STOP_REFRESH';
 export const TOGGLE_CONFIRMATION_MODAL = 'currentTable/TOGGLE_CONFIRMATION_MODAL';
 export const TOGGLE_CONTEXT_MENU = 'currentTable/TOGGLE_CONTEXT_MENU';
 export const TOGGLE_EDITOR = 'currentTable/TOGGLE_EDITOR';

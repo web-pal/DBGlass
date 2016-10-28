@@ -43,6 +43,7 @@ export default function tables(tablesDefault = [], action) {
         }
       });
       return tablesDefault.slice();
+    case types.CLEAR_TABLES:
     case RESET_STATE:
       return [];
     default:
