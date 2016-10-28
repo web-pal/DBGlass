@@ -11,7 +11,7 @@
   max-width: 210px;
   max-height: calc(~"100vh - 100px");
   overflow: auto;
-  background-color: #3b3b3f;
+  background-color: @light-black;
   color: white;
 
   li {
@@ -19,7 +19,7 @@
     cursor: pointer;
     white-space: nowrap;
     &:hover {
-      background-color: #3b3b3f;
+      background-color: @light-black;
       a {
         color: #fff;
       }
@@ -62,11 +62,11 @@
 
 .navbar-bottom-controls {
   position: absolute;
-  height: 51px;
-  width: 210px;
+  height: @sidebar-bottom-control-height;
+  width: @sidebar-width;
   border-top: 1px solid black;
   bottom: 0;
-  background: #3b3b3f;
+  background: @light-black;
   z-index: 121;
   & > .btn.btn-plain {
     color: @navy;
@@ -81,3 +81,17 @@
   }
 }
 
+.navbar-bottom-search-word {
+  position: absolute;
+  padding: 5px 10px;
+  color: @dark-gray;
+  width: @sidebar-width;
+  bottom: @sidebar-bottom-control-height;
+  background: @light-black;
+  z-index: 120;
+  & > .filter-element {
+    margin-left: 5px;
+    display: inline-block;
+    width: 90%;
+  }
+}

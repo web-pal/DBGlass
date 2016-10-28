@@ -97,3 +97,10 @@ export function getTables(clear = undefined) {
       );
   });
 }
+
+export function searchTables(keyword) {
+  return {
+    type: types.SEARCH_TABLES,
+    keyword
+  };
+}

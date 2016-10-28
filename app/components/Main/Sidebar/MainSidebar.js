@@ -16,7 +16,8 @@ const propTypes = {
   changeMode: PropTypes.func.isRequired,
   initTable: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  toggleContextMenu: PropTypes.func.isRequired
+  toggleContextMenu: PropTypes.func.isRequired,
+  searchTables: PropTypes.func.isRequired
 };
 
 
@@ -57,6 +58,10 @@ class MainSidebar extends Component {
     this.createTableRecursively(newName);
   }
 
+  handleSearch = (e) => {
+    this.props.searchTables(e.target.value);
+  }
+
   render() {
     const {
       tables, setCurrentTable,
@@ -71,10 +76,18 @@ class MainSidebar extends Component {
             &#160;NEW TABLE
           </button>
         </div>
+        <div className="navbar-bottom-search-word">
+          <i className="fa fa-search" />
+          <input
+            type="search"
+            className="form-control filter-element"
+            onChange={this.handleSearch}
+          />
+        </div>
         <nav className="sidebar" id="sidebar0">
           <ul className="nav ">
             {
-              tables.map((item, key) =>
+              tables.filter(item => !item.isHide).map((item, key) =>
                 <MainSidebarItem
                   tableName={item.table_name}
                   key={key}

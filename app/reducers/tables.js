@@ -34,10 +34,18 @@ export default function tables(tablesDefault = [], action) {
         isCurrent: false
       });
       return tablesDefault.slice();
+    case types.SEARCH_TABLES:
+      tablesDefault.forEach((item) => {
+        if (action.keyword) {
+          item.isHide = !item.table_name.includes(action.keyword);
+        } else {
+          item.isHide = false;
+        }
+      });
+      return tablesDefault.slice();
     case RESET_STATE:
       return [];
     default:
       return tablesDefault;
   }
 }
-
