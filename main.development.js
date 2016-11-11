@@ -1,11 +1,13 @@
-import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'; // eslint-disable-line import/extensions
+import { app, Menu, shell, ipcMain } from 'electron'; // eslint-disable-line import/extensions
+import WindowManager from './WindowManager';
 
 const openSshTunnel = require('open-ssh-tunnel');
 const readFileSync = require('fs').readFileSync;
 
+const windowManager = new WindowManager();
+
 let menu;
 let template;
-let mainWindow = null;
 let sshServer = null;
 
 if (process.env.NODE_ENV === 'development') {
@@ -78,50 +80,15 @@ ipcMain.on('ssh-connect', (event, params) => {
 
 
 app.on('activate', () => {
-  if (mainWindow === null) {
-    mainWindow = new BrowserWindow({
-      show: false,
-      width: 1600,
-      height: 900,
-      minWidth: 800,
-      minHeight: 400
-    });
-
-    mainWindow.loadURL(`file://${__dirname}/app/app.html`);
-
-    mainWindow.webContents.on('did-finish-load', () => {
-      mainWindow.show();
-      mainWindow.focus();
-    });
-
-    mainWindow.on('closed', () => {
-      mainWindow = null;
-    });
+  if (windowManager.isEmpty()) {
+    windowManager.createWindow();
   }
 });
-
 
 app.on('ready', async () => {
   await installExtensions();
 
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: 1600,
-    height: 900,
-    minWidth: 800,
-    minHeight: 400
-  });
-
-  mainWindow.loadURL(`file://${__dirname}/app/app.html`);
-
-  mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.show();
-    mainWindow.focus();
-  });
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+  const mainWindow = windowManager.createWindow();
 
   if (process.env.NODE_ENV === 'development') {
     mainWindow.openDevTools();
@@ -189,31 +156,37 @@ app.on('ready', async () => {
       submenu: (process.env.NODE_ENV === 'development') ? [{
         label: 'Reload',
         accelerator: 'Command+R',
-        click() {
-          mainWindow.webContents.send('reload');
+        click(_item, focusedWindow) {
+          focusedWindow.webContents.send('reload');
         }
       }, {
         label: 'Toggle Full Screen',
         accelerator: 'Ctrl+Command+F',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
+        click(_item, focusedWindow) {
+          focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
         }
       }, {
         label: 'Toggle Developer Tools',
         accelerator: 'Alt+Command+I',
-        click() {
-          mainWindow.toggleDevTools();
+        click(_item, focusedWindow) {
+          focusedWindow.toggleDevTools();
         }
       }] : [{
         label: 'Toggle Full Screen',
         accelerator: 'Ctrl+Command+F',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
+        click(_item, focusedWindow) {
+          focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
         }
       }]
     }, {
       label: 'Window',
       submenu: [{
+        label: 'New Window',
+        accelerator: 'Shift+Command+N',
+        click() {
+          windowManager.createWindow();
+        }
+      }, {
         label: 'Minimize',
         accelerator: 'Command+M',
         selector: 'performMiniaturize:'
@@ -254,26 +227,26 @@ app.on('ready', async () => {
       submenu: (process.env.NODE_ENV === 'development') ? [{
         label: '&Reload',
         accelerator: 'Ctrl+R',
-        click() {
-          mainWindow.reload();
+        click(_item, focusedWindow) {
+          focusedWindow.reload();
         }
       }, {
         label: 'Toggle &Full Screen',
         accelerator: 'F11',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
+        click(_item, focusedWindow) {
+          focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
         }
       }, {
         label: 'Toggle &Developer Tools',
         accelerator: 'Alt+Ctrl+I',
-        click() {
-          mainWindow.toggleDevTools();
+        click(_item, focusedWindow) {
+          focusedWindow.toggleDevTools();
         }
       }] : [{
         label: 'Toggle &Full Screen',
         accelerator: 'F11',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
+        click(_item, focusedWindow) {
+          focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
         }
       }]
     }, {
