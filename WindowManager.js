@@ -20,6 +20,7 @@ export default class WindowManager {
 
     w.loadURL(`file://${__dirname}/app/app.html`);
     w.webContents.on('did-finish-load', () => {
+      w.setTitle(`${w.getTitle()} #${id}`);
       w.show();
       w.focus();
     });
