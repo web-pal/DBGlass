@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8">
     <title>DBGlass</title>
-    <link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css" />
     <script>
       (function() {
         if (!process.env.HOT) {
           const link = document.createElement('link');
           link.rel = 'stylesheet';
-          link.href = '../dist/style.css';
-          document.write(link.outerHTML);
+          link.href = './dist/style.css';
+          // HACK: Writing the script path should be done with webpack
+          document.getElementsByTagName('head')[0].appendChild(link);
         }
       }());
     </script>
@@ -18,13 +18,15 @@
   <body>
     <div id="root"></div>
     <script>
-      (function() {
+      {
         const script = document.createElement('script');
-        //script.async = true;
-        script.src = (process.env.HOT) ? 'http://localhost:3000/dist/bundle.js' : '../dist/bundle.js';
-        let s0 = document.getElementsByTagName('script')[0];
-        s0.parentNode.insertBefore(script, s0);
-      }());
+        const port = process.env.PORT || 3000;
+        script.src = (process.env.HOT)
+          ? 'http://localhost:' + port + '/dist/bundle.js'
+          : './dist/bundle.js';
+        // HACK: Writing the script path should be done with webpack
+        document.body.appendChild(script);
+      }
     </script>
     <!-- start Mixpanel -->
     <script type="text/javascript">

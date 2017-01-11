@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import * as settings from '../settings';
+import * as settings from './settings';
 
 const ipcRenderer = require('electron').ipcRenderer;
 const pg = require('electron').remote.require('pg');

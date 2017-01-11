@@ -4,7 +4,7 @@ import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../../../../../../actions/currentTable';
-import * as settings from '../../../../../../../settings';
+import * as settings from '../../../../../../settings';
 
 const propTypes = {
   currentPage: PropTypes.number.isRequired,

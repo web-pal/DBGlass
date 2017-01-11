@@ -1,21 +1,19 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
+
+
+import BaseContainer from './components/Base/BaseComponent';
+
 import configureStore from './store/configureStore';
 import './styles/main.less';
-import '../node_modules/fixed-data-table/dist/fixed-data-table.min.css';
-import DB from './db';
-import BaseComponent from './components/Base/BaseComponent';
+import './app.global.css';
 
 const store = configureStore();
 
 render(
   <Provider store={store}>
-    <BaseComponent />
+    <BaseContainer />
   </Provider>,
   document.getElementById('root')
 );
-
-window.onbeforeunload = function closeWindow() {
-  DB.disconnectDB();
-};

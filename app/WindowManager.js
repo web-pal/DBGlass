@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron'; // eslint-disable-line import/extensions
+import { BrowserWindow } from 'electron';
 
 const defaultWindowOptions = {
   show: false,
@@ -18,7 +18,7 @@ export default class WindowManager {
     const w = new BrowserWindow(this.windowOptions());
     const id = w.id;
 
-    w.loadURL(`file://${__dirname}/app/app.html`);
+    w.loadURL(`file://${__dirname}/app.html`);
     w.webContents.on('did-finish-load', () => {
       w.setTitle(`${w.getTitle()} #${id}`);
       w.show();

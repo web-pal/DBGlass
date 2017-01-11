@@ -1,4 +1,4 @@
-import { app, Menu, shell, ipcMain } from 'electron'; // eslint-disable-line import/extensions
+import { app, Menu, shell, ipcMain } from 'electron';
 import WindowManager from './WindowManager';
 
 const openSshTunnel = require('open-ssh-tunnel');
@@ -10,8 +10,16 @@ let menu;
 let template;
 let sshServer = null;
 
+if (process.env.NODE_ENV === 'production') {
+  const sourceMapSupport = require('source-map-support'); // eslint-disable-line
+  sourceMapSupport.install();
+}
+
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')(); // eslint-disable-line global-require
+  const path = require('path'); // eslint-disable-line
+  const p = path.join(__dirname, '..', 'app', 'node_modules'); // eslint-disable-line
+  require('module').globalPaths.push(p); // eslint-disable-line
 }
 
 process.on('uncaughtException', () => {
@@ -30,19 +38,19 @@ app.on('window-all-closed', () => {
 const installExtensions = async () => {
   if (process.env.NODE_ENV === 'development') {
     const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
+
     const extensions = [
       'REACT_DEVELOPER_TOOLS',
       'REDUX_DEVTOOLS'
     ];
     const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-    for (const name of extensions) {
+    for (const name of extensions) { // eslint-disable-line
       try {
         await installer.default(installer[name], forceDownload);
       } catch (e) {} // eslint-disable-line
     }
   }
 };
-
 
 ipcMain.on('ssh-connect', (event, params) => {
   if (sshServer) {
@@ -85,6 +93,7 @@ app.on('activate', () => {
   }
 });
 
+
 app.on('ready', async () => {
   await installExtensions();
 
@@ -92,6 +101,16 @@ app.on('ready', async () => {
 
   if (process.env.NODE_ENV === 'development') {
     mainWindow.openDevTools();
+    mainWindow.webContents.on('context-menu', (e, props) => {
+      const { x, y } = props;
+
+      Menu.buildFromTemplate([{
+        label: 'Inspect element',
+        click() {
+          mainWindow.inspectElement(x, y);
+        }
+      }]).popup(mainWindow);
+    });
   }
 
   if (process.platform === 'darwin') {

@@ -44,7 +44,7 @@ export function getFavorites() {
           {
             type: types.GET_FAVORITES,
             favorites: Object.keys(favorites).length === 0 ? [] : favorites,
-            selectedFavorite
+            selectedFavorite: typeof selectedFavorite === 'number' ? selectedFavorite : null
           }
         );
       });

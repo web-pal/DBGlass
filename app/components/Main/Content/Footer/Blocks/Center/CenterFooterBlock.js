@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../../../../../../actions/currentTable';
 import * as TablesActions from '../../../../../../actions/tables';
-import * as settings from '../../../../../../../settings';
+import * as settings from '../../../../../../settings';
 
 import { ThreeBounceSpinner } from '../../../../../Base/Spinners/Spinners';
 import Button from '../../../Button/Button';
