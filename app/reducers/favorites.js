@@ -1,5 +1,5 @@
 import { Record, fromJS, List } from 'immutable';
-import * as types from '../constants/favoriteConstants';
+import * as types from '../actions/actionTypes';
 
 
 const path = require('path');

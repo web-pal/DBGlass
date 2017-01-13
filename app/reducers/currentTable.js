@@ -1,6 +1,6 @@
 import Immutable, { List, Map } from 'immutable';
 
-import * as types from '../constants/currentTableConstants';
+import * as types from '../actions/actionTypes';
 
 /* eslint-disable new-cap */
 const currentTableDefault = {

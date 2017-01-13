@@ -1,4 +1,4 @@
-import * as types from '../constants/favoriteConstants';
+import * as types from './actionTypes';
 
 const storage = require('electron-json-storage');
 
