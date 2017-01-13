@@ -1,3 +1,20 @@
+// Favorites action types
+export const GET_FAVORITES = 'favorites/GET_FAVORITES';
+export const ADD_FAVORITE = 'favorites/ADD_FAVORITE';
+export const UPDATE_FAVORITE = 'favorites/UPDATE_FAVORITE';
+export const REMOVE_FAVORITE = 'favorites/REMOVE_FAVORITE';
+export const SET_CURRENT_FAVORITE = 'favorites/SET_CURRENT_FAVORITE';
+export const TOGGLE_FAV_SWITCHER = 'favorites/TOGGLE_FAV_SWITCHER';
+
+// Tables action types
+export const GET_TABLES = 'tables/GET_TABLES';
+export const SET_CURRENT_TABLE = 'tables/SET_CURRENT_TABLE';
+export const CHANGE_TABLE_NAME = 'tables/CHANGE_TABLE_NAME';
+export const CREATE_TABLE = 'tables/CREATE_TABLE';
+export const CLEAR_TABLES = 'tables/CLEAR_TABLES';
+export const SEARCH_TABLES = 'tables/SEARCH_TABLES';
+
+// Current table action types
 // INITIALIZE
 export const CONNECT = 'currentTable/CONNECT';
 export const DROP_CONNECTION = 'currentTable/DROP_CONNECTION';
@@ -60,3 +77,4 @@ export const INPUT_CHANGE = 'currentTable/INPUT_CHANGE';
 
 export const RESET_STATE = 'currentTable/RESET_STATE';
 export const CLEAR_TABLE_NAME = 'currentTable/CLEAR_TABLE_NAME';
+

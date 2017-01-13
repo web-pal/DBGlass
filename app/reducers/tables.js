@@ -1,5 +1,4 @@
-import * as types from '../constants/tablesConstants';
-import { RESET_STATE } from '../constants/currentTableConstants';
+import * as types from '../actions/actionTypes';
 
 export default function tables(tablesDefault = [], action) {
   switch (action.type) {
@@ -44,7 +43,7 @@ export default function tables(tablesDefault = [], action) {
       });
       return tablesDefault.slice();
     case types.CLEAR_TABLES:
-    case RESET_STATE:
+    case types.RESET_STATE:
       return [];
     default:
       return tablesDefault;

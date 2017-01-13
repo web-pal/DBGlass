@@ -1,6 +1,6 @@
 import DB from '../db';
 
-import * as types from '../constants/tablesConstants';
+import * as types from './actionTypes';
 import { stopFetching, internalInitTable } from './currentTable';
 
 export function setCurrentTable(tableName) {

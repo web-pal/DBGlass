@@ -1,5 +1,5 @@
 import DB from '../db';
-import * as types from '../constants/currentTableConstants';
+import * as types from './actionTypes';
 
 // INITIALIZE //
 export function connectDB(params, callback) {
