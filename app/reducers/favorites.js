@@ -1,15 +1,12 @@
 import { Record, fromJS, List } from 'immutable';
 import * as types from '../actions/actionTypes';
 
+import path from 'path';
+import electron from 'electron';
+import { readFileSync, writeFileSync } from 'fs';
+import storage from 'electron-json-storage';
+import jwt from 'jwt-simple';
 
-const path = require('path');
-const electron = require('electron');
-const fs = require('fs');
-const storage = require('electron-json-storage');
-const jwt = require('jwt-simple');
-
-const readFileSync = fs.readFileSync;
-const writeFileSync = fs.writeFileSync;
 const app = electron.app || electron.remote.app;
 const userData = app.getPath('userData');
 
@@ -33,7 +30,6 @@ const InitialState = Record({
 });
 /* eslint-enable new-cap */
 const initialState = new InitialState();
-
 
 export default function favorites(state = initialState, action) {
   switch (action.type) {

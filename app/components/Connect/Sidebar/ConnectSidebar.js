@@ -41,7 +41,7 @@ class ConnectSidebar extends Component {
 
   render() {
     const { favorites, selectedFavorite } = this.props;
-
+    // console.log('check', favorites, selectedFavorite);
     return (
       <nav className="sidebar connect">
         {(favorites.size > 0) &&
@@ -70,10 +70,10 @@ class ConnectSidebar extends Component {
 
 ConnectSidebar.propTypes = propTypes;
 
-function mapStateToProps(state) {
+function mapStateToProps ({ favorites }) {
   return {
-    favorites: state.favorites.favorites,
-    selectedFavorite: state.favorites.selectedFavorite
+    favorites: favorites.favorites,
+    selectedFavorite: favorites.selectedFavorite
   };
 }
 
