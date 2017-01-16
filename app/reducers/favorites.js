@@ -37,7 +37,7 @@ const initialState = new InitialState();
 
 export default function favorites(state = initialState, action) {
   switch (action.type) {
-    case types.GET_FAVORITES: {
+    case types.FILL_FAVORITES: {
       const newFavorites = [...action.favorites];
       for (const favorite of newFavorites) {
         let decodedPassword;
@@ -84,7 +84,7 @@ export default function favorites(state = initialState, action) {
       );
     }
 
-    case types.UPDATE_FAVORITE: {
+    case types.EDIT_FAVORITE: {
       const newState = state.update(
         'favorites',
         favoritesList => favoritesList.map((favorite) => {

@@ -18,7 +18,7 @@ export function addFavorite(favorite, currentId = false, callback) {
 
 export function updateFavorite(favorite) {
   return {
-    type: types.UPDATE_FAVORITE,
+    type: types.EDIT_FAVORITE,
     favorite
   };
 }
@@ -42,7 +42,7 @@ export function getFavorites() {
         if (error2) throw error2;
         dispatch(
           {
-            type: types.GET_FAVORITES,
+            type: types.FILL_FAVORITES,
             favorites: Object.keys(favorites).length === 0 ? [] : favorites,
             selectedFavorite: typeof selectedFavorite === 'number' ? selectedFavorite : null
           }

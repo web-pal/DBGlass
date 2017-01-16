@@ -22,7 +22,7 @@ class Header extends Component {
     }
     this.props.setCurrent(null);
     this.props.dropConnection();
-  }
+  };
 
   render() {
     const { isConnected } = this.props;
