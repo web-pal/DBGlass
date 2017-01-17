@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { getFavorites } from '../../../selectors';
 import * as FavoritesActions from '../../../actions/favorites';
 
 import ConnectSidebarItem from './Item/ConnectSidebarItem';
@@ -40,8 +41,17 @@ class ConnectSidebar extends Component {
     };
 
   render() {
-    const { favorites, selectedFavorite } = this.props;
-    // console.log('check', favorites, selectedFavorite);
+    const { favorites, selectedFavorite, newFavorite, selected } = this.props;
+    console.log('All props: ', this.props);
+    console.log('Progress: ', newFavorite );
+    console.log('=========');
+    // newFavorite.map(item => {
+      // console.log(item.get('id'));
+      // console.log(item.get('connectionName'));
+    // });
+    // });
+    console.log('=========');
+    // console.log('Progress selected: ', selected.selectedFavorite );
     return (
       <nav className="sidebar connect">
         {(favorites.size > 0) &&
@@ -70,10 +80,13 @@ class ConnectSidebar extends Component {
 
 ConnectSidebar.propTypes = propTypes;
 
-function mapStateToProps ({ favorites }) {
+function mapStateToProps ({ favorites, newFavorite }) {
   return {
     favorites: favorites.favorites,
-    selectedFavorite: favorites.selectedFavorite
+    selectedFavorite: favorites.selectedFavorite,
+
+    newFavorite: getFavorites(newFavorite),
+    selected: newFavorite.meta.toJS()
   };
 }
 

@@ -1,4 +1,4 @@
-import { Record, fromJS, List } from 'immutable';
+import { Record, fromJS, List, Map } from 'immutable';
 import * as types from '../actions/actionTypes';
 
 import path from 'path';
@@ -141,39 +141,3 @@ function saveFavorites(nextfavorites, callback) {
   });
 }
 
-// new structure
-const favoritesIds = (state = new List(), action) => {
-  switch (action.type) {
-    case types.FILL_FAVORITES:
-      return fromJS(action.payload.favoritesIds);
-
-      default:
-        return state;
-  }
-};
-
-const favoritesById = (state = new Map(), action) => {
-  switch (action.type) {
-    case types.FILL_FAVORITES:
-      return fromJS(action.payload.favoritesById);
-
-    default:
-      return state;
-  }
-};
-
-const selectedFavorite = (state = new Map({selectedFavorite: null}), action) => {
-  switch (action.type) {
-    case types.FILL_FAVORITES:
-      return state.set('selectedFavorite', action.payload.meta);
-
-    default:
-      return state;
-  }
-};
-
-export const newFavoirte = combineReducers(
-  favoritesIds,
-  favoritesById,
-  selectedFavorite
-);

@@ -1,46 +1,30 @@
 import * as types from './actionTypes';
-import storage from 'electron-json-storage';
 import { schema, normalize } from 'normalizr';
+import path from 'path';
+import electron from 'electron';
+import { readFileSync, writeFileSync } from 'fs';
+import storage from 'electron-json-storage';
+import jwt from 'jwt-simple';
 
-storage.getAll((error, fav) => {
-  console.log('Storage: ', fav);
-});
 
-// console.log('++++++++++BUILDING SCHEMA++++++++++');
-//
-import { createSelector } from 'reselect';
-import { fromJS } from 'immutable';
-//
-// let favorite = new schema.Entity('favorites');
-// let selectedFavorite = new schema.Entity('selectedFavorite');
-//
-// let favorites = null;
-// storage.get('postglass_favorites', (e, fav) => {
-//   storage.get('selected_favorite', (e2, selectedFav) => {
-//     let r = normalize(fav, [favorite]);
-//     let final = {
-//       allIds: fromJS(r.result),
-//       byId: fromJS(r.entities.favorites),
-//       meta: selectedFav
-//     };
-//     console.log('Normalized Final: ', final);
-//
-//     const favID = (ids) => ids.allIds;
-//     const favMAP = (map) => map.byId;
-//     console.log(favID(final).toJS());
-//     console.log(favMAP(final).toJS());
-//
-//     const getFavs = createSelector(
-//       [favID, favMAP],
-//       (ids, byId) => (ids.map(t => byId.get(t.toString())))
-//     );
-//
-//     let selected = getFavs(final);
-//     console.log('Reselected: ', selected.toJS());
-//   });
-// });
-//
-// console.log('++++++++++BUILDING SCHEMA++++++++++');
+const app = electron.app || electron.remote.app;
+const userData = app.getPath('userData');
+
+let key = '';
+const storageKeyPath = path.join(userData, 'storageKey');
+
+try {
+  key = readFileSync(storageKeyPath);
+} catch (e) {
+  key = Math.random().toString(36).slice(-8);
+  writeFileSync(storageKeyPath, key);
+  window.firstInstall = true;
+}
+window.key = key.toString();
+
+
+const favorite = new schema.Entity('favorites');
+
 
 export function getFavorites() {
   return (dispatch) => {
@@ -49,7 +33,32 @@ export function getFavorites() {
       storage.get('selected_favorite', (error2, selectedFavorite) => {
         if (error2) throw error2;
 
+
+        for (const favorite of favorites) {
+          let decodedPassword;
+          let decodedSSHPassword;
+          if (favorite.password) {
+            try {
+              decodedPassword = jwt.decode(favorite.password, key);
+            } catch (error) {
+              decodedPassword = favorite.password;
+            }
+            favorite.password = decodedPassword;
+          }
+          if (favorite.sshPassword) {
+            try {
+              decodedSSHPassword = jwt.decode(favorite.sshPassword, key);
+            } catch (error) {
+              decodedSSHPassword = favorite.sshPassword;
+            }
+            favorite.sshPassword = decodedSSHPassword;
+          }
+        }
+
+
+        console.log('Initial favorites: ', favorites);
         const normalizedFavs = normalize(favorites, [favorite]);
+        console.log('NORMALIZED FAVS: ', normalizedFavs);
 
         dispatch(
           {
@@ -58,9 +67,11 @@ export function getFavorites() {
             selectedFavorite: typeof selectedFavorite === 'number' ? selectedFavorite : null,
 
             // new structure
-            favoritesIds: normalizedFavs.result,
-            favoritesById: normalizedFavs.entities.favorites,
-            meta: selectedFavorite
+            payload: {
+              favoritesIds: normalizedFavs.result,
+              favoritesById: normalizedFavs.entities.favorites,
+              selectedFavorite: typeof selectedFavorite === 'number' ? selectedFavorite : null,
+            }
           }
         );
       });
@@ -97,7 +108,10 @@ export function removeFavorite(favoriteId) {
 }
 
 export function setCurrent(currentId) {
-  return { type: types.SET_CURRENT_FAVORITE, currentId };
+  return {
+    type: types.SET_CURRENT_FAVORITE,
+    payload: currentId,
+    currentId };
 }
 
 
