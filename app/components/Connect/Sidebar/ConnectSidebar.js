@@ -42,21 +42,11 @@ class ConnectSidebar extends Component {
 
   render() {
     const { favorites, selectedFavorite, newFavorite, selected } = this.props;
-    console.log('All props: ', this.props);
-    console.log('Progress: ', newFavorite );
-    console.log('=========');
-    // newFavorite.map(item => {
-      // console.log(item.get('id'));
-      // console.log(item.get('connectionName'));
-    // });
-    // });
-    console.log('=========');
-    // console.log('Progress selected: ', selected.selectedFavorite );
     return (
       <nav className="sidebar connect">
-        {(favorites.size > 0) &&
+        {(newFavorite.size > 0) &&
           <ul className="nav">
-            {favorites.map(item =>
+            {newFavorite.map(item =>
               <ConnectSidebarItem
                 key={item.get('id')}
                 id={item.get('id')}

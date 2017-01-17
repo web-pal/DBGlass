@@ -5,6 +5,7 @@ export const EDIT_FAVORITE = 'favorites/EDIT_FAVORITE';
 export const REMOVE_FAVORITE = 'favorites/REMOVE_FAVORITE';
 export const SET_CURRENT_FAVORITE = 'favorites/SET_CURRENT_FAVORITE';
 export const TOGGLE_FAV_SWITCHER = 'favorites/TOGGLE_FAV_SWITCHER';
+export const SET_SELECTED_FAVORITE = 'favorites/SET_SELECTED_FAVORITE';
 
 // Tables action types
 export const GET_TABLES = 'tables/GET_TABLES';

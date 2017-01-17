@@ -55,10 +55,11 @@ export function getFavorites() {
           }
         }
 
+        const normalizedFavs = Object.keys(favorites).length === 0
+          ? {entities: {}, result: []}
+          :  normalize(favorites, [favorite]);
 
-        console.log('Initial favorites: ', favorites);
-        const normalizedFavs = normalize(favorites, [favorite]);
-        console.log('NORMALIZED FAVS: ', normalizedFavs);
+        console.log(normalizedFavs);
 
         dispatch(
           {
@@ -70,11 +71,18 @@ export function getFavorites() {
             payload: {
               favoritesIds: normalizedFavs.result,
               favoritesById: normalizedFavs.entities.favorites,
-              selectedFavorite: typeof selectedFavorite === 'number' ? selectedFavorite : null,
             }
           }
         );
       });
+    });
+
+    storage.get('selected_favorite', (error, selectedFavorite) => {
+      console.log('SELECTED', selectedFavorite);
+      dispatch({
+        type: types.SET_SELECTED_FAVORITE,
+        payload: typeof selectedFavorite === 'number' ? selectedFavorite : null
+      })
     });
   };
 }
@@ -95,7 +103,7 @@ export function addFavorite(favorite, currentId = false, callback) {
 
 export function updateFavorite(favorite) {
   return {
-    type: types.EDIT_FAVORITE,
+    type: types.EDIT_FAVORITE, // TODO RENAME TO UPDATE_FAVORITE
     favorite
   };
 }
@@ -117,6 +125,6 @@ export function setCurrent(currentId) {
 
 export function toggleFavoriteSwitcher() {
   return {
-    type: types.TOGGLE_FAV_SWITCHER
+    type: types.TOGGLE_FAV_SWITCHER // TODO ADD THIS TO META
   };
 }

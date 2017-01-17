@@ -37,26 +37,7 @@ export default function favorites(state = initialState, action) {
   switch (action.type) {
     case types.FILL_FAVORITES: {
       const newFavorites = [...action.favorites];
-      for (const favorite of newFavorites) {
-        let decodedPassword;
-        let decodedSSHPassword;
-        if (favorite.password) {
-          try {
-            decodedPassword = jwt.decode(favorite.password, key);
-          } catch (error) {
-            decodedPassword = favorite.password;
-          }
-          favorite.password = decodedPassword;
-        }
-        if (favorite.sshPassword) {
-          try {
-            decodedSSHPassword = jwt.decode(favorite.sshPassword, key);
-          } catch (error) {
-            decodedSSHPassword = favorite.sshPassword;
-          }
-          favorite.sshPassword = decodedSSHPassword;
-        }
-      }
+
       const newState = state.set('selectedFavorite', action.selectedFavorite);
       return newState.set(
         'favorites',
