@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 
 import validate from './validateForm';
 
-import { getFavorites } from '../../../selectors';
+import getFavorites from '../../../selectors';
 
 import * as CurrentTableActions from '../../../actions/currentTable';
 import * as favoritesActions from '../../../actions/favorites';
