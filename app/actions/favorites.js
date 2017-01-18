@@ -81,45 +81,28 @@ export function setCurrent(currentId) {
   };
 }
 
-export function addFavorite(favorite, currentId = false, callback) {
-  if (favorite.passowrd) {
-    jwt.encode(favorite.password, key);
-  }
-  if (favorite.sshPassword) {
-    jwt.encode(favorite.sshPassword, key);
-  }
-
+export function addFavorite(favorite, setAsCurrent = false) {
   storage.get('postglass_favorites', (err, fav) => {
     fav.push(favorite);
-    storage.set('postglass_favorites', fav, (error) => {
-      if (error) throw error;
-      if (callback) callback();
-    });
+    storage.set('postglass_favorites', fav);
   });
 
   return (dispatch) => {
-    if (currentId) {
-      dispatch(setCurrent(currentId));
-    }
     dispatch({
       type: types.ADD_FAVORITE,
       payload: {
-        favoriteId: favorite.id,
-        favoriteById: favorite,
-        callback
+        ...favorite,
+        passowrd: favorite.password ? jwt.encode(favorite.password, key) : null,
+        sshPassword: favorite.sshPassword ? jwt.encode(favorite.sshPassword, key) : null
       }
     });
+    if (setAsCurrent) {
+      dispatch(setCurrent(favorite.id));
+    }
   };
 }
 
 export function updateFavorite(favorite) {
-  if (favorite.passowrd) {
-    jwt.encode(favorite.password, key);
-  }
-  if (favorite.sshPassword) {
-    jwt.encode(favorite.sshPassword, key);
-  }
-
   storage.set('postglass_favorites', favorite, (error) => {
     if (error) throw error;
   });
@@ -127,8 +110,9 @@ export function updateFavorite(favorite) {
   return {
     type: types.UPDATE_FAVORITE,
     payload: {
-      favoriteId: favorite.id,
-      favoriteById: favorite
+      ...favorite,
+      passowrd: favorite.password ? jwt.encode(favorite.password, key) : null,
+      sshPassword: favorite.sshPassword ? jwt.encode(favorite.sshPassword, key) : null
     }
   };
 }
@@ -136,9 +120,7 @@ export function updateFavorite(favorite) {
 export function removeFavorite(favoriteId) {
   return {
     type: types.REMOVE_FAVORITE,
-    payload: {
-      favoriteId
-    }
+    payload: favoriteId
   };
 }
 

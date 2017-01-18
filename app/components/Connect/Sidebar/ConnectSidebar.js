@@ -41,7 +41,7 @@ class ConnectSidebar extends Component {
     };
 
   render() {
-    const { newFavorite, selectedFavorite } = this.props;
+    const { newFavorite, selectedFavorite, selected } = this.props;
     return (
       <nav className="sidebar connect">
         {(newFavorite.size > 0) &&
@@ -51,7 +51,7 @@ class ConnectSidebar extends Component {
                 key={item.get('id')}
                 id={item.get('id')}
                 connectionName={item.get('connectionName') || item.get('user')}
-                className={item.get('id') === selectedFavorite ? 'active' : ''}
+                className={item.get('id') === selected ? 'active' : ''}
                 setCurrent={this.setCurrent(item.get('id'))}
               />
             )}

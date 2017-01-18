@@ -2,6 +2,7 @@ import { Map, List, fromJS } from 'immutable';
 import { combineReducers } from 'redux';
 import * as types from '../actions/actionTypes';
 
+
 const favoritesIds = (state = new List(), action) => {
   switch (action.type) {
     case types.FILL_FAVORITES: {
@@ -9,23 +10,18 @@ const favoritesIds = (state = new List(), action) => {
     }
 
     case types.ADD_FAVORITE: {
-      return state.push(action.payload.favoriteId);
-    }
-
-    case types.UPDATE_FAVORITE: {
-      return state.update(
-        state.indexOf(action.payload.favoriteId),
-        action.payload.favoriteId);
+      return state.push(action.payload.id);
     }
 
     case types.REMOVE_FAVORITE: {
-      return state.delete(state.indexOf(action.payload.favoriteId));
+      return state.filter(item => item !== action.payload);
     }
 
     default:
       return state;
   }
 };
+
 
 const favoritesById = (state = new Map(), action) => {
   switch (action.type) {
@@ -34,18 +30,18 @@ const favoritesById = (state = new Map(), action) => {
     }
 
     case types.ADD_FAVORITE: {
-      return state.set(action.payload.favoriteId, action.payload.favoriteById);
+      return state.set(action.payload.id, fromJS(action.payload));
     }
 
     case types.UPDATE_FAVORITE: {
       return state.update(
-        action.payload.favoriteId,
-        action.payload.favoriteById
+        action.payload.id,
+        action.payload
       );
     }
 
     case types.REMOVE_FAVORITE: {
-      return state.delete(action.payload.favoriteId);
+      return state.delete(action.payload);
     }
 
     default:

@@ -80,10 +80,8 @@ class ReduxFormMain extends Component {
     if (data.id) {
       this.props.updateFavorite(data);
     } else {
-      data.id = this.props.newFavorite.size + 1;
-      this.props.addFavorite(data, false, () => {
-        this.props.setCurrent(data.id);
-      });
+      data.id = (this.props.newFavorite.size + 1).toString();
+      this.props.addFavorite(data, true);
     }
   }
 
