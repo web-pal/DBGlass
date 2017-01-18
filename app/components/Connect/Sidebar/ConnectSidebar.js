@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-
-import { getFavorites } from '../../../selectors';
+import getFavorites from '../../../selectors';
 import * as FavoritesActions from '../../../actions/favorites';
 
 import ConnectSidebarItem from './Item/ConnectSidebarItem';
@@ -15,14 +14,14 @@ const ipcRenderer = require('electron').ipcRenderer;
 const propTypes = {
   getFavorites: React.PropTypes.func.isRequired,
   setCurrent: React.PropTypes.func.isRequired,
-  favorites: React.PropTypes.object.isRequired,
+  newFavorite: React.PropTypes.object.isRequired,
   selectedFavorite: React.PropTypes.number
 };
 
 
 class ConnectSidebar extends Component {
   componentWillMount() {
-    if (!this.props.favorites.length) {
+    if (!this.props.newFavorite.length) {
       this.props.getFavorites();
       ipcRenderer.on('reload', () => {
         this.props.getFavorites();
@@ -42,8 +41,7 @@ class ConnectSidebar extends Component {
     };
 
   render() {
-    const { favorites, selectedFavorite, newFavorite, selected } = this.props;
-    console.log('Current: ', newFavorite.toJS());
+    const { newFavorite, selectedFavorite } = this.props;
     return (
       <nav className="sidebar connect">
         {(newFavorite.size > 0) &&
@@ -53,7 +51,7 @@ class ConnectSidebar extends Component {
                 key={item.get('id')}
                 id={item.get('id')}
                 connectionName={item.get('connectionName') || item.get('user')}
-                className={item.get('id') === selected ? 'active' : ''}
+                className={item.get('id') === selectedFavorite ? 'active' : ''}
                 setCurrent={this.setCurrent(item.get('id'))}
               />
             )}
@@ -72,7 +70,7 @@ class ConnectSidebar extends Component {
 
 ConnectSidebar.propTypes = propTypes;
 
-function mapStateToProps ({ favorites, newFavorite }) {
+function mapStateToProps({ favorites, newFavorite }) {
   return {
     favorites: favorites.favorites,
     selectedFavorite: favorites.selectedFavorite,

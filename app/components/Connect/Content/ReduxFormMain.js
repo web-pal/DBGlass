@@ -31,7 +31,7 @@ const propTypes = {
   sshAuthType: PropTypes.string,
   connectDB: PropTypes.func.isRequired,
   selectedFavorite: PropTypes.number,
-  favorites: PropTypes.object.isRequired,
+  newFavorite: PropTypes.object.isRequired,
   addFavorite: PropTypes.func.isRequired,
   setCurrent: PropTypes.func.isRequired,
   updateFavorite: PropTypes.func.isRequired,
