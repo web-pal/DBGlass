@@ -70,7 +70,6 @@ class ConnectSidebar extends Component {
   }
 }
 
-import { fromJS } from 'immutable';
 ConnectSidebar.propTypes = propTypes;
 
 function mapStateToProps ({ favorites, newFavorite }) {
@@ -78,7 +77,7 @@ function mapStateToProps ({ favorites, newFavorite }) {
     favorites: favorites.favorites,
     selectedFavorite: favorites.selectedFavorite,
 
-    newFavorite: fromJS(newFavorite.favoritesById).toList(),
+    newFavorite: getFavorites(newFavorite),
     selected: newFavorite.meta.get('selectedFavorite')
   };
 }
