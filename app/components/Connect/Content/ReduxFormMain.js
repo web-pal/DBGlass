@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 
 import validate from './validateForm';
 
+import { getFavorites } from '../../../selectors';
 
 import * as CurrentTableActions from '../../../actions/currentTable';
 import * as favoritesActions from '../../../actions/favorites';
@@ -79,7 +80,7 @@ class ReduxFormMain extends Component {
     if (data.id) {
       this.props.updateFavorite(data);
     } else {
-      data.id = this.props.favorites.size + 1;
+      data.id = this.props.newFavorite.size + 1;
       this.props.addFavorite(data, false, () => {
         this.props.setCurrent(data.id);
       });
@@ -229,6 +230,7 @@ function mapStateToProps(state) {
       x => x.get('id') === state.favorites.selectedFavorite
     ) || fromJS({ port: 5432, address: 'localhost', sshPort: 22, sshAuthType: 'password', useSSL: true });
   return {
+    newFavorite: getFavorites(state.newFavorite),
     favorites: state.favorites.favorites,
     selectedFavorite: state.favorites.get('selectedFavorite'),
     useSSH: selector(state, 'useSSH'),

@@ -35,33 +35,37 @@ const initialState = new InitialState();
 
 export default function favorites(state = initialState, action) {
   switch (action.type) {
-    case types.FILL_FAVORITES: {
-      const newFavorites = [...action.favorites];
+    // case types.FILL_FAVORITES: {
+    //   const newFavorites = [...action.favorites];
+    //
+    //   const newState = state.set('selectedFavorite', action.selectedFavorite);
+    //   return newState.set(
+    //     'favorites',
+    //     fromJS(newFavorites)
+    //   );
+    // }
 
-      const newState = state.set('selectedFavorite', action.selectedFavorite);
-      return newState.set(
-        'favorites',
-        fromJS(newFavorites)
-      );
-    }
+    // case types.SET_CURRENT_FAVORITE: {
+    //   saveSelectedFavorite(action.currentId);
+    //   return state.set(
+    //     'selectedFavorite',
+    //     action.currentId
+    //   );
+    // }
 
-    case types.SET_CURRENT_FAVORITE: {
-      saveSelectedFavorite(action.currentId);
-      return state.set(
-        'selectedFavorite',
-        action.currentId
-      );
-    }
+    // case types.ADD_FAVORITE: {
+    //   const newFavorites = state.favorites.toArray().slice();
+    //   newFavorites.push(Object.assign({}, action.favorite));
+    //   saveFavorites(newFavorites, action.callback);
+    //   return state.update(
+    //     'favorites',
+    //     favoritesList => favoritesList.push(fromJS(action.favorite))
+    //   );
+    // }
 
-    case types.ADD_FAVORITE: {
-      const newFavorites = state.favorites.toArray().slice();
-      newFavorites.push(Object.assign({}, action.favorite));
-      saveFavorites(newFavorites, action.callback);
-      return state.update(
-        'favorites',
-        favoritesList => favoritesList.push(fromJS(action.favorite))
-      );
-    }
+
+
+
 
     case types.EDIT_FAVORITE: {
       const newState = state.update(

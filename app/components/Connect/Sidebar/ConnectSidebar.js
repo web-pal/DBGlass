@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+
 import { getFavorites } from '../../../selectors';
 import * as FavoritesActions from '../../../actions/favorites';
 
@@ -42,6 +43,7 @@ class ConnectSidebar extends Component {
 
   render() {
     const { favorites, selectedFavorite, newFavorite, selected } = this.props;
+    console.log('Current: ', newFavorite.toJS());
     return (
       <nav className="sidebar connect">
         {(newFavorite.size > 0) &&
@@ -51,7 +53,7 @@ class ConnectSidebar extends Component {
                 key={item.get('id')}
                 id={item.get('id')}
                 connectionName={item.get('connectionName') || item.get('user')}
-                className={item.get('id') === selectedFavorite ? 'active' : ''}
+                className={item.get('id') === selected ? 'active' : ''}
                 setCurrent={this.setCurrent(item.get('id'))}
               />
             )}
@@ -68,6 +70,7 @@ class ConnectSidebar extends Component {
   }
 }
 
+import { fromJS } from 'immutable';
 ConnectSidebar.propTypes = propTypes;
 
 function mapStateToProps ({ favorites, newFavorite }) {
@@ -75,8 +78,8 @@ function mapStateToProps ({ favorites, newFavorite }) {
     favorites: favorites.favorites,
     selectedFavorite: favorites.selectedFavorite,
 
-    newFavorite: getFavorites(newFavorite),
-    selected: newFavorite.meta.toJS()
+    newFavorite: fromJS(newFavorite.favoritesById).toList(),
+    selected: newFavorite.meta.get('selectedFavorite')
   };
 }
 

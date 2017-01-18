@@ -6,7 +6,6 @@ import { readFileSync, writeFileSync } from 'fs';
 import storage from 'electron-json-storage';
 import jwt from 'jwt-simple';
 
-
 const app = electron.app || electron.remote.app;
 const userData = app.getPath('userData');
 
@@ -22,17 +21,19 @@ try {
 }
 window.key = key.toString();
 
-
 const favorite = new schema.Entity('favorites');
 
+export function getFavorites() { // Done
 
-export function getFavorites() {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+
     storage.get('postglass_favorites', (error, favorites) => {
       if (error) throw error;
-      storage.get('selected_favorite', (error2, selectedFavorite) => {
-        if (error2) throw error2;
 
+      if (!Array.isArray(favorites)) {
+        storage.set('postglass_favorites', [], (error) => {
+          if (error) throw error;
+        })}
 
         for (const favorite of favorites) {
           let decodedPassword;
@@ -59,26 +60,18 @@ export function getFavorites() {
           ? {entities: {}, result: []}
           :  normalize(favorites, [favorite]);
 
-        console.log(normalizedFavs);
-
         dispatch(
           {
             type: types.FILL_FAVORITES,
-            favorites: Object.keys(favorites).length === 0 ? [] : favorites,
-            selectedFavorite: typeof selectedFavorite === 'number' ? selectedFavorite : null,
-
-            // new structure
             payload: {
               favoritesIds: normalizedFavs.result,
               favoritesById: normalizedFavs.entities.favorites,
             }
           }
         );
-      });
     });
 
     storage.get('selected_favorite', (error, selectedFavorite) => {
-      console.log('SELECTED', selectedFavorite);
       dispatch({
         type: types.SET_SELECTED_FAVORITE,
         payload: typeof selectedFavorite === 'number' ? selectedFavorite : null
@@ -87,44 +80,87 @@ export function getFavorites() {
   };
 }
 
-export function addFavorite(favorite, currentId = false, callback) {
-  return (dispatch) => {
-    if (currentId) {
-      dispatch(setCurrent(currentId));
-    }
-    dispatch({
-      type: types.ADD_FAVORITE,
-      favorite,
-      currentId,
-      callback
+export function setCurrent(currentId) { // Done
+
+    storage.set('selected_favorite', currentId, error => {
+      if (error) throw error;
     });
+
+    return (dispatch, getState) => {
+
+      console.log('STATE: ', getState().newFavorite.favoritesById.toJS());
+      storage.getAll((e, fav) => {
+        console.log('ELECTRON STATE: ', fav);
+      });
+
+      dispatch({
+          type: types.SET_SELECTED_FAVORITE,
+          payload: currentId,
+      })
   };
 }
 
-export function updateFavorite(favorite) {
+export function addFavorite(favorite, currentId = false, callback) { // done
+
+  (favorite.password) ? jwt.encode(favorite.password, key) : null;
+  (favorite.sshPassword) ? jwt.encode(favorite.sshPassword, key) : null;
+
+  return (dispatch) => {
+
+    dispatch({
+      type: types.ADD_FAVORITE,
+      payload: {
+        favoriteId: favorite.id,
+        favoriteById: favorite,
+        callback
+      }
+    });
+
+  storage.get('postglass_favorites', (err, fav) => {
+
+    fav.push(favorite);
+    storage.set('postglass_favorites', fav, (error) => {
+      if (error) throw error;
+    if (callback) callback();
+    });
+
+    if (currentId) {
+      dispatch(setCurrent(currentId));
+    }
+  })
+  }
+}
+
+export function updateFavorite(favorite) { // done
+
+  (favorite.passowrd) ? jwt.encode(favorite.password, key) : null;
+  (favorite.sshPassword) ? jwt.encode(favorite.sshPassword, key) : null;
+
+  storage.set('postglass_favorites', favorite, (error) => {
+    if (error) throw error;
+    if (callback) callback();
+  });
+
   return {
-    type: types.EDIT_FAVORITE, // TODO RENAME TO UPDATE_FAVORITE
-    favorite
+    type: types.UPDATE_FAVORITE,
+    payload: {
+      favoriteId: favorite.id,
+      favoriteById: favorite
+    }
   };
 }
 
 export function removeFavorite(favoriteId) {
   return {
     type: types.REMOVE_FAVORITE,
-    favoriteId
+    payload: {
+      favoriteId
+    }
   };
 }
 
-export function setCurrent(currentId) {
-  return {
-    type: types.SET_CURRENT_FAVORITE,
-    payload: currentId,
-    currentId };
-}
-
-
 export function toggleFavoriteSwitcher() {
   return {
-    type: types.TOGGLE_FAV_SWITCHER // TODO ADD THIS TO META
+    type: types.TOGGLE_FAV_SWITCHER
   };
 }
