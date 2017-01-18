@@ -25,11 +25,9 @@ const favoriteSchema = new schema.Entity('favorites');
 
 export function getFavorites() {
   return (dispatch) => {
-    storage.get('postglass_favorites', (error, favorites) => {
-      if (error) throw error;
-
-      if (Array.isArray(favorites)) {
-        for (const favorite of favorites) {
+    storage.get('postglass_favorites', (error, favs) => {
+      const favorites = Array.isArray(favs) ?
+        favs.map(favorite => {
           let decodedPassword;
           let decodedSSHPassword;
           if (favorite.password) {
@@ -38,7 +36,6 @@ export function getFavorites() {
             } catch (e) {
               decodedPassword = favorite.password;
             }
-            favorite.password = decodedPassword;
           }
           if (favorite.sshPassword) {
             try {
@@ -46,14 +43,9 @@ export function getFavorites() {
             } catch (e) {
               decodedSSHPassword = favorite.sshPassword;
             }
-            favorite.sshPassword = decodedSSHPassword;
           }
-        }
-      } else {
-        storage.set('postglass_favorites', [], (e) => {
-          if (e) throw e;
-        });
-      }
+          return { ...favorite, password: decodedPassword, sshPassword: decodedSSHPassword };
+        }) : [];
 
       const normalizedFavs = Object.keys(favorites).length === 0
           ? { entities: {}, result: [] }
