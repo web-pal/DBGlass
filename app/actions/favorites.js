@@ -24,6 +24,7 @@ window.key = key.toString();
 const favoriteSchema = new schema.Entity('favorites');
 
 export function getFavorites() {
+
   return (dispatch) => {
     storage.get('postglass_favorites', (error, favs) => {
       const favorites = Array.isArray(favs) ?
@@ -92,7 +93,7 @@ export function addFavorite(favorite, setAsCurrent = false) {
       type: types.ADD_FAVORITE,
       payload: {
         ...favorite,
-        passowrd: favorite.password ? jwt.encode(favorite.password, key) : null,
+        password: favorite.password ? jwt.encode(favorite.password, key) : null,
         sshPassword: favorite.sshPassword ? jwt.encode(favorite.sshPassword, key) : null
       }
     });
@@ -111,7 +112,7 @@ export function updateFavorite(favorite) {
     type: types.UPDATE_FAVORITE,
     payload: {
       ...favorite,
-      passowrd: favorite.password ? jwt.encode(favorite.password, key) : null,
+      password: favorite.password ? jwt.encode(favorite.password, key) : null,
       sshPassword: favorite.sshPassword ? jwt.encode(favorite.sshPassword, key) : null
     }
   };
