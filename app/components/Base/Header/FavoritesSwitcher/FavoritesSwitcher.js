@@ -5,15 +5,17 @@ import { connect } from 'react-redux';
 import * as Actions from '../../../../actions/currentTable';
 import * as FavoritesActions from '../../../../actions/favorites';
 
-const propTypes = {
-  favorites: PropTypes.object.isRequired,
-  dropConnection: PropTypes.func.isRequired,
-  toggleFavoriteSwitcher: PropTypes.func.isRequired,
-  setCurrent: PropTypes.func.isRequired,
-  favSwitcherOpen: PropTypes.bool.isRequired
-};
+import getFavorites from '../../../../selectors';
 
 class FavSwitcherComponent extends Component {
+  static propTypes = {
+    favorites: PropTypes.object.isRequired,
+    dropConnection: PropTypes.func.isRequired,
+    toggleFavoriteSwitcher: PropTypes.func.isRequired,
+    setCurrent: PropTypes.func.isRequired,
+    favSwitcherOpen: PropTypes.bool.isRequired
+  };
+
   componentDidMount() {
     window.addEventListener('mousedown', this.handleOuterClick);
   }
@@ -78,14 +80,10 @@ class FavSwitcherComponent extends Component {
   }
 }
 
-FavSwitcherComponent.propTypes = propTypes;
-
-function mapStateToProps(state) {
-  return {
-    favorites: state.favorites.favorites,
-    favSwitcherOpen: state.favorites.favSwitcherOpen
-  };
-}
+const mapStateToProps = ({ newFavorite }) => ({
+  favorites: getFavorites(newFavorite),
+  favSwitcherOpen: newFavorite.meta.get('favSwitcherOpen')
+});
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ ...Actions, ...FavoritesActions }, dispatch);

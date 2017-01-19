@@ -7,15 +7,17 @@ import { toggleFavoriteSwitcher, setCurrent } from '../../../actions/favorites';
 
 import FavoritesSwitcher from '../../Base/Header/FavoritesSwitcher/FavoritesSwitcher';
 
-const propTypes = {
-  favSwitcherOpen: PropTypes.bool,
-  toggleFavoriteSwitcher: PropTypes.func,
-  isConnected: PropTypes.bool,
-  setCurrent: PropTypes.func,
-  dropConnection: PropTypes.func
-};
+import getFavorites from '../../../selectors';
 
 class Header extends Component {
+  propTypes = {
+    favSwitcherOpen: PropTypes.bool,
+    toggleFavoriteSwitcher: PropTypes.func,
+    isConnected: PropTypes.bool,
+    setCurrent: PropTypes.func,
+    dropConnection: PropTypes.func
+  };
+
   handleClick = () => {
     if (this.props.favSwitcherOpen) {
       this.props.toggleFavoriteSwitcher();
@@ -42,7 +44,7 @@ class Header extends Component {
 const SideBarTop = (props) => {
   const { favorites, selectedFavorite, isConnected } = props;
 
-  const favorite = favorites.get(selectedFavorite - 1);
+  const favorite = favorites.get(selectedFavorite);
   const connectionName = favorite
     ? favorite.get('connectionName')
     : '';
@@ -75,7 +77,6 @@ const BarTop = (props) => {
       </div>;
 };
 
-Header.propTypes = propTypes;
 SideBarTop.propTypes = {
   favorites: PropTypes.object,
   selectedFavorite: PropTypes.number,
@@ -89,8 +90,8 @@ BarTop.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    favorites: state.favorites.favorites,
-    selectedFavorite: state.favorites.selectedFavorite,
+    favorites: getFavorites(state.newFavorite),
+    selectedFavorite: state.newFavorite.meta.get('selectedFavorite'),
     isConnected: state.currentTable.isConnected
   };
 }
