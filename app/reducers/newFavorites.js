@@ -2,7 +2,6 @@ import { Map, List, fromJS } from 'immutable';
 import { combineReducers } from 'redux';
 import * as types from '../actions/actionTypes';
 
-
 const favoritesIds = (state = new List(), action) => {
   switch (action.type) {
     case types.FILL_FAVORITES: {

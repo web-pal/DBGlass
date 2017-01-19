@@ -19,26 +19,25 @@ import { renderField, renderCheckbox } from './InputComponents';
 
 import { mixPanelTrack } from '../../../helpers';
 
-const propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  reset: PropTypes.func.isRequired,
-  submitting: PropTypes.bool.isRequired,
-  dirty: PropTypes.bool.isRequired,
-  valid: PropTypes.bool.isRequired,
-  formValues: PropTypes.object.isRequired,
-  useSSH: PropTypes.bool,
-  sshKey: PropTypes.string,
-  sshAuthType: PropTypes.string,
-  connectDB: PropTypes.func.isRequired,
-  selectedFavorite: PropTypes.number,
-  newFavorite: PropTypes.object.isRequired,
-  addFavorite: PropTypes.func.isRequired,
-  setCurrent: PropTypes.func.isRequired,
-  updateFavorite: PropTypes.func.isRequired,
-  removeFavorite: PropTypes.func.isRequired
-};
-
 class ReduxFormMain extends Component {
+  static propTypes = {
+    handleSubmit: PropTypes.func.isRequired,
+    reset: PropTypes.func.isRequired,
+    submitting: PropTypes.bool.isRequired,
+    dirty: PropTypes.bool.isRequired,
+    valid: PropTypes.bool.isRequired,
+    formValues: PropTypes.object.isRequired,
+    useSSH: PropTypes.bool,
+    sshKey: PropTypes.string,
+    sshAuthType: PropTypes.string,
+    connectDB: PropTypes.func.isRequired,
+    selectedFavorite: PropTypes.string,
+    newFavorite: PropTypes.object.isRequired,
+    addFavorite: PropTypes.func.isRequired,
+    setCurrent: PropTypes.func.isRequired,
+    updateFavorite: PropTypes.func.isRequired,
+    removeFavorite: PropTypes.func.isRequired
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -80,7 +79,9 @@ class ReduxFormMain extends Component {
     if (data.id) {
       this.props.updateFavorite(data);
     } else {
-      data.id = (this.props.newFavorite.size + 1).toString();
+      data.id = (this.props.newFavorite.size)
+        ? (+this.props.newFavorite.last().get('id') + 1).toString()
+        : 0;
       this.props.addFavorite(data, true);
     }
   };
@@ -96,8 +97,9 @@ class ReduxFormMain extends Component {
   };
 
   render() {
-    const { handleSubmit, submitting, useSSH, sshKey, sshAuthType, dirty, valid } = this.props;
-
+    const {
+      handleSubmit, submitting, useSSH, sshKey, sshAuthType, dirty, valid, selectedFavorite
+    } = this.props;
     return (
       <form
         className="flex-row"
@@ -174,7 +176,7 @@ class ReduxFormMain extends Component {
               component={renderCheckbox}
             />
             <div className="btn-block flex-row flex--s-between">
-              {this.props.selectedFavorite !== null &&
+              {selectedFavorite !== null &&
                 <button
                   className="btn btn-empty flex-item--grow-1"
                   type="button"
@@ -213,9 +215,6 @@ class ReduxFormMain extends Component {
   }
 }
 
-ReduxFormMain.propTypes = propTypes;
-
-
 const selector = formValueSelector('connect');
 const ReduxFormMainDecorated = reduxForm({
   form: 'connect',
@@ -224,13 +223,19 @@ const ReduxFormMainDecorated = reduxForm({
 })(ReduxFormMain);
 
 function mapStateToProps(state) {
-  const initData = state.favorites.favorites.find(
-      x => x.get('id') === state.favorites.selectedFavorite
-    ) || fromJS({ port: 5432, address: 'localhost', sshPort: 22, sshAuthType: 'password', useSSL: true });
+  const initData = getFavorites(state.newFavorite).find(
+      item => item.get('id') === state.newFavorite.meta.get('selectedFavorite')
+    ) || fromJS(
+      { port: 5432,
+        address: 'localhost',
+        sshPort: 22,
+        sshAuthType: 'password',
+        useSSL: true }
+      );
   return {
     newFavorite: getFavorites(state.newFavorite),
-    favorites: state.favorites.favorites,
-    selectedFavorite: state.favorites.get('selectedFavorite'),
+    selectedFavorite: state.newFavorite.meta.get('selectedFavorite'),
+
     useSSH: selector(state, 'useSSH'),
     sshKey: selector(state, 'privateKey'),
     sshAuthType: selector(state, 'sshAuthType'),
@@ -240,9 +245,17 @@ function mapStateToProps(state) {
   };
 }
 
-
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ ...CurrentTableActions, ...favoritesActions }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReduxFormMainDecorated);
+// + 46.30.42.172
+// + dbuser
+// + 1u238ahagy12khj321hjka
+//
+// ### DB доступ
+// + dbuser
+// + aks821asjhagyba
+// + название базы: dbglass
+

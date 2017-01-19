@@ -24,8 +24,16 @@ window.key = key.toString();
 const favoriteSchema = new schema.Entity('favorites');
 
 export function getFavorites() {
+
+  storage.getAll((e, data) => {console.log('ALL STORAGE: ', data)}); // mock
+
   return (dispatch) => {
     storage.get('postglass_favorites', (error, favs) => {
+
+      (!Array.isArray(favs))
+        ? storage.set('postglass_favorites', []) // mock
+        : console.log('array');
+
       const favorites = Array.isArray(favs) ?
         favs.map(favorite => {
           let decodedPassword;
@@ -47,23 +55,34 @@ export function getFavorites() {
           return { ...favorite, password: decodedPassword, sshPassword: decodedSSHPassword };
         }) : [];
 
+
+        console.log('+++++++++++');
+        console.log('STORAGE FAVS: ', favs);
+        console.log('FOR NORMALIZATION: ', favorites); // mock
+        console.log('+++++++++++');
+
       const normalizedFavs = Object.keys(favorites).length === 0
-          ? { entities: {}, result: [] }
+          ? { entities: {favorites: {}}, result: [] }
           : normalize(favorites, [favoriteSchema]);
 
       storage.get('selected_favorite', (error2, selectedFavorite) => {
+
+        console.log('+++++++++++');
+        console.log('STORAGE SELECTED: ', selectedFavorite); // mock
+        console.log('+++++++++++');
+
         dispatch({
           type: types.SET_SELECTED_FAVORITE,
-          payload: typeof selectedFavorite === 'number' ? selectedFavorite : null
+          payload: selectedFavorite
         });
-      });
 
-      dispatch({
-        type: types.FILL_FAVORITES,
-        payload: {
-          favoritesIds: normalizedFavs.result,
-          favoritesById: normalizedFavs.entities.favorites,
+        dispatch({
+          type: types.FILL_FAVORITES,
+          payload: {
+            favoritesIds: normalizedFavs.result,
+            favoritesById: normalizedFavs.entities.favorites,
         } });
+      });
     });
   };
 }
@@ -118,6 +137,13 @@ export function updateFavorite(favorite) {
 }
 
 export function removeFavorite(favoriteId) {
+  storage.get('postglass_favorites', (err, fav) => {
+    storage.set('postglass_favorites',
+      fav.filter(item => item.id !== favoriteId),
+      (error) => {
+        if (error) throw error;
+      });
+  });
   return {
     type: types.REMOVE_FAVORITE,
     payload: favoriteId

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -11,20 +11,24 @@ import { mixPanelTrack } from '../../../helpers';
 
 const ipcRenderer = require('electron').ipcRenderer;
 
-const propTypes = {
-  getFavorites: React.PropTypes.func.isRequired,
-  setCurrent: React.PropTypes.func.isRequired,
-  newFavorite: React.PropTypes.object.isRequired,
-  selectedFavorite: React.PropTypes.number
-};
-
-
 class ConnectSidebar extends Component {
+  static propTypes = {
+    // actions: PropTypes.object.isRequired,
+    // getFavorites: PropTypes.func.isRequired,
+    // setCurrent: PropTypes.func.isRequired,
+    // favorites: PropTypes.object.isRequired,
+    // selectedFavorites: PropTypes.string.isRequired
+  };
+
+  static defaultProps = {
+    // actions: {}
+  };
+
   componentWillMount() {
-    if (!this.props.newFavorite.length) {
-      this.props.getFavorites();
+    if (!this.props.favorites.length) {
+      this.props.actions.getFavorites();
       ipcRenderer.on('reload', () => {
-        this.props.getFavorites();
+        this.props.actions.getFavorites();
       });
     }
   }
@@ -37,24 +41,21 @@ class ConnectSidebar extends Component {
       } else {
         mixPanelTrack('Select favorite', { name: id });
       }
-      this.props.setCurrent(id);
+      this.props.actions.setCurrent(id);
     };
 
   render() {
-    const { newFavorite, selectedFavorite, selected } = this.props;
-    console.log('=========')
-    console.log('Slected', selected)
-    console.log('=========')
+    const { favorites, selectedFavorites } = this.props;
     return (
       <nav className="sidebar connect">
-        {(newFavorite.size > 0) &&
+        {(favorites.size > 0) &&
           <ul className="nav">
-            {newFavorite.map(item =>
+            {favorites.map(item =>
               <ConnectSidebarItem
                 key={item.get('id')}
                 id={item.get('id')}
                 connectionName={item.get('connectionName') || item.get('user')}
-                className={item.get('id') === selected ? 'active' : ''}
+                className={item.get('id') === selectedFavorites ? 'active' : ''}
                 setCurrent={this.setCurrent(item.get('id'))}
               />
             )}
@@ -71,20 +72,13 @@ class ConnectSidebar extends Component {
   }
 }
 
-ConnectSidebar.propTypes = propTypes;
+const mapStateToProps = ({ newFavorite }) => ({
+  favorites: getFavorites(newFavorite),
+  selectedFavorites: newFavorite.meta.get('selectedFavorite')
+});
 
-function mapStateToProps({ favorites, newFavorite }) {
-  return {
-    favorites: favorites.favorites,
-    selectedFavorite: favorites.selectedFavorite,
-
-    newFavorite: getFavorites(newFavorite),
-    selected: newFavorite.meta.get('selectedFavorite')
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(FavoritesActions, dispatch);
-}
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(FavoritesActions, dispatch)
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectSidebar);
