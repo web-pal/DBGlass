@@ -33,10 +33,7 @@ const favoritesById = (state = new Map(), action) => {
     }
 
     case types.UPDATE_FAVORITE: {
-      return state.update(
-        action.payload.id,
-        action.payload
-      );
+      return state.set(action.payload.id, fromJS(action.payload));
     }
 
     case types.REMOVE_FAVORITE: {
