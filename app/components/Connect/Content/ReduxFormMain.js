@@ -32,7 +32,7 @@ class ReduxFormMain extends Component {
     sshAuthType: PropTypes.string,
     connectDB: PropTypes.func.isRequired,
     selectedFavorite: PropTypes.string,
-    newFavorite: PropTypes.object.isRequired,
+    favorites: PropTypes.object.isRequired,
     addFavorite: PropTypes.func.isRequired,
     setCurrent: PropTypes.func.isRequired,
     updateFavorite: PropTypes.func.isRequired,
@@ -79,9 +79,9 @@ class ReduxFormMain extends Component {
     if (data.id) {
       this.props.updateFavorite(data);
     } else {
-      data.id = (this.props.newFavorite.size)
-        ? (+this.props.newFavorite.last().get('id') + 1).toString()
-        : 0;
+      data.id = (this.props.favorites.size)
+        ? (+this.props.favorites.last().get('id') + 1).toString()
+        : "0";
       this.props.addFavorite(data, true);
     }
   };
@@ -223,9 +223,12 @@ const ReduxFormMainDecorated = reduxForm({
 })(ReduxFormMain);
 
 function mapStateToProps(state) {
-  const initData = getFavorites(state.newFavorite).find(
-      item => item.get('id') === state.newFavorite.meta.get('selectedFavorite')
-    ) || fromJS(
+  const data = getFavorites(state.favorites);
+  const initData = data.size > 0
+    ? data.find(
+      item => item.get('id') === state.favorites.meta.get('selectedFavorite')
+    )
+    : fromJS(
       { port: 5432,
         address: 'localhost',
         sshPort: 22,
@@ -233,8 +236,8 @@ function mapStateToProps(state) {
         useSSL: true }
       );
   return {
-    newFavorite: getFavorites(state.newFavorite),
-    selectedFavorite: state.newFavorite.meta.get('selectedFavorite'),
+    favorites: getFavorites(state.favorites),
+    selectedFavorite: state.favorites.meta.get('selectedFavorite'),
 
     useSSH: selector(state, 'useSSH'),
     sshKey: selector(state, 'privateKey'),
@@ -250,12 +253,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReduxFormMainDecorated);
-// + 46.30.42.172
-// + dbuser
-// + 1u238ahagy12khj321hjka
-//
-// ### DB доступ
-// + dbuser
-// + aks821asjhagyba
-// + название базы: dbglass
-

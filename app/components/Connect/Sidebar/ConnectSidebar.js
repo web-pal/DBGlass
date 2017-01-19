@@ -13,15 +13,15 @@ const ipcRenderer = require('electron').ipcRenderer;
 
 class ConnectSidebar extends Component {
   static propTypes = {
-    // actions: PropTypes.object.isRequired,
-    // getFavorites: PropTypes.func.isRequired,
-    // setCurrent: PropTypes.func.isRequired,
-    // favorites: PropTypes.object.isRequired,
-    // selectedFavorites: PropTypes.string.isRequired
+    actions: PropTypes.object.isRequired,
+    getFavorites: PropTypes.func,
+    setCurrent: PropTypes.func,
+    favorites: PropTypes.object.isRequired,
+    selectedFavorites: PropTypes.string
   };
 
   static defaultProps = {
-    // actions: {}
+    actions: {}
   };
 
   componentWillMount() {
@@ -72,9 +72,9 @@ class ConnectSidebar extends Component {
   }
 }
 
-const mapStateToProps = ({ newFavorite }) => ({
-  favorites: getFavorites(newFavorite),
-  selectedFavorites: newFavorite.meta.get('selectedFavorite')
+const mapStateToProps = ({ favorites }) => ({
+  favorites: getFavorites(favorites),
+  selectedFavorites: favorites.meta.get('selectedFavorite')
 });
 
 const mapDispatchToProps = (dispatch) => ({

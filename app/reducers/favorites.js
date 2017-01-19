@@ -1,128 +1,70 @@
-import { Record, fromJS, List, Map } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
+import { combineReducers } from 'redux';
 import * as types from '../actions/actionTypes';
 
-import path from 'path';
-import electron from 'electron';
-import { readFileSync, writeFileSync } from 'fs';
-import storage from 'electron-json-storage';
-import jwt from 'jwt-simple';
-
-import { combineReducers } from 'redux';
-
-const app = electron.app || electron.remote.app;
-const userData = app.getPath('userData');
-
-let key = '';
-const storageKeyPath = path.join(userData, 'storageKey');
-
-try {
-  key = readFileSync(storageKeyPath);
-} catch (e) {
-  key = Math.random().toString(36).slice(-8);
-  writeFileSync(storageKeyPath, key);
-  window.firstInstall = true;
-}
-window.key = key.toString();
-
-/* eslint-disable new-cap */
-const InitialState = Record({
-  selectedFavorite: null,
-  favSwitcherOpen: false,
-  favorites: List()
-});
-/* eslint-enable new-cap */
-const initialState = new InitialState();
-
-export default function favorites(state = initialState, action) {
+const favoritesIds = (state = new List(), action) => {
   switch (action.type) {
-    // case types.FILL_FAVORITES: {
-    //   const newFavorites = [...action.favorites];
-    //
-    //   const newState = state.set('selectedFavorite', action.selectedFavorite);
-    //   return newState.set(
-    //     'favorites',
-    //     fromJS(newFavorites)
-    //   );
-    // }
-
-    // case types.SET_CURRENT_FAVORITE: {
-    //   saveSelectedFavorite(action.currentId);
-    //   return state.set(
-    //     'selectedFavorite',
-    //     action.currentId
-    //   );
-    // }
-
-    // case types.ADD_FAVORITE: {
-    //   const newFavorites = state.favorites.toArray().slice();
-    //   newFavorites.push(Object.assign({}, action.favorite));
-    //   saveFavorites(newFavorites, action.callback);
-    //   return state.update(
-    //     'favorites',
-    //     favoritesList => favoritesList.push(fromJS(action.favorite))
-    //   );
-    // }
-
-
-
-
-
-    case types.EDIT_FAVORITE: {
-      const newState = state.update(
-        'favorites',
-        favoritesList => favoritesList.map((favorite) => {
-          if (favorite.get('id') === action.favorite.id) {
-            return fromJS(action.favorite);
-          }
-          return favorite;
-        })
-      );
-      saveFavorites(newState.favorites.toJS());
-      return newState;
+    case types.FILL_FAVORITES: {
+      return fromJS(action.payload.favoritesIds);
     }
 
-    case types.REMOVE_FAVORITE : {
-      const indexToDelete = state.favorites.findIndex(x => x.get('id') === action.favoriteId);
-      if (indexToDelete > -1) {
-        const newState = state.update(
-          'favorites',
-          favoritesList => favoritesList.remove(indexToDelete)
-        );
-        saveFavorites(newState.favorites.toJS());
-        return newState;
-      }
-      return state;
+    case types.ADD_FAVORITE: {
+      return state.push(action.payload.id);
     }
 
-    case types.TOGGLE_FAV_SWITCHER:
-      return state.set(
-        'favSwitcherOpen',
-        !state.get('favSwitcherOpen')
-      );
+    case types.REMOVE_FAVORITE: {
+      return state.filter(item => item !== action.payload);
+    }
 
     default:
       return state;
   }
-}
+};
 
-function saveSelectedFavorite(selectedFavorite) {
-  storage.set('selected_favorite', selectedFavorite, (err) => {
-    if (err) throw err;
-  });
-}
 
-function saveFavorites(nextfavorites, callback) {
-  for (const favorit of nextfavorites) {
-    if (favorit.password) {
-      favorit.password = jwt.encode(favorit.password, key);
+const favoritesById = (state = new Map(), action) => {
+  switch (action.type) {
+    case types.FILL_FAVORITES: {
+      return fromJS(action.payload.favoritesById);
     }
-    if (favorit.sshPassword) {
-      favorit.sshPassword = jwt.encode(favorit.sshPassword, key);
+
+    case types.ADD_FAVORITE: {
+      return state.set(action.payload.id, fromJS(action.payload));
     }
+
+    case types.UPDATE_FAVORITE: {
+      return state.update(
+        action.payload.id,
+        action.payload
+      );
+    }
+
+    case types.REMOVE_FAVORITE: {
+      return state.delete(action.payload);
+    }
+
+    default:
+      return state;
   }
-  storage.set('postglass_favorites', nextfavorites, (error) => {
-    if (error) throw error;
-    if (callback) callback();
-  });
-}
+};
 
+const meta = (state = new Map({ selectedFavorite: '', favSwitcherOpen: false }), action) => {
+  switch (action.type) {
+    case types.SET_SELECTED_FAVORITE: {
+      return state.set('selectedFavorite', action.payload);
+    }
+
+    case types.TOGGLE_FAV_SWITCHER: {
+      return state.set('favSwitcherOpen', !state.get('favSwitcherOpen'));
+    }
+
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({
+  favoritesIds,
+  favoritesById,
+  meta
+});

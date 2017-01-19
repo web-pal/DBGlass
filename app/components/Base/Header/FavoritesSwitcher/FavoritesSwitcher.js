@@ -80,9 +80,9 @@ class FavSwitcherComponent extends Component {
   }
 }
 
-const mapStateToProps = ({ newFavorite }) => ({
-  favorites: getFavorites(newFavorite),
-  favSwitcherOpen: newFavorite.meta.get('favSwitcherOpen')
+const mapStateToProps = ({ favorites }) => ({
+  favorites: getFavorites(favorites),
+  favSwitcherOpen: favorites.meta.get('favSwitcherOpen')
 });
 
 function mapDispatchToProps(dispatch) {

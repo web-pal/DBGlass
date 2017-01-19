@@ -24,16 +24,11 @@ window.key = key.toString();
 const favoriteSchema = new schema.Entity('favorites');
 
 export function getFavorites() {
-
-  storage.getAll((e, data) => {console.log('ALL STORAGE: ', data)}); // mock
-
   return (dispatch) => {
     storage.get('postglass_favorites', (error, favs) => {
-
-      (!Array.isArray(favs))
-        ? storage.set('postglass_favorites', []) // mock
-        : console.log('array');
-
+      if (!Array.isArray(favs)) {
+        storage.set('postglass_favorites', []);
+      }
       const favorites = Array.isArray(favs) ?
         favs.map(favorite => {
           let decodedPassword;
@@ -55,25 +50,13 @@ export function getFavorites() {
           return { ...favorite, password: decodedPassword, sshPassword: decodedSSHPassword };
         }) : [];
 
-
-        console.log('+++++++++++');
-        console.log('STORAGE FAVS: ', favs);
-        console.log('FOR NORMALIZATION: ', favorites); // mock
-        console.log('+++++++++++');
-
       const normalizedFavs = Object.keys(favorites).length === 0
-          ? { entities: {favorites: {}}, result: [] }
+          ? { entities: { favorites: {} }, result: [] }
           : normalize(favorites, [favoriteSchema]);
-
       storage.get('selected_favorite', (error2, selectedFavorite) => {
-
-        console.log('+++++++++++');
-        console.log('STORAGE SELECTED: ', selectedFavorite); // mock
-        console.log('+++++++++++');
-
         dispatch({
           type: types.SET_SELECTED_FAVORITE,
-          payload: selectedFavorite
+          payload: typeof selectedFavorite === 'string' ? selectedFavorite : ''
         });
 
         dispatch({
@@ -81,7 +64,7 @@ export function getFavorites() {
           payload: {
             favoritesIds: normalizedFavs.result,
             favoritesById: normalizedFavs.entities.favorites,
-        } });
+          } });
       });
     });
   };
