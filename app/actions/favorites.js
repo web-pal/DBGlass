@@ -24,7 +24,6 @@ window.key = key.toString();
 const favoriteSchema = new schema.Entity('favorites');
 
 export function getFavorites() {
-
   return (dispatch) => {
     storage.get('postglass_favorites', (error, favs) => {
       const favorites = Array.isArray(favs) ?
@@ -52,19 +51,19 @@ export function getFavorites() {
           ? { entities: {}, result: [] }
           : normalize(favorites, [favoriteSchema]);
 
+      storage.get('selected_favorite', (error2, selectedFavorite) => {
+        dispatch({
+          type: types.SET_SELECTED_FAVORITE,
+          payload: typeof selectedFavorite === 'number' ? selectedFavorite : null
+        });
+      });
+
       dispatch({
         type: types.FILL_FAVORITES,
         payload: {
           favoritesIds: normalizedFavs.result,
           favoritesById: normalizedFavs.entities.favorites,
         } });
-    });
-
-    storage.get('selected_favorite', (error, selectedFavorite) => {
-      dispatch({
-        type: types.SET_SELECTED_FAVORITE,
-        payload: typeof selectedFavorite === 'number' ? selectedFavorite : null
-      });
     });
   };
 }

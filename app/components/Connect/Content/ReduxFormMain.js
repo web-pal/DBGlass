@@ -72,7 +72,7 @@ class ReduxFormMain extends Component {
         mixPanelTrack('Connect success');
       }
     });
-  }
+  };
 
   handleSave = () => {
     mixPanelTrack('Save favorite click');
@@ -83,17 +83,17 @@ class ReduxFormMain extends Component {
       data.id = (this.props.newFavorite.size + 1).toString();
       this.props.addFavorite(data, true);
     }
-  }
+  };
 
   handleRemove = () => {
     mixPanelTrack('Remove favorite click');
     this.props.removeFavorite(this.props.formValues.id);
     this.props.setCurrent(null);
-  }
+  };
 
   saveSSHKey = (sshKey) => {
     this.setState({ sshKey });
-  }
+  };
 
   render() {
     const { handleSubmit, submitting, useSSH, sshKey, sshAuthType, dirty, valid } = this.props;

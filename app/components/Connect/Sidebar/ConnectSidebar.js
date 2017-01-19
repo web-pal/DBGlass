@@ -42,6 +42,9 @@ class ConnectSidebar extends Component {
 
   render() {
     const { newFavorite, selectedFavorite, selected } = this.props;
+    console.log('=========')
+    console.log('Slected', selected)
+    console.log('=========')
     return (
       <nav className="sidebar connect">
         {(newFavorite.size > 0) &&
