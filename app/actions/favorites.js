@@ -97,7 +97,6 @@ export function addFavorite(favorite, setAsCurrent = false) {
     });
     storage.set('postglass_favorites', favorites);
   });
-
   return (dispatch) => {
     dispatch({
       type: types.ADD_FAVORITE,

@@ -81,7 +81,7 @@ class ReduxFormMain extends Component {
     } else {
       data.id = (this.props.favorites.size)
         ? (+this.props.favorites.last().get('id') + 1).toString()
-        : "0";
+        : '0';
       this.props.addFavorite(data, true);
     }
   };
@@ -107,7 +107,7 @@ class ReduxFormMain extends Component {
         onSubmit={handleSubmit(this.handleSubmit)}
       >
         <div className="form-panel right-padded flex-col flex--half">
-          <span style={{ color: 'red' }}>{this.state.error}</span>
+          <span style={{ color: 'red', position: 'absolute', margin: '-25px auto' }}>{this.state.error}</span>
           <Field
             type="hidden"
             name="id"
@@ -224,7 +224,7 @@ const ReduxFormMainDecorated = reduxForm({
 
 function mapStateToProps(state) {
   const data = getFavorites(state.favorites);
-  const initData = data.size > 0
+  const initData = data.size > 0 && state.favorites.meta.get('selectedFavorite')
     ? data.find(
       item => item.get('id') === state.favorites.meta.get('selectedFavorite')
     )

@@ -21,7 +21,6 @@ const favoritesIds = (state = new List(), action) => {
   }
 };
 
-
 const favoritesById = (state = new Map(), action) => {
   switch (action.type) {
     case types.FILL_FAVORITES: {

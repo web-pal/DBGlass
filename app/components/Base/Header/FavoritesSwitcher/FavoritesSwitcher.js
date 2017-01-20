@@ -26,7 +26,7 @@ class FavSwitcherComponent extends Component {
 
   handleClick = (e) => {
     this.props.toggleFavoriteSwitcher();
-    this.props.setCurrent(Number(e.target.dataset.id) || null);
+    this.props.setCurrent((Number(e.target.dataset.id)).toString() || null);
     this.props.dropConnection();
   }
 
