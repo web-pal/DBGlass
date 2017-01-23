@@ -21,7 +21,8 @@
     "promise/no-native": 0,
     "react/jsx-no-bind": "off",
     "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }],
-    "react/prefer-stateless-function": "off"
+    "react/prefer-stateless-function": "off",
+    "react/forbid-prop-types": 0
   },
   "plugins": [
     "import",

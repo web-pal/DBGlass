@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 
 import validate from './validateForm';
 
+import getFavorites from '../../../selectors';
 
 import * as CurrentTableActions from '../../../actions/currentTable';
 import * as favoritesActions from '../../../actions/favorites';
@@ -18,26 +19,25 @@ import { renderField, renderCheckbox } from './InputComponents';
 
 import { mixPanelTrack } from '../../../helpers';
 
-const propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  reset: PropTypes.func.isRequired,
-  submitting: PropTypes.bool.isRequired,
-  dirty: PropTypes.bool.isRequired,
-  valid: PropTypes.bool.isRequired,
-  formValues: PropTypes.object.isRequired,
-  useSSH: PropTypes.bool,
-  sshKey: PropTypes.string,
-  sshAuthType: PropTypes.string,
-  connectDB: PropTypes.func.isRequired,
-  selectedFavorite: PropTypes.number,
-  favorites: PropTypes.object.isRequired,
-  addFavorite: PropTypes.func.isRequired,
-  setCurrent: PropTypes.func.isRequired,
-  updateFavorite: PropTypes.func.isRequired,
-  removeFavorite: PropTypes.func.isRequired
-};
-
 class ReduxFormMain extends Component {
+  static propTypes = {
+    handleSubmit: PropTypes.func.isRequired,
+    reset: PropTypes.func.isRequired,
+    submitting: PropTypes.bool.isRequired,
+    dirty: PropTypes.bool.isRequired,
+    valid: PropTypes.bool.isRequired,
+    formValues: PropTypes.object.isRequired,
+    useSSH: PropTypes.bool,
+    sshKey: PropTypes.string,
+    sshAuthType: PropTypes.string,
+    connectDB: PropTypes.func.isRequired,
+    selectedFavorite: PropTypes.string,
+    favorites: PropTypes.object.isRequired,
+    addFavorite: PropTypes.func.isRequired,
+    setCurrent: PropTypes.func.isRequired,
+    updateFavorite: PropTypes.func.isRequired,
+    removeFavorite: PropTypes.func.isRequired
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -71,7 +71,7 @@ class ReduxFormMain extends Component {
         mixPanelTrack('Connect success');
       }
     });
-  }
+  };
 
   handleSave = () => {
     mixPanelTrack('Save favorite click');
@@ -79,26 +79,27 @@ class ReduxFormMain extends Component {
     if (data.id) {
       this.props.updateFavorite(data);
     } else {
-      data.id = this.props.favorites.size + 1;
-      this.props.addFavorite(data, false, () => {
-        this.props.setCurrent(data.id);
-      });
+      data.id = (this.props.favorites.size)
+        ? (+this.props.favorites.last().get('id') + 1).toString()
+        : '0';
+      this.props.addFavorite(data, true);
     }
-  }
+  };
 
   handleRemove = () => {
     mixPanelTrack('Remove favorite click');
     this.props.removeFavorite(this.props.formValues.id);
     this.props.setCurrent(null);
-  }
+  };
 
   saveSSHKey = (sshKey) => {
     this.setState({ sshKey });
-  }
+  };
 
   render() {
-    const { handleSubmit, submitting, useSSH, sshKey, sshAuthType, dirty, valid } = this.props;
-
+    const {
+      handleSubmit, submitting, useSSH, sshKey, sshAuthType, dirty, valid, selectedFavorite
+    } = this.props;
     return (
       <form
         className="flex-row"
@@ -106,7 +107,7 @@ class ReduxFormMain extends Component {
         onSubmit={handleSubmit(this.handleSubmit)}
       >
         <div className="form-panel right-padded flex-col flex--half">
-          <span style={{ color: 'red' }}>{this.state.error}</span>
+          <span style={{ color: 'red', position: 'absolute', margin: '-25px auto' }}>{this.state.error}</span>
           <Field
             type="hidden"
             name="id"
@@ -175,7 +176,7 @@ class ReduxFormMain extends Component {
               component={renderCheckbox}
             />
             <div className="btn-block flex-row flex--s-between">
-              {this.props.selectedFavorite !== null &&
+              {selectedFavorite !== null &&
                 <button
                   className="btn btn-empty flex-item--grow-1"
                   type="button"
@@ -214,9 +215,6 @@ class ReduxFormMain extends Component {
   }
 }
 
-ReduxFormMain.propTypes = propTypes;
-
-
 const selector = formValueSelector('connect');
 const ReduxFormMainDecorated = reduxForm({
   form: 'connect',
@@ -225,12 +223,22 @@ const ReduxFormMainDecorated = reduxForm({
 })(ReduxFormMain);
 
 function mapStateToProps(state) {
-  const initData = state.favorites.favorites.find(
-      x => x.get('id') === state.favorites.selectedFavorite
-    ) || fromJS({ port: 5432, address: 'localhost', sshPort: 22, sshAuthType: 'password', useSSL: true });
+  const data = getFavorites(state.favorites);
+  const initData = data.size > 0 && state.favorites.meta.get('selectedFavorite')
+    ? data.find(
+      item => item.get('id') === state.favorites.meta.get('selectedFavorite')
+    )
+    : fromJS(
+      { port: 5432,
+        address: 'localhost',
+        sshPort: 22,
+        sshAuthType: 'password',
+        useSSL: true }
+      );
   return {
-    favorites: state.favorites.favorites,
-    selectedFavorite: state.favorites.get('selectedFavorite'),
+    favorites: getFavorites(state.favorites),
+    selectedFavorite: state.favorites.meta.get('selectedFavorite'),
+
     useSSH: selector(state, 'useSSH'),
     sshKey: selector(state, 'privateKey'),
     sshAuthType: selector(state, 'sshAuthType'),
@@ -239,7 +247,6 @@ function mapStateToProps(state) {
     state.form.get('connect').get('values').toObject() : {}
   };
 }
-
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ ...CurrentTableActions, ...favoritesActions }, dispatch);

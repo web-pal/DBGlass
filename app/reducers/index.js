@@ -6,10 +6,10 @@ import currentTable from './currentTable';
 import favorites from './favorites';
 
 const rootReducer = combineReducers({
+  form: formReducer,
   tables,
   currentTable,
-  favorites,
-  form: formReducer
+  favorites
 });
 
 export default rootReducer;

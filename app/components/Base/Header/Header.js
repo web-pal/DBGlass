@@ -7,22 +7,24 @@ import { toggleFavoriteSwitcher, setCurrent } from '../../../actions/favorites';
 
 import FavoritesSwitcher from '../../Base/Header/FavoritesSwitcher/FavoritesSwitcher';
 
-const propTypes = {
-  favSwitcherOpen: PropTypes.bool,
-  toggleFavoriteSwitcher: PropTypes.func,
-  isConnected: PropTypes.bool,
-  setCurrent: PropTypes.func,
-  dropConnection: PropTypes.func
-};
+import getFavorites from '../../../selectors';
 
 class Header extends Component {
+  static propTypes = {
+    favSwitcherOpen: PropTypes.bool,
+    toggleFavoriteSwitcher: PropTypes.func,
+    isConnected: PropTypes.bool,
+    setCurrent: PropTypes.func,
+    dropConnection: PropTypes.func
+  };
+
   handleClick = () => {
     if (this.props.favSwitcherOpen) {
       this.props.toggleFavoriteSwitcher();
     }
     this.props.setCurrent(null);
     this.props.dropConnection();
-  }
+  };
 
   render() {
     const { isConnected } = this.props;
@@ -41,8 +43,8 @@ class Header extends Component {
 
 const SideBarTop = (props) => {
   const { favorites, selectedFavorite, isConnected } = props;
+  const favorite = favorites.get(selectedFavorite);
 
-  const favorite = favorites.get(selectedFavorite - 1);
   const connectionName = favorite
     ? favorite.get('connectionName')
     : '';
@@ -55,9 +57,9 @@ const SideBarTop = (props) => {
       {connectionName}
       <i className="fa fa-chevron-right vertical-center" />
     </div> :
-      <div className="sidebar-head" >
-        Favorites
-      </div>;
+    <div className="sidebar-head" >
+      Favorites
+    </div>;
 };
 
 const BarTop = (props) => {
@@ -70,15 +72,14 @@ const BarTop = (props) => {
         &#160;New Connection
       </button>
     </div> :
-      <div className="bar-top flex-row flex--s-between">
-        <img role="presentation" className="logo" src="styles/images/logo.svg" />
-      </div>;
+    <div className="bar-top flex-row flex--s-between">
+      <img role="presentation" className="logo" src="styles/images/logo.svg" />
+    </div>;
 };
 
-Header.propTypes = propTypes;
 SideBarTop.propTypes = {
   favorites: PropTypes.object,
-  selectedFavorite: PropTypes.number,
+  selectedFavorite: PropTypes.string,
   toggleFavoriteSwitcher: PropTypes.func,
   isConnected: PropTypes.bool
 };
@@ -89,8 +90,8 @@ BarTop.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    favorites: state.favorites.favorites,
-    selectedFavorite: state.favorites.selectedFavorite,
+    favorites: getFavorites(state.favorites),
+    selectedFavorite: state.favorites.meta.get('selectedFavorite'),
     isConnected: state.currentTable.isConnected
   };
 }
