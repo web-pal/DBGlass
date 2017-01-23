@@ -1,19 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as Actions from '../../../../actions/currentTable';
-import * as FavoritesActions from '../../../../actions/favorites';
-
-import getFavorites from '../../../../selectors';
-
-class FavSwitcherComponent extends Component {
+export default class FavSwitcherComponent extends Component {
   static propTypes = {
-    favorites: PropTypes.object.isRequired,
-    dropConnection: PropTypes.func.isRequired,
-    toggleFavoriteSwitcher: PropTypes.func.isRequired,
-    setCurrent: PropTypes.func.isRequired,
-    favSwitcherOpen: PropTypes.bool.isRequired
+    favorites: PropTypes.object,
+    dropConnection: PropTypes.func,
+    toggleFavoriteSwitcher: PropTypes.func,
+    setCurrent: PropTypes.func,
+    favSwitcherOpen: PropTypes.bool,
+    actions: PropTypes.object
   };
 
   componentDidMount() {
@@ -25,10 +19,10 @@ class FavSwitcherComponent extends Component {
   }
 
   handleClick = (e) => {
-    this.props.toggleFavoriteSwitcher();
-    this.props.setCurrent((Number(e.target.dataset.id)).toString() || null);
-    this.props.dropConnection();
-  }
+    this.props.actions.toggleFavoriteSwitcher();
+    this.props.actions.setCurrent((Number(e.target.dataset.id)).toString() || null);
+    this.props.actions.dropConnection();
+  };
 
   handleOuterClick = (e) => {
     const wrapper = document.getElementById('favSwitcher');
@@ -40,7 +34,7 @@ class FavSwitcherComponent extends Component {
     if (!condition && this.props.favSwitcherOpen) {
       this.props.toggleFavoriteSwitcher();
     }
-  }
+  };
 
   render() {
     const { favorites, favSwitcherOpen, toggleFavoriteSwitcher } = this.props;
@@ -79,14 +73,3 @@ class FavSwitcherComponent extends Component {
     );
   }
 }
-
-const mapStateToProps = ({ favorites }) => ({
-  favorites: getFavorites(favorites),
-  favSwitcherOpen: favorites.meta.get('favSwitcherOpen')
-});
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ ...Actions, ...FavoritesActions }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(FavSwitcherComponent);

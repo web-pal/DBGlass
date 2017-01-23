@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { lifecycle } from 'recompose';
 
@@ -10,9 +11,9 @@ import Header from '../../components/Base/Header/Header';
 import ContextMenu from '../../components/Base/ContextMenu/ContextMenu';
 import { startAppMixpanelEvent } from '../../helpers';
 
-const propTypes = {
-  isConnected: PropTypes.bool
-};
+import * as Actions from '../../actions/currentTable';
+import * as favActions from '../../actions/favorites';
+import getFavorites from '../../selectors';
 
 const enhance = lifecycle({
   componentDidMount() {
@@ -20,28 +21,43 @@ const enhance = lifecycle({
   }
 });
 
-const BaseContainer = enhance(({ isConnected }) => (
-  <div id="wrapper">
-    <ContextMenu />
+const BaseContainer = enhance(({
+  favorites,
+  selectedFavorite,
+  favSwitcherOpen,
+  isConnected,
+  actions }) => (
+    <div id="wrapper">
+      <ContextMenu />
 
-    {isConnected
-      ? <div className="flex-row max-height">
-        <div className="flex-col left-pane">
-          <Header />
-          <MainSidebar />
+      {isConnected
+        ? <div className="flex-row max-height">
+          <div className="flex-col left-pane">
+            <Header
+              favorites={favorites}
+              selectedFavorite={selectedFavorite}
+              favSwitcherOpen={favSwitcherOpen}
+              isConnected={isConnected}
+              actions={actions}
+            />
+            <MainSidebar />
+          </div>
+          <MainContent />
         </div>
-        <MainContent />
-      </div>
-      : <ConnectContainer />
-    }
-  </div>
+        : <ConnectContainer />
+      }
+    </div>
 ));
 
-BaseContainer.propTypes = propTypes;
+const mapStateToProps = ({ favorites, currentTable }) => ({
+  favorites: getFavorites(favorites),
+  selectedFavorite: favorites.meta.get('selectedFavorite'),
+  favSwitcherOpen: favorites.meta.get('favSwitcherOpen'),
+  isConnected: currentTable.isConnected
+});
 
-function mapStateToProps(state) {
-  return {
-    isConnected: state.currentTable.isConnected
-  };
-}
-export default connect(mapStateToProps, null)(BaseContainer);
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ ...Actions, ...favActions }, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(BaseContainer);
