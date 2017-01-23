@@ -172,6 +172,7 @@
     "react-redux": "^5.0.1",
     "react-select": "^1.0.0-rc.2",
     "react-syntax-highlighter": "^4.0.1",
+    "recompose": "^0.21.2",
     "redux": "^3.6.0",
     "redux-form": "^6.4.3",
     "redux-thunk": "^2.1.0",

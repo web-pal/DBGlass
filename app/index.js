@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 
 
-import BaseContainer from './components/Base/BaseComponent';
+import BaseContainer from './containers/Base/BaseContainer';
 
 import configureStore from './store/configureStore';
 import './styles/main.less';

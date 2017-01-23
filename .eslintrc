@@ -12,6 +12,7 @@
     "consistent-return": "off",
     "comma-dangle": "off",
     "generator-star-spacing": "off",
+    "import/extensions": 0,
     "import/no-unresolved": ["error", { "ignore": ["electron"] }],
     "import/no-extraneous-dependencies": "off",
     "no-use-before-define": "off",
