@@ -53,3 +53,35 @@
     border-top: 1px solid rgba( 0, 0, 0, 0.17 );
   }
 }
+
+.plainlist {
+  list-style: none;
+  padding-left: 20px;
+  padding-right: 20px;
+  & > li {
+	font: 400 14px / 34px Harmonia Sans;
+	font-weight: 400;
+	margin: 12px 0px;
+	&:not(:first-child) {
+	  border-top: 1px solid rgba(0, 0, 0, .03);
+	}
+	cursor: pointer;
+	&:hover {
+	  color: @navy;
+	  font: 700 14px / 34px Harmonia Sans;
+	  font-weight: 700;
+	}
+  }
+}
+
+.plainList-title {
+  display: inline-block;
+  width: 100%;
+  font: 18px / 34px Harmonia Sans;
+  padding:  12px 15px 0px 10px;
+  height: 52px;
+  border-bottom: 1px solid lightgray;
+  .fa.fa-times {
+	float: right;
+  }
+}

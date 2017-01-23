@@ -1,27 +1,15 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-
-import getFavorites from '../../../selectors';
-import * as FavoritesActions from '../../../actions/favorites';
-
 import ConnectSidebarItem from './Item/ConnectSidebarItem';
 
 import { mixPanelTrack } from '../../../helpers';
 
 const ipcRenderer = require('electron').ipcRenderer;
 
-class ConnectSidebar extends Component {
+export default class ConnectSidebar extends Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
-    getFavorites: PropTypes.func,
-    setCurrent: PropTypes.func,
     favorites: PropTypes.object.isRequired,
-    selectedFavorites: PropTypes.string
-  };
-
-  static defaultProps = {
-    actions: {}
+    selectedFavorite: PropTypes.string
   };
 
   componentWillMount() {
@@ -45,7 +33,7 @@ class ConnectSidebar extends Component {
     };
 
   render() {
-    const { favorites, selectedFavorites } = this.props;
+    const { favorites, selectedFavorite } = this.props;
     return (
       <nav className="sidebar connect">
         {(favorites.size > 0) &&
@@ -55,7 +43,7 @@ class ConnectSidebar extends Component {
                 key={item.get('id')}
                 id={item.get('id')}
                 connectionName={item.get('connectionName') || item.get('user')}
-                className={item.get('id') === selectedFavorites ? 'active' : ''}
+                className={item.get('id') === selectedFavorite ? 'active' : ''}
                 setCurrent={this.setCurrent(item.get('id'))}
               />
             )}
@@ -71,14 +59,3 @@ class ConnectSidebar extends Component {
     );
   }
 }
-
-const mapStateToProps = ({ favorites }) => ({
-  favorites: getFavorites(favorites),
-  selectedFavorites: favorites.meta.get('selectedFavorite')
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(FavoritesActions, dispatch)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ConnectSidebar);
