@@ -1,20 +1,15 @@
 import React, { Component, PropTypes } from 'react';
-
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-
-import * as Actions from '../../../../actions/favorites';
 import Modal from '../../../Main/Content/Modals/Modal';
 
 import checkVersion from '../UpdatesModal/versionCheck';
 
 const { shell } = require('electron');
 
-const propTypes = {
-  updatesModalOpen: PropTypes.bool
-};
+export default class UpdatesModal extends Component {
+  static propTypes = {
+    updatesModalOpen: PropTypes.bool
+  };
 
-class UpdatesModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -37,13 +32,12 @@ class UpdatesModal extends Component {
     this.setState({
       modalOpen: false
     });
-  }
+  };
 
   handleClick = (ev) => {
     ev.preventDefault();
     shell.openExternal(this.state.updateUrl);
-  }
-
+  };
   render() {
     return this.state.modalOpen && (
       <Modal onClose={this.handleClose}>
@@ -59,17 +53,3 @@ class UpdatesModal extends Component {
     );
   }
 }
-
-UpdatesModal.propTypes = propTypes;
-
-function mapStateToProps(state) {
-  return {
-    updatesModalOpen: state.favorites.updatesModalOpen
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ ...Actions }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(UpdatesModal);
