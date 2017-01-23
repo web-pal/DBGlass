@@ -4,6 +4,7 @@ import electron from 'electron';
 import { readFileSync, writeFileSync } from 'fs';
 import storage from 'electron-json-storage';
 import jwt from 'jwt-simple';
+import v4 from 'uuid';
 import * as types from './actionTypes';
 
 const app = electron.app || electron.remote.app;
@@ -89,6 +90,7 @@ export function setCurrent(currentId) {
 }
 
 export function addFavorite(favorite, setAsCurrent = false) {
+  favorite.id = v4();
   storage.get('postglass_favorites', (err, favorites) => {
     favorites.push({
       ...favorite,

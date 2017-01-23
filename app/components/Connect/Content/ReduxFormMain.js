@@ -79,9 +79,6 @@ class ReduxFormMain extends Component {
     if (data.id) {
       this.props.updateFavorite(data);
     } else {
-      data.id = (this.props.favorites.size)
-        ? (+this.props.favorites.last().get('id') + 1).toString()
-        : '0';
       this.props.addFavorite(data, true);
     }
   };
@@ -100,6 +97,7 @@ class ReduxFormMain extends Component {
     const {
       handleSubmit, submitting, useSSH, sshKey, sshAuthType, dirty, valid, selectedFavorite
     } = this.props;
+    console.log(this);
     return (
       <form
         className="flex-row"

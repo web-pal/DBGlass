@@ -22,10 +22,10 @@ function onClick(ev) {
 }
 
 
-const ReduxFormBase = enhance(() => (
+const ReduxFormBase = enhance(({ props }) => (
   <div className="form-wrapper flex-row flex--center">
     <div className="form">
-      <ReduxFormMain />
+      <ReduxFormMain propsa={{ ...props }} />
     </div>
     <span id="madeby">designed by</span>
     <a
