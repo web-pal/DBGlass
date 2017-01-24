@@ -38,7 +38,7 @@ class ConnectContainer extends Component {
             selectedFavorite={selectedFavorite}
             actions={actions}
           />
-          <ReduxFormBase />
+          <ReduxFormBase test={isConnected} />
         </div>
       </div>
     );
