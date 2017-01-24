@@ -18,10 +18,12 @@ export default class FavSwitcherComponent extends Component {
     window.removeEventListener('mousedown', null);
   }
 
-  handleClick = (e) => {
-    this.props.actions.toggleFavoriteSwitcher();
-    this.props.actions.setCurrent(e.target.dataset.id.toString() || null);
-    this.props.actions.dropConnection();
+  handleClick = (id) => {
+    return () => {
+      this.props.actions.toggleFavoriteSwitcher();
+      this.props.actions.setCurrent(id.toString() || null);
+      this.props.actions.dropConnection();
+    }
   };
 
   handleOuterClick = (e) => {
@@ -55,7 +57,7 @@ export default class FavSwitcherComponent extends Component {
             <li
               key={item.get('id')}
               data-id={item.get('id')}
-              onClick={this.handleClick}
+              onClick={this.handleClick(item.get('id'))}
             >
               <i className="fa fa-database" />
               {item.get('connectionName')}
@@ -64,7 +66,7 @@ export default class FavSwitcherComponent extends Component {
         </ul>
         <hr />
         <div className="btn-block">
-          <button className="btn btn-plain btn--block-centered" onClick={this.handleClick}>
+          <button className="btn btn-plain btn--block-centered" onClick={this.handleClick()}>
             <i className="fa fa-plus" />
             &#160;New Connection
           </button>

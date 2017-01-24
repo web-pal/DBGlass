@@ -74,7 +74,7 @@ const mapStateToProps = (state) => {
     selectedFavorite: state.favorites.meta.get('selectedFavorite'),
     favSwitcherOpen: state.favorites.meta.get('favSwitcherOpen'),
     isConnected: state.currentTable.isConnected,
-    useSSH: selector(state, 'useSSH'), // -------------
+    useSSH: selector(state, 'useSSH'),
     sshKey: selector(state, 'privateKey'),
     sshAuthType: selector(state, 'sshAuthType'),
     initialValues: initData,
