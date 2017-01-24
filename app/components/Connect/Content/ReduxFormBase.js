@@ -7,13 +7,11 @@ import DB from '../../../db';
 
 const { shell } = require('electron');
 
-
 const enhance = lifecycle({
   componentDidMount() {
     DB.disconnectDB();
   }
 });
-
 
 function onClick(ev) {
   ev.preventDefault();
@@ -21,11 +19,10 @@ function onClick(ev) {
   shell.openExternal('http://web-pal.com?ref=dbglass');
 }
 
-
 const ReduxFormBase = enhance((props) => (
   <div className="form-wrapper flex-row flex--center">
     <div className="form">
-      <ReduxFormMain propsa={props} />
+      <ReduxFormMain {...props} />
     </div>
     <span id="madeby">designed by</span>
     <a
@@ -41,6 +38,5 @@ const ReduxFormBase = enhance((props) => (
     </a>
   </div>
 ));
-
 
 export default ReduxFormBase;

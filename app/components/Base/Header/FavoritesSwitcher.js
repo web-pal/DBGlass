@@ -20,7 +20,7 @@ export default class FavSwitcherComponent extends Component {
 
   handleClick = (e) => {
     this.props.actions.toggleFavoriteSwitcher();
-    this.props.actions.setCurrent((Number(e.target.dataset.id)).toString() || null);
+    this.props.actions.setCurrent(e.target.dataset.id.toString() || null);
     this.props.actions.dropConnection();
   };
 

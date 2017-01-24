@@ -1,10 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { fromJS } from 'immutable';
+import { reduxForm, formValueSelector} from 'redux-form/immutable';
 
 import * as Actions from '../actions/currentTable';
 import * as favActions from '../actions/favorites';
 import getFavorites from '../selectors';
+
+import validate from './../components/Connect/Content/validateForm';
 
 import Header from '../components/Base/Header/Header';
 import UpdatesModal from '../components/Connect/Content/UpdatesModal/UpdatesModal';
@@ -38,23 +42,50 @@ class ConnectContainer extends Component {
             selectedFavorite={selectedFavorite}
             actions={actions}
           />
-          <ReduxFormBase test={isConnected} />
+          <ReduxFormBase {...this.props} />
         </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ favorites, currentTable }) => ({
-  favorites: getFavorites(favorites),
-  selectedFavorite: favorites.meta.get('selectedFavorite'),
-  favSwitcherOpen: favorites.meta.get('favSwitcherOpen'),
-  isConnected: currentTable.isConnected
-});
+const selector = formValueSelector('connect');
+const ReduxFormMainDecorated = reduxForm({
+  form: 'connect',
+  validate,
+  enableReinitialize: true
+})(ConnectContainer);
+
+const mapStateToProps = (state) => {
+  const data = getFavorites(state.favorites);
+  const initData = data.size > 0 && state.favorites.meta.get('selectedFavorite')
+    ? data.find(
+      item => item.get('id') === state.favorites.meta.get('selectedFavorite')
+    )
+    : fromJS(
+      { port: 5432,
+        address: 'localhost',
+        sshPort: 22,
+        sshAuthType: 'password',
+        useSSL: true }
+    );
+  return {
+    favorites: getFavorites(state.favorites),
+    selectedFavorite: state.favorites.meta.get('selectedFavorite'),
+    favSwitcherOpen: state.favorites.meta.get('favSwitcherOpen'),
+    isConnected: state.currentTable.isConnected,
+    useSSH: selector(state, 'useSSH'), // -------------
+    sshKey: selector(state, 'privateKey'),
+    sshAuthType: selector(state, 'sshAuthType'),
+    initialValues: initData,
+    formValues: state.form.get('connect') && state.form.get('connect').get('values') ?
+      state.form.get('connect').get('values').toObject() : {}
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({ ...Actions, ...favActions }, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConnectContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ReduxFormMainDecorated);
 
