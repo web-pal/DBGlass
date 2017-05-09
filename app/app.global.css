@@ -1,0 +1,143 @@
+@import "~font-awesome/css/font-awesome.css";
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+#wrapper {
+  font-family: Harmonia Sans;
+  height: 100%;
+  overflow: hidden;
+}
+
+@font-face {
+  font-family: Harmonia Sans;
+  src: url('./assets/fonts/HarmoniaSansProCyr-Light.otf') format('opentype');
+  font-weight: 50;
+  font-style: Light;
+}
+
+@font-face {
+  font-family: Harmonia Sans;
+  src: url('./assets/fonts/HarmoniaSansProCyr-Regular.otf') format('opentype');
+  font-weight: 100;
+  font-style: Regular;
+}
+
+@font-face {
+  font-family: Harmonia Sans;
+  src: url('./assets/fonts/HarmoniaSansProCyr-SemiBd.otf') format('opentype');
+  font-weight: 400;
+  font-style: SemiBold;
+}
+
+@font-face {
+  font-family: Harmonia Sans;
+  src: url('./assets/fonts/HarmoniaSansProCyr-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: Bold;
+}
+
+.flex-column {
+  display: flex;
+  flex-flow: column nowrap;
+  &.flex--half {
+    width: 50%;
+  }
+  &.wrap {
+    flex-wrap: wrap;
+  }
+}
+
+.flex-row {
+  display: flex;
+  flex-flow: row nowrap;
+  &.flex--half {
+    height: 50%;
+  }
+  &.wrap {
+    flex-wrap: wrap;
+  }
+  &.flex--vertical-center {
+    align-items: center;
+  }
+}
+
+.flex-row > .form-group:not(:last-child){
+  margin-right: 8px;
+}
+
+.flex-row-reverse {
+  display: flex;
+  flex-flow: row-reverse nowrap;
+}
+
+.flex--vh-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex--s-between {
+  justify-content: space-between;
+}
+
+.flex--s-around {
+  justify-content: space-around;
+}
+
+.flex--center {
+  justify-content: center;
+}
+
+.flex--start {
+  justify-content: flex-start;
+}
+
+.flex--end {
+  justify-content: flex-end;
+}
+
+.flex-item--start {
+  align-self: flex-start;
+}
+
+.flex-item--center {
+  align-self: center;
+  margin: 0 auto;
+}
+
+.flex-row > .flex-item--end {
+  align-self: flex-end;
+  margin: auto 0;
+  margin-left: auto;
+}
+
+.flex-column > .flex-item--end {
+  align-self: flex-end;
+  margin-top: auto;
+}
+
+.flex-item--last {
+  order: 999;
+}
+
+.flex-item--first {
+  order: 0;
+}
+
+.flex-item--grow-1 {
+  flex-grow: 1;
+}
+
+.flex-item--grow-2 {
+  flex-grow: 2;
+}

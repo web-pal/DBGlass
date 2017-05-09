@@ -1,0 +1,29 @@
+{
+  "name": "DBGlass",
+  "productName": "DBGlass",
+  "version": "0.1.0-beta.1",
+  "description": "Cross platform GUI PostgreSQL client",
+  "main": "./main.prod.js",
+  "scripts": {
+    "rebuild-electron": "npm rebuild --runtime=electron --target=1.6.5 --disturl=https://atom.io/download/atom-shell -—abi=51"
+  },
+  "updater": {
+    "url": "https://raw.githubusercontent.com/web-pal/DBGlass/master/updates.json",
+    "autoDownload": false,
+    "disabled": false
+  },
+  "author": {
+    "name": "Vladimir Pal",
+    "email": "mail.vpal@gmail.com",
+    "url": "https://web-pal.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "electron-updater": "^1.14.0"
+  },
+  "devEngines": {
+    "node": ">=6.x",
+    "npm": ">=4.x",
+    "yarn": "0.22.0"
+  }
+}

@@ -1,15 +1,12 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form/immutable';
 
-import tables from './tables';
-import currentTable from './currentTable';
-import favorites from './favorites';
+import ui from './ui';
+
 
 const rootReducer = combineReducers({
-  tables,
-  currentTable,
-  favorites,
-  form: formReducer
+  form: formReducer,
+  ui,
 });
 
 export default rootReducer;

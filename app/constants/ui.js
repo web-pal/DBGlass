@@ -1,0 +1,1 @@
+export const SET_CONNECTED_STATE = 'ui/SET_CONNECTED_STATE';
