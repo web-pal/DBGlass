@@ -366,7 +366,7 @@ class ConnectForm extends Component {
                 Remove
               </Button>
             }
-            <Button onClick={this.save} disabled={(valid && !dirty)}>
+            <Button onClick={this.save} disabled={(!valid && !dirty)}>
               Save
             </Button>
             <Button type="submit">
