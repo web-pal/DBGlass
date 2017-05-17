@@ -11,8 +11,10 @@ function allItems(state: FavoritesIds = [], action: Action) {
   switch (action.type) {
     case 'favorites/FILL':
       return _.union(state, action.payload.ids);
-    case 'favorites/REMOVE':
-      return state.filter(f => f !== action.payload);
+    case 'favorites/REMOVE': {
+      const payload = action.payload;
+      return state.filter(f => f !== payload);
+    }
     case 'CLEAR_ALL_REDUCERS':
       return [];
     default:
