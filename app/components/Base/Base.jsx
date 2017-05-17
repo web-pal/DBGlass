@@ -4,11 +4,11 @@ import { Provider } from 'react-redux';
 
 import App from '../../containers/App';
 
-type BaseType = {
+type Props = {
   store: {}
 };
 
-const Base = ({ store }: BaseType) =>
+const Base = ({ store }: Props) =>
   <Provider store={store}>
     <App />
   </Provider>;

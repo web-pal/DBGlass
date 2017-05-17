@@ -1,15 +1,17 @@
-import * as types from '../constants/ui';
+// @flow
+import type { uiState, Action } from '../types';
 
-const InitialState = Immutable.Record({
+const initialState: uiState = {
   isConnected: false,
-});
+};
 
-const initialState = new InitialState();
-
-export default function ui(state = initialState, action) {
+export default function ui(state: uiState = initialState, action: Action) {
   switch (action.type) {
-    case types.SET_CONNECTED_STATE:
-      return state.set('isConnected', action.payload);
+    case 'ui/SET_CONNECTED_STATE':
+      return {
+        ...state,
+        isConnected: action.payload,
+      };
     default:
       return state;
   }

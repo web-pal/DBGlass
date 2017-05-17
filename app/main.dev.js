@@ -72,8 +72,8 @@ function createWindow(callback) {
       data : { width: workAreaSize.width, height: workAreaSize.height };
     mainWindow = new BrowserWindow({
       show: false,
-      minWidth: 800,
-      minHeight: 400,
+      minWidth: 1000,
+      minHeight: 600,
       ...lastWindowSize,
       ...noFrameOption,
     });

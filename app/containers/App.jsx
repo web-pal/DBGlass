@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 
 import Connect from './Connect/Connect';
 import Main from './Main';
+import type { State } from '../types';
 
-type AppType = {
+type Props = {
   isConnected: boolean
 };
 
-const App = ({ isConnected }: AppType) =>
+const App = ({ isConnected }: Props) =>
   <div id="wrapper">
     {isConnected
       ? <Main />
@@ -17,10 +18,9 @@ const App = ({ isConnected }: AppType) =>
     }
   </div>;
 
-function mapStateToProps({ ui }) {
-  return {
-    isConnected: ui.isConnected,
-  };
-}
+
+const mapStateToProps = ({ ui }: State) => ({
+  isConnected: ui.isConnected,
+});
 
 export default connect(mapStateToProps)(App);

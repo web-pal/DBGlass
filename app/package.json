@@ -19,7 +19,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "electron-updater": "^1.14.0"
+    "electron-updater": "^1.14.0",
+    "open-ssh-tunnel": "^0.3.1",
+    "pg": "^6.1.5",
+    "pg-native": "^1.10.1"
   },
   "devEngines": {
     "node": ">=6.x",

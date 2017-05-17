@@ -115,7 +115,7 @@ export default merge.smart(baseConfig, {
   entry: {
     vendor: [
       'babel-polyfill',
-      ...Object.keys(dependencies)
+      ...Object.keys(dependencies || {}),
     ]
     .filter(dependency => dependency !== 'font-awesome'),
   },
@@ -124,7 +124,7 @@ export default merge.smart(baseConfig, {
     library: 'vendor',
     path: dist,
     filename: '[name].dll.js',
-    libraryTarget: 'var'
+    libraryTarget: 'var',
   },
 
   plugins: [
@@ -143,7 +143,7 @@ export default merge.smart(baseConfig, {
      * development checks
      */
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
     }),
 
     new webpack.ProvidePlugin({
@@ -158,6 +158,6 @@ export default merge.smart(baseConfig, {
           path: path.resolve(process.cwd(), 'dll'),
         },
       },
-    })
+    }),
   ],
 });

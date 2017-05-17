@@ -1,7 +1,4 @@
 import styled from 'styled-components';
-import { Column } from 'hedron';
-
-import Flex from '../../../components/Base/Flex/Flex';
 
 export const Ul = styled.ul`
   list-style: none;
@@ -15,8 +12,12 @@ export const Li = styled.li`
   color: #989898;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 100;
   padding: 10px 15px;
+
+  border-left: ${props => props.active ? '2px solid #10a78a' : ''};
+  background-color: ${props => props.active ? '#2f2f2f' : ''};
+  color: ${props => props.active ? '#fff' : ''};
+  font-weight: ${props => props.active ? '400' : '100'};
 
   &:hover {
     color: #fff;
@@ -24,7 +25,7 @@ export const Li = styled.li`
   }
 `;
 
-export const Button = styled.div`
+export const Button = styled.button`
   display: flex;
   flex-grow: 1;
   justify-content: center;
@@ -37,7 +38,6 @@ export const Button = styled.div`
   border: none;
   border-radius: 4px;
   margin-left: 15px;
-  padding-top: 5px;
 
   &:hover {
     color: #333;
@@ -62,7 +62,8 @@ export const Input = styled.input`
   padding: 6px 12px;
   height: 20px;
   line-height: 1.4;
-  border: 1px solid #ccc;
+  border: ${props => (props.error && props.touched) ? '1px solid #ff6f6f' : '1px solid #ccc'};
+  box-shadow: ${props => (props.error && props.touched) ? '0 0 6px #ff6f6f' : ''};
   border-radius: 4px;
   font: inherit;
 `;
@@ -72,6 +73,11 @@ export const InputGroup = styled.div`
   flex-flow: column nowrap;
   min-width: 300px;
   margin-top: 15px;
+`;
+
+export const ButtonsGroup = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
 `;
 
 export const ToggleGroup = styled.div`
@@ -165,11 +171,13 @@ export const SidebarHeader = styled.div`
   padding: 32px 10px 18px 21px;
   font-weight: 700;
   font-size: 16px;
+  -webkit-app-region: drag;
 `;
 
 export const MainHeader = styled.div`
   height: 60px;
   background-color: #fff;
+  -webkit-app-region: drag;
 `;
 
 export const SidebarContent = styled.div`
