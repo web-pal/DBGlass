@@ -1,9 +1,10 @@
 // @flow
-export type IdString = string;
+import type { IdString } from './';
+
 export type FavoritesIds = Array<IdString>;
 
 export type Favorite = {
-  id: ?string,
+  id: ?IdString,
   connectionName: ?string,
   user: ?string,
   password: ?string,

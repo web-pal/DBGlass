@@ -9,7 +9,7 @@ import {
 
 import * as uiActions from '../../actions/ui';
 import * as favoritesActions from '../../actions/favorites';
-import PGDB from '../../utils/pgDB';
+import { configureConnect, connectDB } from '../../utils/pgDB';
 import sshConnect from '../../utils/sshForward';
 
 import {
@@ -125,7 +125,8 @@ class ConnectForm extends Component {
       sshKeyPassword, sshAuthType, privateKey, port, address,
     } = data;
     this.setState({ err: '' });
-    let promise = new Promise(resolve => PGDB.connectDB(data, (isConnected, err) => {
+    configureConnect(data);
+    let promise = new Promise(resolve => connectDB((isConnected, err) => {
       resolve({ err, isConnected });
     }));
     if (useSSH) {
@@ -150,7 +151,8 @@ class ConnectForm extends Component {
             if (err) {
               resolve({ err, isConnected: false });
             } else {
-              PGDB.connectDB({ ...data, port: freePort }, (isConnected, error) => {
+              configureConnect({ ...data, port: freePort });
+              connectDB((isConnected, error) => {
                 resolve({ err: error, isConnected });
               });
             }

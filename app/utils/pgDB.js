@@ -1,27 +1,35 @@
 // @flow
+
 import type { Favorite } from '../types';
 
 const pg = require('electron').remote.require('pg');
 
+let pool = null;
 
-export default class PGDB {
-  static connectDB(params: Favorite, callback) {
-    pg.connect(params, (err, client) => {
-      let isConnected = true;
-      let errorMessage = false;
+
+export function configureConnect(params: Favorite) {
+  pool = new pg.Pool(params);
+}
+
+export function connectDB(callback: Function) {
+  if (pool) {
+    pool.connect((err) => {
       if (err) {
-        isConnected = false;
-        errorMessage = err.message;
-      } else {
-        this.client = client;
+        callback.apply(null, [false, err]);
       }
-      callback.apply(null, [isConnected, errorMessage]);
+      callback.apply(null, [true, '']);
     });
   }
+}
 
-  static disconnectDB() {
-    if (this.client) {
-      this.client.end();
-    }
+export function disconnectDB() {
+  if (pool) {
+    pool.disconnect();
+  }
+}
+
+export function executeSQL(query: string, values: Array<string>, callback: Function) {
+  if (pool) {
+    pool.query(query, values, callback);
   }
 }

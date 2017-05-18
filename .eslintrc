@@ -13,6 +13,7 @@
     "generator-star-spacing": "off",
     "import/no-unresolved": "error",
     "import/no-extraneous-dependencies": "off",
+    "import/prefer-default-export": "off",
     "no-console": "off",
     "no-constant-condition": "off",
     "no-confusing-arrow": "off",

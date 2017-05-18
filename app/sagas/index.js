@@ -4,6 +4,7 @@ import {
   fetchFavorites, selectFavorite,
   saveFavorite, removeFavorite,
 } from './favorites';
+import { fetchTables } from './tables';
 
 export default function* root() {
   yield [
@@ -11,5 +12,7 @@ export default function* root() {
     fork(saveFavorite),
     fork(removeFavorite),
     fork(selectFavorite),
+
+    fork(fetchTables),
   ];
 }
