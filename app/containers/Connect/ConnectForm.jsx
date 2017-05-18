@@ -366,7 +366,7 @@ class ConnectForm extends Component {
             <Button
               backgroundColor="#6386e2"
               onClick={this.save}
-              disabled={true}
+              disabled={(!valid && !dirty)}
             >
               Save
             </Button>
