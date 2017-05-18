@@ -30,7 +30,7 @@ export const I = styled.i`
 `;
 
 export const Img = styled.img`
-  padding: 19px 10px 10px 21px;
+  padding: 27px 10px 10px 21px;
   height: 23px;
 `;
 
@@ -158,7 +158,7 @@ export const SidebarHeader = styled.div`
 `;
 
 export const MainHeader = styled.div`
-  height: 52px;
+  height: 60px;
   background-color: #fff;
   -webkit-app-region: drag;
 `;
