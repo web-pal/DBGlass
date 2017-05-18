@@ -1,6 +1,6 @@
-import devConfig from './config.development.js';
-import prodConfig from './config.production.js';
-import testConfig from './config.testing.js';
+import devConfig from './config.development';
+import prodConfig from './config.production';
+import testConfig from './config.testing';
 
 let config = prodConfig; // eslint-disable-line
 

@@ -67,9 +67,8 @@ export default function sshConnect(params, callback) {
     if (err) {
       callback(err);
     } else if (server) {
-      server.close(() => {
-        connect(params, port, callback);
-      });
+      server.close();
+      connect(params, port, callback);
     } else {
       connect(params, port, callback);
     }

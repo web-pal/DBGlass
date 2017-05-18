@@ -1,4 +1,4 @@
-/* eslint global-require: 1, flowtype-errors/show-errors: 0 */
+/* eslint global-require: 0, flowtype-errors/show-errors: 0 */
 // @flow
 import path from 'path';
 import storage from 'electron-json-storage';
@@ -29,7 +29,7 @@ const installExtensions = async () => {
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = [
     'REACT_DEVELOPER_TOOLS',
-    'REDUX_DEVTOOLS'
+    'REDUX_DEVTOOLS',
   ];
 
   return Promise

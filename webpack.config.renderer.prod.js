@@ -14,7 +14,7 @@ import pjson from './package.json';
 
 const plugins = [
   new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
   }),
   // Define global vars
   new webpack.ProvidePlugin({
@@ -29,7 +29,7 @@ const plugins = [
 
   new BundleAnalyzerPlugin({
     analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
-    openAnalyzer: process.env.OPEN_ANALYZER === 'true'
+    openAnalyzer: process.env.OPEN_ANALYZER === 'true',
   }),
 ];
 
@@ -41,7 +41,7 @@ if (process.env.UPLOAD_SENTRY !== '0') {
       project: 'DBGlass',
       apiKey: '9eacb1a468a41b29bd005a1a46c039644fe1ca5ea614540b9e6b03db719a5ee',
       release: `${pjson.version}_${process.platform}`,
-    })
+    }),
   );
 }
 
@@ -56,7 +56,7 @@ export default merge.smart(baseConfig, {
   output: {
     path: path.join(__dirname, 'app/dist'),
     publicPath: '../dist/',
-    filename: '[name]-bundle.js'
+    filename: '[name]-bundle.js',
   },
 
   module: {
@@ -66,17 +66,17 @@ export default merge.smart(baseConfig, {
         use: ExtractTextPlugin.extract({
           use: 'css-loader',
           fallback: 'style-loader',
-        })
+        }),
       },
       {
         test: /\.less$/,
         use: ExtractTextPlugin.extract({
           use: [{
-            loader: 'css-loader'
+            loader: 'css-loader',
           }, {
             loader: 'less-loader',
           }],
-          fallback: 'style-loader'
+          fallback: 'style-loader',
         }),
       },
       // WOFF Font
@@ -87,7 +87,7 @@ export default merge.smart(baseConfig, {
           options: {
             limit: 10000,
             mimetype: 'application/font-woff',
-          }
+          },
         },
       },
       // WOFF2 Font
@@ -98,8 +98,8 @@ export default merge.smart(baseConfig, {
           options: {
             limit: 10000,
             mimetype: 'application/font-woff',
-          }
-        }
+          },
+        },
       },
       // TTF Font
       {
@@ -108,9 +108,9 @@ export default merge.smart(baseConfig, {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            mimetype: 'application/octet-stream'
-          }
-        }
+            mimetype: 'application/octet-stream',
+          },
+        },
       },
       // EOT Font
       {
@@ -130,15 +130,15 @@ export default merge.smart(baseConfig, {
           options: {
             limit: 10000,
             mimetype: 'image/svg+xml',
-          }
-        }
+          },
+        },
       },
       // Common Image Formats
       {
         test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
         use: 'url-loader',
-      }
-    ]
+      },
+    ],
   },
   plugins,
 });

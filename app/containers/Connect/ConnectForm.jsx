@@ -119,6 +119,8 @@ class ConnectForm extends Component {
     }
   }
 
+  // We don't use saga here because of redux-form
+  // https://github.com/redux-saga/redux-saga/issues/161
   submit = (data: Favorite) => {
     const {
       useSSH, sshHost, sshPort, sshUsername, sshPassword,
@@ -126,9 +128,7 @@ class ConnectForm extends Component {
     } = data;
     this.setState({ err: '' });
     configureConnect(data);
-    let promise = new Promise(resolve => connectDB((isConnected, err) => {
-      resolve({ err, isConnected });
-    }));
+    let promise = null;
     if (useSSH) {
       if (sshAuthType === 'key' && !privateKey) {
         return new Promise(resolve => resolve({ err: 'Missing private key', isConnected: false })).then(result => {
@@ -157,6 +157,10 @@ class ConnectForm extends Component {
               });
             }
           }));
+    } else {
+      promise = new Promise(resolve => connectDB((isConnected, err) => {
+        resolve({ err, isConnected });
+      }));
     }
     return promise.then((result) => {
       if (!result.isConnected) {

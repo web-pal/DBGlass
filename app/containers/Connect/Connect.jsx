@@ -58,7 +58,7 @@ class Connect extends Component {
                 <Li
                   key={favorite.id}
                   active={currentFavoriteId === favorite.id}
-                  onClick={() => selectFavoriteRequest(favorite.id.toString())}
+                  onClick={() => selectFavoriteRequest(favorite.id)}
                 >
                   <I className="fa fa-database" />
                   <span>{favorite.connectionName}</span>
@@ -100,7 +100,7 @@ function mapStateToProps(state: State) {
   };
 }
 
-const connector: Connector<Props, Props> = connect(
+const connector: Connector<{}, Props> = connect(
   mapStateToProps,
   mapDispatchToProps,
 );

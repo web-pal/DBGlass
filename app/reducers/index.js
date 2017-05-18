@@ -9,6 +9,7 @@ import tables from './tables';
 const rootReducer = combineReducers({
   ui,
   favorites,
+  tables,
   form: formReducer,
 });
 
