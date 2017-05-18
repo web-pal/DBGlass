@@ -14,9 +14,6 @@ export function configureConnect(params: Favorite) {
 export function connectDB(callback: Function) {
   if (pool) {
     pool.connect((err) => {
-      console.log('------');
-      console.log(err);
-      console.log('------');
       if (err) {
         callback.apply(null, [false, err]);
       }
@@ -31,7 +28,7 @@ export function disconnectDB() {
   }
 }
 
-export function executeSQL(query: string, values: Array<string>, callback: Function) {
+export function executeSQL(query: string, values: Array<?string>, callback: Function) {
   if (pool) {
     pool.query(query, values, callback);
   }

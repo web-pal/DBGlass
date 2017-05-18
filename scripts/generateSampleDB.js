@@ -19,7 +19,7 @@ let askCredentials = true;
 process.argv.slice(2).forEach((val) => {
   switch (val) {
     case 'default-config':
-      askCredentials = false;
+      // askCredentials = false;
       break;
     default:
       console.log('Unknown command');
@@ -158,10 +158,7 @@ async function connect() {
   let client = null;
   try {
     console.log('Trying connect to database.');
-    client = await pool.connect((err, client) => {
-      console.log('Connected');
-      return client;
-    });
+    client = await pool.connect();
   } catch (err) {
     return console.log('Error during connection...');
   }

@@ -16,7 +16,7 @@ export function* fetchTables() {
       AND table_type='BASE TABLE'
     `;
 
-    const result = yield cps(executeSQL, query);
+    const result = yield cps(executeSQL, query, []);
     const tablesIds = [];
     const tables = {};
     result.rows.map((t, i) => {
