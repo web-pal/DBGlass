@@ -11,13 +11,19 @@ import * as uiActions from '../../actions/ui';
 import * as favoritesActions from '../../actions/favorites';
 import { configureConnect, connectDB } from '../../utils/pgDB';
 import sshConnect from '../../utils/sshForward';
+import {
+  renderRadio,
+  renderField,
+  renderSlider,
+} from '../../components/shared/InputComponents';
+
+import { Button } from '../../components/shared/styled';
 
 import {
   LeftFieldsContainer,
   RightFieldsContainer,
   HelpText,
   Form,
-  Input,
   InputGroup,
   ButtonsGroup,
   ToggleGroup,
@@ -28,7 +34,6 @@ import {
   Label,
   RadioLabel,
   InputWithButton,
-  Button,
 } from './styled';
 
 import type { Favorite, State, Dispatch } from '../../types';
@@ -40,17 +45,6 @@ const { dialog } = require('electron').remote;
 
 const required = value => (value ? undefined : 'Required');
 const requiredIfUseSSH = (value, allValues) => ((value || !allValues.useSSH) ? undefined : 'Required');
-
-const renderField = ({ input, label, disabled, placeholder, type, meta: { touched, error, warning } }) => // eslint-disable-line
-  <Input
-    {...input}
-    disabled={disabled}
-    error={error}
-    touched={touched}
-    placeholder={placeholder}
-    type={type}
-  />;
-
 
 type Props = {
   changeField: () => void,
@@ -260,7 +254,7 @@ class ConnectForm extends Component {
             <ToggleArea>
               <Field
                 name="ssl"
-                component="input"
+                component={renderSlider}
                 type="checkbox"
                 normalize={value => value || false}
               />
@@ -308,7 +302,7 @@ class ConnectForm extends Component {
               <Field
                 name="sshAuthType"
                 disabled={!useSSH}
-                component={renderField}
+                component={renderRadio}
                 onChange={this.onSSHAuthTypeChange}
                 type="radio"
                 value="password"
@@ -319,7 +313,7 @@ class ConnectForm extends Component {
               <Field
                 name="sshAuthType"
                 disabled={!useSSH}
-                component={renderField}
+                component={renderRadio}
                 onChange={this.onSSHAuthTypeChange}
                 type="radio"
                 value="key"
@@ -360,7 +354,7 @@ class ConnectForm extends Component {
             <ToggleArea>
               <Field
                 name="useSSH"
-                component="input"
+                component={renderSlider}
                 type="checkbox"
                 normalize={value => value || false}
               />
@@ -368,11 +362,18 @@ class ConnectForm extends Component {
           </ToggleGroup>
           <ButtonsGroup>
             {id &&
-              <Button onClick={this.remove}>
+              <Button
+                backgroundColor="#6386e2"
+                onClick={this.remove}
+              >
                 Remove
               </Button>
             }
-            <Button onClick={this.save} disabled={(!valid && !dirty)}>
+            <Button
+              backgroundColor="#6386e2"
+              onClick={this.save}
+              disabled={true}
+            >
               Save
             </Button>
             <Button type="submit">
