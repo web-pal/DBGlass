@@ -15,6 +15,9 @@ import {
   NewConnectionButton,
   SidebarBottom,
   FormContainer,
+  MainFooter,
+  CompanyImg,
+  MadeBy,
   Img,
   Ul,
   Li,
@@ -22,6 +25,7 @@ import {
 } from './styled';
 import ConnectForm from './ConnectForm';
 import logo from '../../assets/images/logo.svg';
+import companyLogo from '../../assets/images/WebPal.svg';
 
 import * as favoritesActions from '../../actions/favorites';
 import { getFavorites } from '../../selectors/favorites';
@@ -83,6 +87,10 @@ class Connect extends Component {
               <ConnectForm />
             </FormContainer>
           </MainContent>
+          <MainFooter>
+            <CompanyImg alt="" role="presentation" src={companyLogo} />
+            <MadeBy>designed by</MadeBy>
+          </MainFooter>
         </MainColumn>
       </ConnectContainer>
     );
