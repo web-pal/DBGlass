@@ -60,7 +60,9 @@ class Main extends Component {
                   key={table.id}
                 >
                   <I className="fa fa-table" />
-                  <Span>{table.tableName}</Span>
+                  <Span title={table.tableName}>
+                    {table.tableName.length < 25 ? table.tableName : table.tableName.slice(0, 24).concat('...')}
+                  </Span>
                 </Li>,
               )}
             </Ul>
