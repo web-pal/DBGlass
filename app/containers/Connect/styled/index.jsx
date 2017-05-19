@@ -25,37 +25,19 @@ export const Li = styled.li`
   }
 `;
 
-export const Button = styled.button`
-  display: flex;
-  flex-grow: 1;
-  justify-content: center;
-  align-items: center;
-
-  cursor: pointer;
-  font-size: 14px;
-  background-color: #10a78a
-  color: white;
-  border: none;
-  border-radius: 4px;
-  margin-left: 15px;
-
-  &:hover {
-    color: #333;
-  }
-`;
-
 export const I = styled.i`
   margin-right: 9px;
 `;
 
 export const Img = styled.img`
-  padding: 32px 10px 18px 21px;
+  padding: 27px 10px 10px 21px;
   height: 23px;
 `;
 
 export const Form = styled.form`
   display: flex;
   padding: 43px 36px 39px 43px;
+  box-shadow: 1px 1px 27px 0px rgba(59, 59, 63, 0.2);
 `;
 
 export const Input = styled.input`
@@ -85,7 +67,7 @@ export const ToggleGroup = styled.div`
   flex-flow: row nowrap;
   justify-content: flex-end;
   min-width: 300px;
-  margin-top: 15px;
+  margin: 15px 10px;
 `;
 
 export const InputWithButton = styled.div`
@@ -117,6 +99,7 @@ export const Label = styled.div`
 
 export const ToggleLabel = styled.div`
   display: flex;
+  margin-right: 10px;
 `;
 
 export const RadioLabel = styled.div`
@@ -188,6 +171,8 @@ export const SidebarContent = styled.div`
 `;
 
 export const MainContent = styled.div`
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-grow: 1;
   justify-content: center;
@@ -214,4 +199,29 @@ export const RightFieldsContainer = styled.div`
 
 export const HelpText = styled.div`
   margin-top: 10px;
+`;
+
+export const MainFooter = styled.div`
+  align-self: center;
+  position: relative;
+  display: flex;
+  height: 73px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  background-color: #f0f0f0;
+  width: 100%;
+  padding: 10px 0;
+`;
+
+export const MadeBy = styled.span`
+  font-weight: 400;
+  font-size: 15px;
+  color: #a1a1a1;
+`;
+
+export const CompanyImg = styled.img`
+  padding: 15px 10px;
+  height: 32px;
 `;
