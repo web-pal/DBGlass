@@ -10,11 +10,14 @@ export const Input = styled.input`
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
   font: inherit;
   outline: 0;
+  background-color: white;
+  &:disabled {
+    background-color: #eeeeee;
+  }
   &:focus {
     border-color: #66afe9;
     border-left: 3px solid #2F4050;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
-    }
   }
 `;
 
