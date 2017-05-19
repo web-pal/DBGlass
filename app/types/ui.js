@@ -1,4 +1,5 @@
 // @flow
 export type uiState = {
-  isConnected: boolean
+  isConnected: boolean,
+  isMenuOpen: boolean
 };
