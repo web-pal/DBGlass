@@ -4,20 +4,22 @@ export const MainContainer = styled.div`
   display: flex;
   height: 100%;
 `;
-export const TablesButton = styled.button`
-  height: 36px;
-  font: 400 12px / 35px Harmonia Sans;
-  font-size: 14px;
-  cursor: pointer;
-  color: #10a78a;
-  background-color: transparent;
-  border: 1px solid rgba(16, 167, 138, 0.4);
-  border-radius: 4px;
-
-  &:hover {
-    color: #fff;
-  }
-`;
 export const Span = styled.span`
   word-break: break-all;
+`;
+
+export const MenuSwitcher = styled.div`
+  cursor: pointer;
+  height: 10px;
+  background-color: #232323;
+  color: white;
+  padding: 32px 10px 18px 21px;
+  font-weight: 700;
+  font-size: 16px;
+  -webkit-app-region: drag;
+`;
+
+export const Pin = styled.i`
+  float: right;
+  cursor: pointer;
 `;
