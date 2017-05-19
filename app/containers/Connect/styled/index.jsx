@@ -158,7 +158,7 @@ export const SidebarHeader = styled.div`
 `;
 
 export const MainHeader = styled.div`
-  height: 52px;
+  height: ${props => props.os.includes('Linux') ? '60px' : '52px'};
   background-color: #fff;
   -webkit-app-region: drag;
 `;

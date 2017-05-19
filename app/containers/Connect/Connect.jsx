@@ -79,7 +79,7 @@ class Connect extends Component {
         </SidebarColumn>
 
         <MainColumn>
-          <MainHeader>
+          <MainHeader os={window.navigator.platform}>
             <Img alt="" role="presentation" src={logo} />
           </MainHeader>
           <MainContent>
