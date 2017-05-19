@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Connect from './Connect/Connect';
-import Main from './Main';
+import Main from './Main/Main';
 import type { State } from '../types';
 
 type Props = {

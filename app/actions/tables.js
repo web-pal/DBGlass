@@ -10,3 +10,5 @@ export const fillTables = (payload: TableNormalizePayload): Action =>
     payload,
   });
 
+export const clearTables = (): Action =>
+  ({ type: 'tables/CLEAR_TABLES' });

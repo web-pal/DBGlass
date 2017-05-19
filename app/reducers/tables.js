@@ -8,6 +8,8 @@ function allItems(state: TablesIds = [], action: Action) {
   switch (action.type) {
     case 'tables/FILL':
       return _.union(state, action.payload.ids);
+    case 'tables/CLEAR_TABLES':
+      return [];
     case 'CLEAR_ALL_REDUCERS':
       return [];
     default:
@@ -22,6 +24,8 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
         ...state,
         ...action.payload.map,
       };
+    case 'tables/CLEAR_TABLES':
+      return {};
     case 'CLEAR_ALL_REDUCERS':
       return {};
     default:

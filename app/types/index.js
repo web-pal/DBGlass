@@ -4,7 +4,7 @@ import type {
   Favorite, FavoritesIndexedMap,
   FavoriteNormalizePayload, FavoritesIds, FavoritesMetaState,
 } from './favorites';
-import type { TableNormalizePayload } from './tables';
+import type { TableNormalizePayload, TablesIndexedMap, TablesIds } from './tables';
 import type { uiState } from './ui';
 
 export * from './favorites';
@@ -25,6 +25,7 @@ export type Action =
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'tables/FETCH_REQUEST' }
 | { type: 'tables/FILL', +payload: TableNormalizePayload }
+| { type: 'tables/CLEAR_TABLES' }
 | Object
 ;
 
@@ -35,6 +36,10 @@ export type State = {
     +byId: FavoritesIndexedMap,
     +allIds: FavoritesIds,
     +meta: FavoritesMetaState
+  },
+  +tables: {
+    +byId: TablesIndexedMap,
+    +allIds: TablesIds
   }
 };
 
