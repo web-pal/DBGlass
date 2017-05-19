@@ -23,6 +23,7 @@ import {
 import {
   MainContainer,
   TablesButton,
+  Span,
 } from './styled';
 
 type Props = {
@@ -59,7 +60,7 @@ class Main extends Component {
                   key={table.id}
                 >
                   <I className="fa fa-table" />
-                  <span>{table.tableName}</span>
+                  <Span>{table.tableName}</Span>
                 </Li>,
               )}
             </Ul>

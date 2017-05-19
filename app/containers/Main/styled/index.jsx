@@ -18,3 +18,6 @@ export const TablesButton = styled.button`
     color: #fff;
   }
 `;
+export const Span = styled.span`
+  word-break: break-all;
+`;
