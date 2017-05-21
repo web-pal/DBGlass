@@ -1,59 +1,47 @@
-import * as types from '../constants/favoriteConstants';
+// @flow
+import type {
+  IdString,
+  Action, Favorite, FavoriteNormalizePayload,
+} from '../types';
 
-const storage = require('electron-json-storage');
+export const fetchFavoritesRequest = (): Action =>
+  ({ type: 'favorites/FETCH_REQUEST' });
 
-export function addFavorite(favorite, currentId = false, callback) {
-  return (dispatch) => {
-    if (currentId) {
-      dispatch(setCurrent(currentId));
-    }
-    dispatch({
-      type: types.ADD_FAVORITE,
-      favorite,
-      currentId,
-      callback
-    });
-  };
-}
+export const addFavoriteRequest = (favorite: Favorite): Action =>
+  ({
+    type: 'favorites/ADD_REQUEST',
+    payload: favorite,
+  });
 
-export function updateFavorite(favorite) {
-  return {
-    type: types.UPDATE_FAVORITE,
-    favorite
-  };
-}
+export const removeFavoriteRequest = (payload: IdString): Action =>
+  ({
+    type: 'favorites/REMOVE_REQUEST',
+    payload,
+  });
 
-export function removeFavorite(favoriteId) {
-  return {
-    type: types.REMOVE_FAVORITE,
-    favoriteId
-  };
-}
+export const selectFavoriteRequest = (payload: ?IdString): Action =>
+  ({
+    type: 'favorites/SELECT_REQUEST',
+    payload,
+  });
 
-export function setCurrent(currentId) {
-  return { type: types.SET_CURRENT_FAVORITE, currentId };
-}
 
-export function getFavorites() {
-  return (dispatch) => {
-    storage.get('postglass_favorites', (error, favorites) => {
-      if (error) throw error;
-      storage.get('selected_favorite', (error2, selectedFavorite) => {
-        if (error2) throw error2;
-        dispatch(
-          {
-            type: types.GET_FAVORITES,
-            favorites: Object.keys(favorites).length === 0 ? [] : favorites,
-            selectedFavorite
-          }
-        );
-      });
-    });
-  };
-}
+export const fillFavorites = (payload: FavoriteNormalizePayload): Action =>
+  ({
+    type: 'favorites/FILL',
+    payload,
+  });
 
-export function toggleFavoriteSwitcher() {
-  return {
-    type: types.TOGGLE_FAV_SWITCHER
-  };
-}
+
+export const selectFavorite = (payload: ?IdString): Action =>
+  ({
+    type: 'favorites/SELECT',
+    payload,
+  });
+
+export const removeFavorite = (payload: IdString): Action =>
+  ({
+    type: 'favorites/REMOVE',
+    payload,
+  });
+

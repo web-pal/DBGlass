@@ -1,0 +1,57 @@
+@import "~font-awesome/css/font-awesome.css";
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+#wrapper {
+  font-family: Harmonia Sans;
+  height: 100%;
+  overflow: hidden;
+}
+
+@font-face {
+  font-family: Harmonia Sans;
+  src: url('./assets/fonts/HarmoniaSansProCyr-Light.otf') format('opentype');
+  font-weight: 50;
+  font-style: Light;
+}
+
+@font-face {
+  font-family: Harmonia Sans;
+  src: url('./assets/fonts/HarmoniaSansProCyr-Regular.otf') format('opentype');
+  font-weight: 100;
+  font-style: Regular;
+}
+
+@font-face {
+  font-family: Harmonia Sans;
+  src: url('./assets/fonts/HarmoniaSansProCyr-SemiBd.otf') format('opentype');
+  font-weight: 400;
+  font-style: SemiBold;
+}
+
+@font-face {
+  font-family: Harmonia Sans;
+  src: url('./assets/fonts/HarmoniaSansProCyr-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: Bold;
+}
+
+.connectFormInput {
+  padding: 6px 12px;
+  height: 20px;
+  line-height: 1.4;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font: inherit;
+}
