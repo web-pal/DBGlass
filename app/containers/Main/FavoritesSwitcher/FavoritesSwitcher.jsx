@@ -24,6 +24,7 @@ import {
   Favorite,
   Close,
   MenuButton,
+  SwitcherFooter,
 } from './styled';
 
 type Props = {
@@ -47,7 +48,7 @@ class FavoritesSwitcher extends Component {
   render() {
     const { favorites, selectFavoriteRequest, toggleMenu, isMenuOpen }: Props = this.props;
     return (
-      <SwitcherWrapper>
+      <SwitcherWrapper isMenuOpen={isMenuOpen}>
         <TitleWrapper>
           <Title>
             Favorites
@@ -66,10 +67,12 @@ class FavoritesSwitcher extends Component {
             )
           }
         </Favourites>
-        <MenuButton onClick={this.disconectFromDB}>
-          <I className="fa fa-chevron-left" />
-          Disconnect
+        <SwitcherFooter>
+          <MenuButton onClick={this.disconectFromDB}>
+            <I className="fa fa-chevron-left" />
+            Disconnect
         </MenuButton>
+        </SwitcherFooter>
       </SwitcherWrapper>
     );
   }

@@ -10,7 +10,7 @@ export const SwitcherWrapper = styled.div`
   z-index: 4;
   border-radius: 3px;
   transition: left .3s ease-out;
-  display: block;
+  display: ${props => props.isMenuOpen ? 'block' : 'none'};
 `;
 
 export const TitleWrapper = styled.div`
@@ -60,6 +60,11 @@ export const MenuButton = styled.button`
   border: 1px solid rgba(16, 167, 138, 0.4);
   border-radius: 4px;
   display: block;
-  margin: 0 auto;
-  margin-bottom: 25px;
+  margin: 15px auto;
+`;
+
+export const SwitcherFooter = styled.div`
+  display: block;
+  width: 100%;
+  border-top: 1px solid lightgray;
 `;

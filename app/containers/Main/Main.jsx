@@ -69,12 +69,7 @@ class Main extends Component {
             </Ul>
           </SidebarContent>
         </SidebarColumn>
-        {
-          isMenuOpen ?
-            <FavoritesSwitcher />
-            :
-            null
-        }
+        <FavoritesSwitcher />
       </MainContainer>
     );
   }
