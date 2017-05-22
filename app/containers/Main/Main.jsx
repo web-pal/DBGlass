@@ -8,13 +8,14 @@ import * as uiActions from '../../actions/ui';
 import * as tablesActions from '../../actions/tables';
 import type { Dispatch, Tables, State } from '../../types';
 import { getTables } from '../../selectors/tables';
+
 import { getCurrentDBName } from '../../selectors/tableName';
+
+import FavoritesSwitcher from './FavoritesSwitcher/FavoritesSwitcher';
 
 import {
   SidebarColumn,
-  SidebarHeader,
   SidebarContent,
-  SidebarBottom,
   Ul,
   Li,
   I,
@@ -22,37 +23,39 @@ import {
 
 import {
   MainContainer,
-  TablesButton,
   Span,
+  MenuSwitcher,
+  Pin,
 } from './styled';
 
 type Props = {
-  setConnectedState: () => void,
   fetchTablesRequest: () => void,
-  clearTables: () => void,
+  toggleMenu: () => void,
   tables: Tables,
-  currentDBName: string
+  currentDBName: string,
+  isMenuOpen: boolean
 };
 
 class Main extends Component {
   props: Props;
 
+  state = {
+    isMenuOpen: false,
+  }
+
   componentDidMount() {
     this.props.fetchTablesRequest();
   }
-  disconectFromDB = () => {
-    this.props.setConnectedState(false);
-    this.props.clearTables();
-  }
 
   render() {
-    const { tables, currentDBName }: Props = this.props;
+    const { tables, currentDBName, isMenuOpen, toggleMenu }: Props = this.props;
     return (
       <MainContainer>
         <SidebarColumn>
-          <SidebarHeader>
+          <MenuSwitcher onClick={() => toggleMenu(!isMenuOpen)} >
             {currentDBName}
-          </SidebarHeader>
+            <Pin className="fa fa-chevron-right" />
+          </MenuSwitcher>
           <SidebarContent>
             <Ul>
               {tables.map(table =>
@@ -66,14 +69,9 @@ class Main extends Component {
                 </Li>,
               )}
             </Ul>
-            <SidebarBottom>
-              <TablesButton onClick={this.disconectFromDB}>
-                <I className="fa fa-chevron-left" />
-                Disconnect
-              </TablesButton>
-            </SidebarBottom>
           </SidebarContent>
         </SidebarColumn>
+        <FavoritesSwitcher />
       </MainContainer>
     );
   }
@@ -87,6 +85,7 @@ function mapStateToProps(state: State) {
   return {
     tables: getTables({ tables: state.tables }),
     currentDBName: getCurrentDBName({ favorites: state.favorites }),
+    isMenuOpen: state.ui.isMenuOpen,
   };
 }
 
