@@ -16,7 +16,6 @@ import FavoritesSwitcher from './FavoritesSwitcher/FavoritesSwitcher';
 import {
   SidebarColumn,
   SidebarContent,
-  SidebarBottom,
   Li,
   I,
 } from '../Connect/styled';
@@ -24,12 +23,12 @@ import {
 import {
   MainContainer,
   TablesContainer,
-  TablesButton,
   Span,
+  MenuSwitcher,
+  Pin,
   LoaderContainer,
   TableLoader,
   AnimatedLoader,
-
 } from './styled';
 
 type Props = {
@@ -52,7 +51,7 @@ class Main extends Component {
   }
 
   render() {
-    const { tables, currentDBName }: Props = this.props;
+    const { tables, currentDBName, isMenuOpen, toggleMenu }: Props = this.props;
     const tablesBeforeLoading = [1, 2, 3]; // for testing purposes
     return (
       <MainContainer>
@@ -82,12 +81,6 @@ class Main extends Component {
                 </Li>,
               )}
             </TablesContainer>
-            <SidebarBottom>
-              <TablesButton onClick={this.disconectFromDB}>
-                <I className="fa fa-chevron-left" />
-                Disconnect
-              </TablesButton>
-            </SidebarBottom>
           </SidebarContent>
         </SidebarColumn>
         <FavoritesSwitcher />
