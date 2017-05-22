@@ -26,6 +26,7 @@ export type Action =
 | { type: 'tables/FETCH_REQUEST' }
 | { type: 'tables/FILL', +payload: TableNormalizePayload }
 | { type: 'tables/CLEAR_TABLES' }
+| { type: 'ui/TOGGLE_MENU', +payload: boolean }
 | Object
 ;
 
