@@ -28,7 +28,6 @@ import {
 } from './styled';
 
 type Props = {
-  selectFavoriteRequest: () => void,
   setConnectedState: () => void,
   clearTables: () => void,
   toggleMenu: () => void,
@@ -46,7 +45,7 @@ class FavoritesSwitcher extends Component {
   }
 
   render() {
-    const { favorites, selectFavoriteRequest, toggleMenu, isMenuOpen }: Props = this.props;
+    const { favorites, toggleMenu, isMenuOpen }: Props = this.props;
     return (
       <SwitcherWrapper isMenuOpen={isMenuOpen}>
         <TitleWrapper>
