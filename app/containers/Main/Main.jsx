@@ -15,15 +15,18 @@ import {
   SidebarHeader,
   SidebarContent,
   SidebarBottom,
-  Ul,
   Li,
   I,
 } from '../Connect/styled';
 
 import {
   MainContainer,
+  TablesContainer,
   TablesButton,
   Span,
+  LoaderContainer,
+  TableLoader,
+  AnimatedLoader,
 } from './styled';
 
 type Props = {
@@ -47,6 +50,7 @@ class Main extends Component {
 
   render() {
     const { tables, currentDBName }: Props = this.props;
+    const tablesBeforeLoading = [1, 2, 3]; // for testing purposes
     return (
       <MainContainer>
         <SidebarColumn>
@@ -54,7 +58,15 @@ class Main extends Component {
             {currentDBName}
           </SidebarHeader>
           <SidebarContent>
-            <Ul>
+            <LoaderContainer display={tables.length}>
+              {tablesBeforeLoading.map((index) =>
+                <TableLoader key={index}>
+                  <I className="fa fa-table" />
+                  <AnimatedLoader />
+                </TableLoader>,
+              )}
+            </LoaderContainer>
+            <TablesContainer display={tables.length}>
               {tables.map(table =>
                 <Li
                   key={table.id}
@@ -63,7 +75,7 @@ class Main extends Component {
                   <Span>{table.tableName}</Span>
                 </Li>,
               )}
-            </Ul>
+            </TablesContainer>
             <SidebarBottom>
               <TablesButton onClick={this.disconectFromDB}>
                 <I className="fa fa-chevron-left" />
