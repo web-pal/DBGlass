@@ -6,91 +6,121 @@ import type { Connector } from 'react-redux';
 
 import * as uiActions from '../../actions/ui';
 import * as tablesActions from '../../actions/tables';
+import * as currentTableActions from '../../actions/currentTable';
+import * as favoritesActions from '../../actions/favorites';
 import type { Dispatch, Tables, State } from '../../types';
-import { getTables } from '../../selectors/tables';
+import { getTables, getTablesQuantity } from '../../selectors/tables';
 
 import { getCurrentDBName } from '../../selectors/tableName';
 
 import FavoritesSwitcher from './FavoritesSwitcher/FavoritesSwitcher';
-
-import {
-  SidebarColumn,
-  SidebarContent,
-  Li,
-  I,
-} from '../Connect/styled';
+import MainContent from './MainContent/MainContent';
 
 import {
   MainContainer,
+  TablesSidebar,
+  TablesContent,
   TablesContainer,
-  Span,
+  Table,
+  TableIcon,
   MenuSwitcher,
   Pin,
   LoaderContainer,
   TableLoader,
   AnimatedLoader,
+  MaskTop,
+  MaskBottom,
+  MaskShort,
 } from './styled';
 
 type Props = {
   fetchTablesRequest: () => void,
   toggleMenu: () => void,
+  addFavoriteTablesQuantity: () => void,
+  fetchTableData: () => void,
   tables: Tables,
   currentDBName: string,
-  isMenuOpen: boolean
+  isMenuOpen: boolean,
+  isConnected: boolean,
+  currentFavoriteId: string,
+  tablesQuantity: ?number
 };
 
 class Main extends Component {
   props: Props;
 
-  state = {
-    isMenuOpen: false,
-  }
-
   componentDidMount() {
     this.props.fetchTablesRequest();
+    window.addEventListener('mousedown', (e) => {
+      if (!e.target.matches('#switcherWrapper, #switcherWrapper *, #menuSwitcher, #menuSwitcher *')) {
+        this.props.toggleMenu(false);
+      }
+    }, false);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.tables !== this.props.tables) {
+      this.props.addFavoriteTablesQuantity(
+        { currentFavoriteId: this.props.currentFavoriteId, quantity: nextProps.tables.length },
+      );
+    }
   }
 
   render() {
-    const { tables, currentDBName, isMenuOpen, toggleMenu }: Props = this.props;
-    const tablesBeforeLoading = [1, 2, 3]; // for testing purposes
+    const {
+      tables, currentDBName, isMenuOpen, toggleMenu, isConnected, tablesQuantity, fetchTableData,
+    }: Props = this.props;
+    const tablesBeforeLoading =
+      tablesQuantity ?
+      [...Array(tablesQuantity).keys()]
+      : [...Array(10).keys()];
     return (
       <MainContainer>
-        <SidebarColumn>
-          <MenuSwitcher onClick={() => toggleMenu(!isMenuOpen)} >
+        <TablesSidebar>
+          <MenuSwitcher onClick={() => toggleMenu(!isMenuOpen)} id="menuSwitcher">
             {currentDBName}
             <Pin className="fa fa-chevron-right" />
           </MenuSwitcher>
-          <SidebarContent>
-            <LoaderContainer display={tables.length}>
+          <TablesContent>
+            <LoaderContainer display={!isConnected}>
               {tablesBeforeLoading.map((index) =>
                 <TableLoader key={index}>
-                  <I className="fa fa-table" />
-                  <AnimatedLoader />
+                  <TableIcon className="fa fa-table" />
+                  <AnimatedLoader>
+                    <MaskTop />
+                    <MaskShort />
+                    <MaskBottom />
+                  </AnimatedLoader>
                 </TableLoader>,
               )}
             </LoaderContainer>
-            <TablesContainer display={tables.length}>
+            <TablesContainer display={isConnected}>
               {tables.map(table =>
-                <Li
+                <Table
                   key={table.id}
+                  onClick={() => fetchTableData(table.tableName)}
                 >
-                  <I className="fa fa-table" />
-                  <Span title={table.tableName}>
-                    {table.tableName.length < 25 ? table.tableName : table.tableName.slice(0, 24).concat('...')}
-                  </Span>
-                </Li>,
+                  <TableIcon className="fa fa-table" />
+                  <span title={table.tableName}>
+                    {table.tableName}
+                  </span>
+                </Table>,
               )}
             </TablesContainer>
-          </SidebarContent>
-        </SidebarColumn>
+          </TablesContent>
+        </TablesSidebar>
         <FavoritesSwitcher />
+        <MainContent />
       </MainContainer>
+
     );
   }
 }
 
 function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
-  return bindActionCreators({ ...uiActions, ...tablesActions }, dispatch);
+  return bindActionCreators(
+    { ...uiActions, ...tablesActions, ...favoritesActions, ...currentTableActions }, dispatch,
+  );
 }
 
 function mapStateToProps(state: State) {
@@ -98,6 +128,9 @@ function mapStateToProps(state: State) {
     tables: getTables({ tables: state.tables }),
     currentDBName: getCurrentDBName({ favorites: state.favorites }),
     isMenuOpen: state.ui.isMenuOpen,
+    currentFavoriteId: state.favorites.meta.currentFavoriteId,
+    isConnected: state.ui.isConnected,
+    tablesQuantity: getTablesQuantity({ favorites: state.favorites }),
   };
 }
 
