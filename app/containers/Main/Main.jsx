@@ -8,11 +8,13 @@ import * as uiActions from '../../actions/ui';
 import * as tablesActions from '../../actions/tables';
 import type { Dispatch, Tables, State } from '../../types';
 import { getTables } from '../../selectors/tables';
+
 import { getCurrentDBName } from '../../selectors/tableName';
+
+import FavoritesSwitcher from './FavoritesSwitcher/FavoritesSwitcher';
 
 import {
   SidebarColumn,
-  SidebarHeader,
   SidebarContent,
   SidebarBottom,
   Li,
@@ -27,25 +29,26 @@ import {
   LoaderContainer,
   TableLoader,
   AnimatedLoader,
+
 } from './styled';
 
 type Props = {
-  setConnectedState: () => void,
   fetchTablesRequest: () => void,
-  clearTables: () => void,
+  toggleMenu: () => void,
   tables: Tables,
-  currentDBName: string
+  currentDBName: string,
+  isMenuOpen: boolean
 };
 
 class Main extends Component {
   props: Props;
 
+  state = {
+    isMenuOpen: false,
+  }
+
   componentDidMount() {
     this.props.fetchTablesRequest();
-  }
-  disconectFromDB = () => {
-    this.props.setConnectedState(false);
-    this.props.clearTables();
   }
 
   render() {
@@ -54,9 +57,10 @@ class Main extends Component {
     return (
       <MainContainer>
         <SidebarColumn>
-          <SidebarHeader>
+          <MenuSwitcher onClick={() => toggleMenu(!isMenuOpen)} >
             {currentDBName}
-          </SidebarHeader>
+            <Pin className="fa fa-chevron-right" />
+          </MenuSwitcher>
           <SidebarContent>
             <LoaderContainer display={tables.length}>
               {tablesBeforeLoading.map((index) =>
@@ -72,7 +76,9 @@ class Main extends Component {
                   key={table.id}
                 >
                   <I className="fa fa-table" />
-                  <Span>{table.tableName}</Span>
+                  <Span title={table.tableName}>
+                    {table.tableName.length < 25 ? table.tableName : table.tableName.slice(0, 24).concat('...')}
+                  </Span>
                 </Li>,
               )}
             </TablesContainer>
@@ -84,6 +90,7 @@ class Main extends Component {
             </SidebarBottom>
           </SidebarContent>
         </SidebarColumn>
+        <FavoritesSwitcher />
       </MainContainer>
     );
   }
@@ -97,6 +104,7 @@ function mapStateToProps(state: State) {
   return {
     tables: getTables({ tables: state.tables }),
     currentDBName: getCurrentDBName({ favorites: state.favorites }),
+    isMenuOpen: state.ui.isMenuOpen,
   };
 }
 
