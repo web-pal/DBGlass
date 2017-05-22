@@ -16,16 +16,19 @@ import FavoritesSwitcher from './FavoritesSwitcher/FavoritesSwitcher';
 import {
   SidebarColumn,
   SidebarContent,
-  Ul,
   Li,
   I,
 } from '../Connect/styled';
 
 import {
   MainContainer,
+  TablesContainer,
   Span,
   MenuSwitcher,
   Pin,
+  LoaderContainer,
+  TableLoader,
+  AnimatedLoader,
 } from './styled';
 
 type Props = {
@@ -49,6 +52,7 @@ class Main extends Component {
 
   render() {
     const { tables, currentDBName, isMenuOpen, toggleMenu }: Props = this.props;
+    const tablesBeforeLoading = [1, 2, 3]; // for testing purposes
     return (
       <MainContainer>
         <SidebarColumn>
@@ -57,7 +61,15 @@ class Main extends Component {
             <Pin className="fa fa-chevron-right" />
           </MenuSwitcher>
           <SidebarContent>
-            <Ul>
+            <LoaderContainer display={tables.length}>
+              {tablesBeforeLoading.map((index) =>
+                <TableLoader key={index}>
+                  <I className="fa fa-table" />
+                  <AnimatedLoader />
+                </TableLoader>,
+              )}
+            </LoaderContainer>
+            <TablesContainer display={tables.length}>
               {tables.map(table =>
                 <Li
                   key={table.id}
@@ -68,7 +80,7 @@ class Main extends Component {
                   </Span>
                 </Li>,
               )}
-            </Ul>
+            </TablesContainer>
           </SidebarContent>
         </SidebarColumn>
         <FavoritesSwitcher />
