@@ -4,6 +4,18 @@ export const MainContainer = styled.div`
   display: flex;
   height: 100%;
 `;
+export const TablesSidebar = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  flex-basis: 250px;
+  max-width: 250px;
+`;
+export const TablesContent = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  flex-grow: 1;
+  background-color: #3b3b3f;
+`;
 export const TablesContainer = styled.ul`
   list-style: none;
   width: 100%;
@@ -11,6 +23,24 @@ export const TablesContainer = styled.ul`
   padding-left: 0;
   overflow: auto;
   display: ${props => props.display ? 'block' : 'none'}
+`;
+export const Table = styled.li`
+  color: #989898;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    color: #fff;
+    background-color: #2f2f2f;
+  }
+`;
+export const TableIcon = styled.i`
+  margin-right: 9px;
+  font-size: 0.9em;
 `;
 export const TablesButton = styled.button`
   height: 36px;
@@ -25,9 +55,6 @@ export const TablesButton = styled.button`
   &:hover {
     color: #fff;
   }
-`;
-export const Span = styled.span`
-  word-break: break-all;
 `;
 
 export const MenuSwitcher = styled.div`
@@ -60,13 +87,14 @@ export const LoaderContainer = styled.ul`
   margin-top: 0;
   padding-left: 0;
   overflow: hidden;
-  display: ${props => props.display ? 'none' : 'block'}
+  display: ${props => props.display ? 'block' : 'none'}
 `;
 export const TableLoader = styled.li`
   position: relative;
   margin: 5px;
   width: 100%;
   color: #989898;
+  padding-left: 10px
 `;
 export const AnimatedLoader = styled.span`
   animation-duration: 1s;
@@ -82,4 +110,28 @@ export const AnimatedLoader = styled.span`
   position: relative;
   top: 3px;
   display: inline-block;
+`;
+
+export const MaskTop = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 8px;
+  background: #3b3b3f;
+  width: 100%;
+`;
+export const MaskBottom = styled.div`
+  position: absolute;
+  top: 15px;
+  height: 8px;
+  width: 100%;
+  background: #3b3b3f;
+`;
+export const MaskShort = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 0;
+  height: 7px;
+  width: 35px;
+  background: #3b3b3f
 `;

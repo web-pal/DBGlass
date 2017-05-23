@@ -76,3 +76,12 @@ export function* fetchFavorites() {
     }
   }
 }
+
+export function* saveFavouriteTablesQuantity() {
+  while (true) {
+    const { payload } = yield take('favorites/ADD_FAVORITE_TABLES_QUANTITY');
+    const favorites = yield cps(storage.get, 'DBGlassFavorites');
+    favorites[payload.currentFavoriteId].tablesQuantity = payload.quantity;
+    yield cps(storage.set, 'DBGlassFavorites', favorites);
+  }
+}
