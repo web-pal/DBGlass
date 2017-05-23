@@ -4,6 +4,7 @@ import type { uiState, Action } from '../types';
 const initialState: uiState = {
   isConnected: false,
   isMenuOpen: false,
+  isLoading: false,
 };
 
 export default function ui(state: uiState = initialState, action: Action) {
@@ -17,6 +18,11 @@ export default function ui(state: uiState = initialState, action: Action) {
       return {
         ...state,
         isMenuOpen: action.payload,
+      };
+    case 'ui/TOGGLE_LADDA':
+      return {
+        ...state,
+        isLoading: action.payload,
       };
     default:
       return state;
