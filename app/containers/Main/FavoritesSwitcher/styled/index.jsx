@@ -9,8 +9,8 @@ export const SwitcherWrapper = styled.div`
   box-shadow: 1px 2px 13px 0.00px rgba(0, 0, 0, 0.17);
   z-index: 4;
   border-radius: 3px;
-  left: ${props => props.isMenuOpen ? '250px' : '-297px'};
-  transition: left .1s ease-out;
+  left: ${props => props.isMenuOpen ? '210px' : '-297px'};
+  transition: left .3s ease-out;
 `;
 
 export const TitleWrapper = styled.div`

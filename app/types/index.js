@@ -29,6 +29,7 @@ export type Action =
 | { type: 'tables/FILL', +payload: TableNormalizePayload }
 | { type: 'tables/CLEAR_TABLES' }
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }
+| { type: 'ui/TOGGLE_LADDA', +payload: boolean }
 | Object
 ;
 

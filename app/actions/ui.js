@@ -12,3 +12,9 @@ export const toggleMenu = (payload: boolean): Action =>
     type: 'ui/TOGGLE_MENU',
     payload,
   });
+
+export const toggleLadda = (payload: boolean): Action =>
+  ({
+    type: 'ui/TOGGLE_LADDA',
+    payload,
+  });

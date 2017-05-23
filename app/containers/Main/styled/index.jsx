@@ -7,8 +7,9 @@ export const MainContainer = styled.div`
 export const TablesSidebar = styled.div`
   display: flex;
   flex-flow: column nowrap;
-  flex-basis: 250px;
-  max-width: 250px;
+  flex-basis: 210px;
+  max-width: 210px;
+  z-index: 12;
 `;
 export const TablesContent = styled.div`
   display: flex;

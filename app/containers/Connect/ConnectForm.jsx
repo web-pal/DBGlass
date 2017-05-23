@@ -18,6 +18,7 @@ import {
 } from '../../components/shared/InputComponents';
 
 import { Button } from '../../components/shared/styled';
+import LaddaButton from '../../components/shared/LaddaButton/LaddaButton';
 
 import {
   LeftFieldsContainer,
@@ -52,10 +53,12 @@ type Props = {
   removeFavoriteRequest: () => void,
   setConnectedState: () => void,
   handleSubmit: () => void,
+  toggleLadda: () => void,
   favoritesLength: number,
   currentValues: ?Favorite,
   valid: boolean,
-  dirty: boolean
+  dirty: boolean,
+  isLoading: boolean
 };
 
 type ConnectFormState = {
@@ -116,6 +119,7 @@ class ConnectForm extends Component {
   // We don't use saga here because of redux-form
   // https://github.com/redux-saga/redux-saga/issues/161
   submit = (data: Favorite) => {
+    this.props.toggleLadda(true);
     const {
       useSSH, sshHost, sshPort, sshUsername, sshPassword,
       sshKeyPassword, sshAuthType, privateKey, port, address,
@@ -163,6 +167,7 @@ class ConnectForm extends Component {
       } else {
         this.props.setConnectedState(true);
       }
+      this.props.toggleLadda(false);
     });
   };
 
@@ -376,9 +381,9 @@ class ConnectForm extends Component {
             >
               Save
             </Button>
-            <Button type="submit">
+            <LaddaButton isLoading={this.props.isLoading} type="submit">
               Connect
-            </Button>
+            </LaddaButton>
           </ButtonsGroup>
         </RightFieldsContainer>
       </Form>
@@ -391,6 +396,7 @@ function mapStateToProps(state: State) {
   return {
     favoritesLength: state.favorites.allIds.length,
     currentValues: getFormValues('connectForm')(state),
+    isLoading: state.ui.isLoading,
   };
 }
 
