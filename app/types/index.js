@@ -3,6 +3,7 @@ import type { Store as ReduxStore, Dispatch as ReduxDispatch } from 'redux';
 import type {
   Favorite, FavoritesIndexedMap,
   FavoriteNormalizePayload, FavoritesIds, FavoritesMetaState,
+  FavoriteTablesQuantity,
 } from './favorites';
 import type { TableNormalizePayload, TablesIndexedMap, TablesIds } from './tables';
 import type { uiState } from './ui';
@@ -22,6 +23,7 @@ export type Action =
 | { type: 'favorites/FILL', +payload: FavoriteNormalizePayload }
 | { type: 'favorites/SELECT', +payload: ?IdString }
 | { type: 'favorites/REMOVE', +payload: IdString }
+| { type: 'favorites/ADD_FAVORITE_TABLES_QUANTITY', +payload: FavoriteTablesQuantity }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'tables/FETCH_REQUEST' }
 | { type: 'tables/FILL', +payload: TableNormalizePayload }

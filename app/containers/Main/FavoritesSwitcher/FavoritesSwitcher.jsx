@@ -10,12 +10,6 @@ import * as tablesActions from '../../../actions/tables';
 import type { Dispatch, Favorites, State } from '../../../types';
 import { getFavorites } from '../../../selectors/favorites';
 
-
-import {
-  I,
-} from '../../Connect/styled';
-
-
 import {
   SwitcherWrapper,
   TitleWrapper,
@@ -23,6 +17,7 @@ import {
   Favourites,
   Favorite,
   Close,
+  Icon,
   MenuButton,
   SwitcherFooter,
 } from './styled';
@@ -47,7 +42,7 @@ class FavoritesSwitcher extends Component {
   render() {
     const { favorites, toggleMenu, isMenuOpen }: Props = this.props;
     return (
-      <SwitcherWrapper isMenuOpen={isMenuOpen}>
+      <SwitcherWrapper isMenuOpen={isMenuOpen} id="switcherWrapper">
         <TitleWrapper>
           <Title>
             Favorites
@@ -60,7 +55,7 @@ class FavoritesSwitcher extends Component {
               <Favorite
                 key={favorite.id}
               >
-                <I className="fa fa-database" />
+                <Icon className="fa fa-database" />
                 <span>{favorite.connectionName}</span>
               </Favorite>,
             )
@@ -68,7 +63,7 @@ class FavoritesSwitcher extends Component {
         </Favourites>
         <SwitcherFooter>
           <MenuButton onClick={this.disconectFromDB}>
-            <I className="fa fa-chevron-left" />
+            <Icon className="fa fa-chevron-left" />
             Disconnect
         </MenuButton>
         </SwitcherFooter>

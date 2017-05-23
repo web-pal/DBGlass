@@ -140,4 +140,3 @@ const connector: Connector<{}, Props> = connect(
 );
 
 export default connector(Main);
-

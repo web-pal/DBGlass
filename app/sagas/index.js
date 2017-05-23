@@ -3,6 +3,7 @@ import { fork } from 'redux-saga/effects';
 import {
   fetchFavorites, selectFavorite,
   saveFavorite, removeFavorite,
+  saveFavouriteTablesQuantity,
 } from './favorites';
 import { fetchTables } from './tables';
 
@@ -12,6 +13,7 @@ export default function* root() {
     fork(saveFavorite),
     fork(removeFavorite),
     fork(selectFavorite),
+    fork(saveFavouriteTablesQuantity),
 
     fork(fetchTables),
   ];
