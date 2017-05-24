@@ -1,9 +1,9 @@
 import styled from 'styled-components';
+import { Button } from '../../styled';
 
-// export const LaddaLabel = styled.span`
-//   font-size: 1em;
-// `;
-
+export const LButton = styled(Button)`
+  justify-content: space-around;
+`;
 export const Spinner = styled.img`
   width: 27px;
   margin-left: 5px;

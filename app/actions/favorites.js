@@ -51,3 +51,15 @@ export const addFavoriteTablesQuantity = (payload: FavoriteTablesQuantity): Acti
     type: 'favorites/ADD_FAVORITE_TABLES_QUANTITY',
     payload,
   });
+
+export const submitConnectionForm = (payload: Favorite): Action =>// test
+  ({
+    type: 'favorites/SUBMIT_CONNECTION_FORM',
+    payload,
+  });
+
+export const connectToDB = (payload: any): Action =>// test
+  ({
+    type: 'favorites/CONNECT_TO_DB',
+    payload,
+  });

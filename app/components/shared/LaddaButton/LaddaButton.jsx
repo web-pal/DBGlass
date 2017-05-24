@@ -3,21 +3,18 @@ import React from 'react';
 import spinner from '../../../assets/images/spinner.svg';
 
 import {
-  Button,
-} from '../styled';
-
-import {
+  LButton,
   Spinner,
 } from './styled';
 
 
 const LaddaButton = ({ isLoading }) => ( // eslint-disable-line
-  <Button>
+  <LButton>
     <span>
-      connect
+      Connect
     </span>
     <Spinner src={spinner} alt="alt" isLooading={isLoading} />
-  </Button>
+  </LButton>
 );
 
 export default LaddaButton;
