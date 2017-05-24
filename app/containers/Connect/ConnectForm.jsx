@@ -120,16 +120,12 @@ class ConnectForm extends Component {
   // https://github.com/redux-saga/redux-saga/issues/161
   submit = (data: Favorite) => {
     this.props.toggleLadda(true);
-    // write action to make saga work and move all the above promises to saga
-    // and use the same action
-    // when user chooses one of the favorites DBs when connected
     const {
       useSSH, sshHost, sshPort, sshUsername, sshPassword,
       sshKeyPassword, sshAuthType, privateKey, port, address,
     } = data;
     this.setState({ err: '' });
-    this.props.submitConnectionForm(data);
-    // configureConnect(data);
+    configureConnect(data);
     let promise = null;
     if (useSSH) {
       if (sshAuthType === 'key' && !privateKey) {
@@ -160,8 +156,6 @@ class ConnectForm extends Component {
             }
           }));
     } else {
-      // promise = new Promise(resolve => this.props.connectToDB({ resolve }));
-      // console.log('promise', promise);
       promise = new Promise(resolve => connectDB((isConnected, err) => {
         resolve({ err, isConnected });
       }));
