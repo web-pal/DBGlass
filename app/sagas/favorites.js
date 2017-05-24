@@ -1,5 +1,5 @@
 import storage from 'electron-json-storage';
-import { take, cps, put, select, call } from 'redux-saga/effects';
+import { take, cps, put, select } from 'redux-saga/effects';
 import { initialize } from 'redux-form';
 
 import {
@@ -8,9 +8,6 @@ import {
   removeFavorite as removeFavoriteAction,
   fillFavorites as fillFavoritesAction,
 } from '../actions/favorites';
-
-import sshConnect from '../utils/sshForward';
-import { configureConnect, connectDB } from '../utils/pgDB';
 
 export function* saveFavorite() {
   while (true) {
@@ -85,25 +82,5 @@ export function* saveFavouriteTablesQuantity() {
     const favorites = yield cps(storage.get, 'DBGlassFavorites');
     favorites[payload.currentFavoriteId].tablesQuantity = payload.quantity;
     yield cps(storage.set, 'DBGlassFavorites', favorites);
-  }
-}
-
-export function* submitConnectionForm() {
-  while (true) {
-    const { payload } = yield take('favorites/SUBMIT_CONNECTION_FORM');
-    configureConnect(payload);
-    console.log('payload', payload);
-    const { payload: { resolve } } = yield take('favorites/CONNECT_TO_DB');
-    console.log('resolve', resolve);
-    const callback = (isConnected, err) => {
-      resolve({ err, isConnected });
-    };
-    const data = yield cps(connectDB, callback);
-    // const data = yield call(connectDB);
-    console.log('data', data);
-
-    // const data = resolve({ err, isConnected });
-    // const data = cps(resolve.payload.resolve, isConnected, err);
-    // console.log('data', resolve(data));
   }
 }

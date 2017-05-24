@@ -4,18 +4,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
 
-import {
-  SubmissionError,
-} from 'redux-form';
-
 import * as favoritesActions from '../../../actions/favorites';
 import * as uiActions from '../../../actions/ui';
 import * as tablesActions from '../../../actions/tables';
 import type { Dispatch, Favorites, State } from '../../../types';
 import { getFavorites } from '../../../selectors/favorites';
-
-import { configureConnect, connectDB } from '../../../utils/pgDB';
-import sshConnect from '../../../utils/sshForward';
 
 import {
   SwitcherWrapper,
@@ -33,8 +26,6 @@ type Props = {
   setConnectedState: () => void,
   clearTables: () => void,
   toggleMenu: () => void,
-  toggleLadda: () => void,
-  selectFavoriteRequest: () => void,
   favorites: Favorites,
   isMenuOpen: boolean
 };
@@ -46,67 +37,6 @@ class FavoritesSwitcher extends Component {
     this.props.setConnectedState(false);
     this.props.clearTables();
     this.props.toggleMenu(false);
-  }
-
-  favoriteClick = (id) => {
-    this.disconectFromDB();
-    this.props.selectFavoriteRequest(id);// to switch to selected db
-    setTimeout(() => {
-      const data = Object.values(this.props.favorites)
-        .filter(favorite => favorite.id === id)[0];
-      this.props.toggleLadda(true);
-      const {
-        useSSH, sshHost, sshPort, sshUsername, sshPassword,
-        sshKeyPassword, sshAuthType, privateKey, port, address,
-      } = data;
-
-      configureConnect(data);
-      let promise = null;
-      if (useSSH) {
-        if (sshAuthType === 'key' && !privateKey) {
-          return new Promise(resolve => resolve({ err: 'Missing private key', isConnected: false })).then(result => {
-            this.setState({ err: result.err });
-          });
-        }
-        const sshParams = {
-          host: sshHost,
-          port: sshPort,
-          username: sshUsername,
-          sshAuthType,
-          password: sshPassword,
-          passphrase: sshKeyPassword,
-          privateKey,
-        };
-        promise = new Promise(
-          resolve => sshConnect(
-            { ...sshParams, dbPort: port, dbAddress: address },
-            (err, freePort) => {
-              if (err) {
-                resolve({ err, isConnected: false });
-              } else {
-                configureConnect({ ...data, port: freePort });
-                connectDB((isConnected, error) => {
-                  resolve({ err: error, isConnected });
-                });
-              }
-            }));
-      } else {
-        promise = new Promise(resolve => connectDB((isConnected, err) => {
-          resolve({ err, isConnected });
-        }));
-      }
-      return promise.then((result) => {
-        if (!result.isConnected) {
-          // this.setState({ err: result.err });
-          throw new SubmissionError(result.err);
-        } else {
-          this.props.setConnectedState(true);
-        }
-        this.props.toggleLadda(false);
-      });
-    }, 1000);
-    // this.props.submitConnectionForm();
-    // this.props.selectFavoriteRequest(id);// to switch to selected db
   }
 
   render() {
@@ -124,7 +54,6 @@ class FavoritesSwitcher extends Component {
             favorites.map(favorite =>
               <Favorite
                 key={favorite.id}
-                onClick={() => this.favoriteClick(favorite.id)}
               >
                 <Icon className="fa fa-database" />
                 <span>{favorite.connectionName}</span>
