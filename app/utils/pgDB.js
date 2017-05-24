@@ -17,7 +17,8 @@ export function connectDB(callback: Function) {
       if (err) {
         callback.apply(null, [false, err]);
       }
-      callback.apply(null, [true, '']);
+      // callback.apply(null, [true, '']);
+      callback(true, '');
     });
   }
 }
