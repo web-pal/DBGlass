@@ -13,8 +13,8 @@ export const toggleMenu = (payload: boolean): Action =>
     payload,
   });
 
-export const toggleLadda = (payload: boolean): Action =>
+export const toggleConnectingLadda = (payload: boolean): Action =>
   ({
-    type: 'ui/TOGGLE_LADDA',
+    type: 'ui/TOGGLE_CONNECTING_LADDA',
     payload,
   });

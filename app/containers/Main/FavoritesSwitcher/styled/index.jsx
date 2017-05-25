@@ -61,6 +61,7 @@ export const MenuButton = styled.button`
   border-radius: 4px;
   display: block;
   margin: 15px auto;
+  outline: none;
 `;
 
 export const SwitcherFooter = styled.div`

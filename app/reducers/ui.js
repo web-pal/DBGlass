@@ -19,7 +19,7 @@ export default function ui(state: uiState = initialState, action: Action) {
         ...state,
         isMenuOpen: action.payload,
       };
-    case 'ui/TOGGLE_LADDA':
+    case 'ui/TOGGLE_CONNECTING_LADDA':
       return {
         ...state,
         isLoading: action.payload,

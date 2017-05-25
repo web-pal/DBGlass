@@ -3,12 +3,13 @@ import { startSubmit, stopSubmit } from 'redux-form';
 
 import sshConnect from '../utils/sshForward';
 import { configureConnect, connectDB } from '../utils/pgDB';
-import { setConnectedState } from '../actions/ui';
+import { setConnectedState, toggleConnectingLadda } from '../actions/ui';
 
 
 export function* startConnect() {
   while (true) {
     const { payload: { data } } = yield take('connect/CONNECT_REQUEST');
+    yield put(toggleConnectingLadda(true));
     const {
       useSSH, sshHost, sshPort, sshUsername, sshPassword,
       sshKeyPassword, sshAuthType, privateKey, port, address,
@@ -40,5 +41,6 @@ export function* startConnect() {
       isConnected = yield cps(connectDB);
     }
     yield put(setConnectedState(isConnected));
+    yield put(toggleConnectingLadda(false));
   }
 }

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
 
 import * as favoritesActions from '../../../actions/favorites';
+import * as connectActions from '../../../actions/connect';
 import * as uiActions from '../../../actions/ui';
 import * as tablesActions from '../../../actions/tables';
 import type { Dispatch, Favorites, State } from '../../../types';
@@ -26,6 +27,8 @@ type Props = {
   setConnectedState: () => void,
   clearTables: () => void,
   toggleMenu: () => void,
+  startSubmitRequest: () => void,
+  selectFavoriteRequest: () => void,
   favorites: Favorites,
   isMenuOpen: boolean
 };
@@ -37,6 +40,14 @@ class FavoritesSwitcher extends Component {
     this.props.setConnectedState(false);
     this.props.clearTables();
     this.props.toggleMenu(false);
+  }
+
+  connectToDB = (favorite) => {
+    this.disconectFromDB();
+    this.props.selectFavoriteRequest(favorite.id);
+    setTimeout(() => {
+      this.props.startSubmitRequest(favorite);
+    }, 500);
   }
 
   render() {
@@ -54,6 +65,7 @@ class FavoritesSwitcher extends Component {
             favorites.map(favorite =>
               <Favorite
                 key={favorite.id}
+                onClick={() => this.connectToDB(favorite)}
               >
                 <Icon className="fa fa-database" />
                 <span>{favorite.connectionName}</span>
@@ -73,7 +85,9 @@ class FavoritesSwitcher extends Component {
 }
 
 function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
-  return bindActionCreators({ ...favoritesActions, ...uiActions, ...tablesActions }, dispatch);
+  return bindActionCreators(
+    { ...favoritesActions, ...connectActions, ...uiActions, ...tablesActions }, dispatch,
+  );
 }
 
 function mapStateToProps(state: State) {
