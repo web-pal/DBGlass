@@ -15,10 +15,9 @@ export function connectDB(callback: Function) {
   if (pool) {
     pool.connect((err) => {
       if (err) {
-        callback.apply(null, [false, err]);
+        callback(err, false);
       }
-      // callback.apply(null, [true, '']);
-      callback(true, '');
+      callback(null, true);
     });
   }
 }

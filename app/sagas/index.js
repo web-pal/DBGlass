@@ -6,6 +6,7 @@ import {
   saveFavouriteTablesQuantity,
 } from './favorites';
 import { fetchTables } from './tables';
+import { startConnect } from './connect';
 
 export default function* root() {
   yield [
@@ -14,6 +15,8 @@ export default function* root() {
     fork(removeFavorite),
     fork(selectFavorite),
     fork(saveFavouriteTablesQuantity),
+
+    fork(startConnect),
 
     fork(fetchTables),
   ];

@@ -9,6 +9,7 @@ import {
 
 import * as uiActions from '../../actions/ui';
 import * as favoritesActions from '../../actions/favorites';
+import * as connectActions from '../../actions/connect';
 import { configureConnect, connectDB } from '../../utils/pgDB';
 import sshConnect from '../../utils/sshForward';
 import {
@@ -53,6 +54,7 @@ type Props = {
   removeFavoriteRequest: () => void,
   setConnectedState: () => void,
   handleSubmit: () => void,
+  startSubmitRequest: () => void,
   toggleLadda: () => void,
   favoritesLength: number,
   currentValues: ?Favorite,
@@ -114,6 +116,11 @@ class ConnectForm extends Component {
     if (values && values.id) {
       this.props.removeFavoriteRequest(values.id);
     }
+  }
+
+  sub = (event) => {
+    event.preventDefault();
+    this.props.startSubmitRequest(this.props.currentValues);
   }
 
   // We don't use saga here because of redux-form
@@ -188,7 +195,7 @@ class ConnectForm extends Component {
     const { useSSH, sshAuthType, privateKey, id } = currentValues;
 
     return (
-      <Form onSubmit={handleSubmit(this.submit)}>
+      <Form onSubmit={this.sub}>
         <LeftFieldsContainer>
           <InputGroup>
             <Label>Connection name</Label>
@@ -404,6 +411,7 @@ function mapDispatchToProps(dispatch: Dispatch): {[key: string]: Function} {
   return bindActionCreators({
     ...uiActions,
     ...favoritesActions,
+    ...connectActions,
     changeField: (field, value) => dispatch(change('connectForm', field, value)),
   }, dispatch);
 }
