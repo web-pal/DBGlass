@@ -117,6 +117,7 @@ export const NewConnectionButton = styled.button`
   background-color: transparent;
   border: 1px solid rgba(16, 167, 138, 0.4);
   border-radius: 4px;
+  outline: none;
 
   &:hover {
     color: #fff;

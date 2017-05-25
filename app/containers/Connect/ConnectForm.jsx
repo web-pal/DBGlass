@@ -55,7 +55,6 @@ type Props = {
   setConnectedState: () => void,
   handleSubmit: () => void,
   startSubmitRequest: () => void,
-  toggleLadda: () => void,
   favoritesLength: number,
   currentValues: ?Favorite,
   valid: boolean,
@@ -126,7 +125,6 @@ class ConnectForm extends Component {
   // We don't use saga here because of redux-form
   // https://github.com/redux-saga/redux-saga/issues/161
   submit = (data: Favorite) => {
-    this.props.toggleLadda(true);
     const {
       useSSH, sshHost, sshPort, sshUsername, sshPassword,
       sshKeyPassword, sshAuthType, privateKey, port, address,
@@ -174,7 +172,6 @@ class ConnectForm extends Component {
       } else {
         this.props.setConnectedState(true);
       }
-      this.props.toggleLadda(false);
     });
   };
 

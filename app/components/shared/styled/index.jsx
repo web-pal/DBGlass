@@ -13,6 +13,7 @@ export const Button = styled.button`
   border-radius: 4px;
   margin-left: 15px;
   cursor: pointer;
+  outline: none;
   ${props => props.disabled
     ? `cursor: not-allowed;
       opacity: 0.65;`
