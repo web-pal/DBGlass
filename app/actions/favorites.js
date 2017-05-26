@@ -2,6 +2,7 @@
 import type {
   IdString,
   Action, Favorite, FavoriteNormalizePayload,
+  FavoriteTablesQuantity,
 } from '../types';
 
 export const fetchFavoritesRequest = (): Action =>
@@ -45,3 +46,8 @@ export const removeFavorite = (payload: IdString): Action =>
     payload,
   });
 
+export const addFavoriteTablesQuantity = (payload: FavoriteTablesQuantity): Action =>
+  ({
+    type: 'favorites/ADD_FAVORITE_TABLES_QUANTITY',
+    payload,
+  });

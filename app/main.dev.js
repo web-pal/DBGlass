@@ -7,6 +7,7 @@ import MenuBuilder from './menu';
 
 let mainWindow;
 let tray;
+let shouldQuit = process.platform !== 'darwin';
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -47,6 +48,12 @@ app.on('window-all-closed', () => {
   }
 });
 
+app.on('before-quit', () => {
+  if (process.platform === 'darwin') {
+    shouldQuit = true;
+  }
+});
+
 
 function createWindow(callback) {
   // disabling chrome frames differ on OSX and other platforms
@@ -84,6 +91,27 @@ function createWindow(callback) {
     mainWindow.loadURL(`file://${__dirname}/app.html`);
     mainWindow.on('closed', () => {
       mainWindow = null;
+    });
+
+    mainWindow.on('close', (ev) => {
+      if (mainWindow) {
+        const contentSize = mainWindow.getContentSize();
+        const windowSize = {
+          width: contentSize[0],
+          height: contentSize[1],
+        };
+        storage.set('lastWindowSize', windowSize, (error) => {
+          if (error) {
+            console.log('error saving last window size', error);
+          } else {
+            console.log('saved last window size');
+          }
+        });
+        if (process.platform === 'darwin' && !shouldQuit) {
+          ev.preventDefault();
+          mainWindow.hide();
+        }
+      }
     });
 
     mainWindow.on('ready-to-show', () => {

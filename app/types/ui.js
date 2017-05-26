@@ -1,5 +1,7 @@
 // @flow
 export type uiState = {
   isConnected: boolean,
-  isMenuOpen: boolean
+  isMenuOpen: boolean,
+  isLoading: boolean,
+  connectionError: string
 };

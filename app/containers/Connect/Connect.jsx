@@ -28,6 +28,7 @@ import logo from '../../assets/images/logo.svg';
 import companyLogo from '../../assets/images/WebPal.svg';
 
 import * as favoritesActions from '../../actions/favorites';
+import * as uiActions from '../../actions/ui';
 import { getFavorites } from '../../selectors/favorites';
 
 import type { IdString, Favorites, Dispatch, State } from '../../types';
@@ -36,6 +37,7 @@ import type { IdString, Favorites, Dispatch, State } from '../../types';
 type Props = {
   fetchFavoritesRequest: () => void,
   selectFavoriteRequest: () => void,
+  setConnectionError: () => void,
   currentFavoriteId: ?IdString,
   favorites: Favorites
 };
@@ -46,6 +48,11 @@ class Connect extends Component {
 
   componentDidMount() {
     this.props.fetchFavoritesRequest();
+  }
+
+  selectFavorite = (id) => {
+    this.props.selectFavoriteRequest(id);
+    this.props.setConnectionError('');
   }
 
   render() {
@@ -62,7 +69,7 @@ class Connect extends Component {
                 <Li
                   key={favorite.id}
                   active={currentFavoriteId === favorite.id}
-                  onClick={() => selectFavoriteRequest(favorite.id)}
+                  onClick={() => this.selectFavorite(favorite.id)}
                 >
                   <I className="fa fa-database" />
                   <span>{favorite.connectionName}</span>
@@ -98,7 +105,7 @@ class Connect extends Component {
 }
 
 function mapDispatchToProps(dispatch: Dispatch): {[key: string]: Function} {
-  return bindActionCreators({ ...favoritesActions }, dispatch);
+  return bindActionCreators({ ...favoritesActions, ...uiActions }, dispatch);
 }
 
 function mapStateToProps(state: State) {

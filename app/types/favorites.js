@@ -19,7 +19,8 @@ export type Favorite = {
   sshPassword: ?string,
   sshKeyPassword: ?string,
   privateKey: ?string,
-  useSSH: boolean
+  useSSH: boolean,
+  tablesQuantity: ?number
 };
 export type Favorites = Array<Favorite>;
 
@@ -34,4 +35,9 @@ export type FavoriteNormalizePayload = {
 
 export type FavoritesMetaState = {
   currentFavoriteId: ?string
+};
+
+export type FavoriteTablesQuantity = {
+  currentFavoriteId: string,
+  quantity: number
 };

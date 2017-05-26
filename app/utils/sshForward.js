@@ -58,7 +58,7 @@ function connect(params, freePort, callback) {
     server = conn;
     callback(null, freePort);
   }).catch((err) => {
-    callback(`SSH ERROR: ${err.level}`, freePort);
+    callback(`SSH ERROR: ${err.level ? err.level : err.message}`, freePort);
   });
 }
 

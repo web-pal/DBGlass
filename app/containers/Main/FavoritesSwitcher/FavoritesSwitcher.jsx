@@ -5,16 +5,11 @@ import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
 
 import * as favoritesActions from '../../../actions/favorites';
+import * as connectActions from '../../../actions/connect';
 import * as uiActions from '../../../actions/ui';
 import * as tablesActions from '../../../actions/tables';
 import type { Dispatch, Favorites, State } from '../../../types';
 import { getFavorites } from '../../../selectors/favorites';
-
-
-import {
-  I,
-} from '../../Connect/styled';
-
 
 import {
   SwitcherWrapper,
@@ -23,6 +18,7 @@ import {
   Favourites,
   Favorite,
   Close,
+  Icon,
   MenuButton,
   SwitcherFooter,
 } from './styled';
@@ -31,6 +27,8 @@ type Props = {
   setConnectedState: () => void,
   clearTables: () => void,
   toggleMenu: () => void,
+  startSubmitRequest: () => void,
+  selectFavoriteRequest: () => void,
   favorites: Favorites,
   isMenuOpen: boolean
 };
@@ -44,10 +42,18 @@ class FavoritesSwitcher extends Component {
     this.props.toggleMenu(false);
   }
 
+  connectToDB = (favorite) => {
+    this.disconectFromDB();
+    this.props.selectFavoriteRequest(favorite.id);
+    setTimeout(() => {
+      this.props.startSubmitRequest(favorite);
+    }, 500);
+  }
+
   render() {
     const { favorites, toggleMenu, isMenuOpen }: Props = this.props;
     return (
-      <SwitcherWrapper isMenuOpen={isMenuOpen}>
+      <SwitcherWrapper isMenuOpen={isMenuOpen} id="switcherWrapper">
         <TitleWrapper>
           <Title>
             Favorites
@@ -59,8 +65,9 @@ class FavoritesSwitcher extends Component {
             favorites.map(favorite =>
               <Favorite
                 key={favorite.id}
+                onClick={() => this.connectToDB(favorite)}
               >
-                <I className="fa fa-database" />
+                <Icon className="fa fa-database" />
                 <span>{favorite.connectionName}</span>
               </Favorite>,
             )
@@ -68,7 +75,7 @@ class FavoritesSwitcher extends Component {
         </Favourites>
         <SwitcherFooter>
           <MenuButton onClick={this.disconectFromDB}>
-            <I className="fa fa-chevron-left" />
+            <Icon className="fa fa-chevron-left" />
             Disconnect
         </MenuButton>
         </SwitcherFooter>
@@ -78,7 +85,9 @@ class FavoritesSwitcher extends Component {
 }
 
 function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
-  return bindActionCreators({ ...favoritesActions, ...uiActions, ...tablesActions }, dispatch);
+  return bindActionCreators(
+    { ...favoritesActions, ...connectActions, ...uiActions, ...tablesActions }, dispatch,
+  );
 }
 
 function mapStateToProps(state: State) {

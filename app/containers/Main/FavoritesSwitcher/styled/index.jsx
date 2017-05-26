@@ -9,8 +9,8 @@ export const SwitcherWrapper = styled.div`
   box-shadow: 1px 2px 13px 0.00px rgba(0, 0, 0, 0.17);
   z-index: 4;
   border-radius: 3px;
+  left: ${props => props.isMenuOpen ? '210px' : '-297px'};
   transition: left .3s ease-out;
-  display: ${props => props.isMenuOpen ? 'block' : 'none'};
 `;
 
 export const TitleWrapper = styled.div`
@@ -61,10 +61,15 @@ export const MenuButton = styled.button`
   border-radius: 4px;
   display: block;
   margin: 15px auto;
+  outline: none;
 `;
 
 export const SwitcherFooter = styled.div`
   display: block;
   width: 100%;
   border-top: 1px solid lightgray;
+`;
+
+export const Icon = styled.i`
+  margin-right: 9px;
 `;

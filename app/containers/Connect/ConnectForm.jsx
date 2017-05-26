@@ -3,14 +3,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-  Field, reduxForm, SubmissionError,
+  Field, reduxForm,
   getFormValues, change,
 } from 'redux-form';
 
 import * as uiActions from '../../actions/ui';
 import * as favoritesActions from '../../actions/favorites';
-import { configureConnect, connectDB } from '../../utils/pgDB';
-import sshConnect from '../../utils/sshForward';
+import * as connectActions from '../../actions/connect';
 import {
   renderRadio,
   renderField,
@@ -18,6 +17,7 @@ import {
 } from '../../components/shared/InputComponents';
 
 import { Button } from '../../components/shared/styled';
+import LaddaButton from '../../components/shared/LaddaButton/LaddaButton';
 
 import {
   LeftFieldsContainer,
@@ -50,12 +50,14 @@ type Props = {
   changeField: () => void,
   addFavoriteRequest: () => void,
   removeFavoriteRequest: () => void,
-  setConnectedState: () => void,
-  handleSubmit: () => void,
+  startSubmitRequest: () => void,
+  setConnectionError: () => void,
   favoritesLength: number,
   currentValues: ?Favorite,
   valid: boolean,
-  dirty: boolean
+  dirty: boolean,
+  isLoading: boolean,
+  connectionError: string
 };
 
 type ConnectFormState = {
@@ -84,14 +86,14 @@ class ConnectForm extends Component {
 
   save = (event) => {
     event.preventDefault();
-    this.setState({ err: '' });
+    this.props.setConnectionError('');
 
     const values = this.props.currentValues;
     if (values) {
       const { useSSH, privateKey, sshAuthType } = values;
 
       if (useSSH && sshAuthType === 'key' && !privateKey) {
-        this.setState({ err: 'Missing private key' });
+        this.props.setConnectionError('Missing private key');
       } else {
         const favorite = values;
         if (!values.connectionName) {
@@ -113,58 +115,10 @@ class ConnectForm extends Component {
     }
   }
 
-  // We don't use saga here because of redux-form
-  // https://github.com/redux-saga/redux-saga/issues/161
-  submit = (data: Favorite) => {
-    const {
-      useSSH, sshHost, sshPort, sshUsername, sshPassword,
-      sshKeyPassword, sshAuthType, privateKey, port, address,
-    } = data;
-    this.setState({ err: '' });
-    configureConnect(data);
-    let promise = null;
-    if (useSSH) {
-      if (sshAuthType === 'key' && !privateKey) {
-        return new Promise(resolve => resolve({ err: 'Missing private key', isConnected: false })).then(result => {
-          this.setState({ err: result.err });
-        });
-      }
-      const sshParams = {
-        host: sshHost,
-        port: sshPort,
-        username: sshUsername,
-        sshAuthType,
-        password: sshPassword,
-        passphrase: sshKeyPassword,
-        privateKey,
-      };
-      promise = new Promise(
-        resolve => sshConnect(
-          { ...sshParams, dbPort: port, dbAddress: address },
-          (err, freePort) => {
-            if (err) {
-              resolve({ err, isConnected: false });
-            } else {
-              configureConnect({ ...data, port: freePort });
-              connectDB((isConnected, error) => {
-                resolve({ err: error, isConnected });
-              });
-            }
-          }));
-    } else {
-      promise = new Promise(resolve => connectDB((isConnected, err) => {
-        resolve({ err, isConnected });
-      }));
-    }
-    return promise.then((result) => {
-      if (!result.isConnected) {
-        this.setState({ err: result.err });
-        throw new SubmissionError(result.err);
-      } else {
-        this.props.setConnectedState(true);
-      }
-    });
-  };
+  submit = (event) => {
+    event.preventDefault();
+    this.props.startSubmitRequest(this.props.currentValues);
+  }
 
   onSSHAuthTypeChange = (event) => {
     if (this.props.currentValues) {
@@ -179,11 +133,11 @@ class ConnectForm extends Component {
     if (!this.props.currentValues) {
       return <div />;
     }
-    const { currentValues, handleSubmit, valid, dirty } = this.props;
+    const { currentValues, valid, dirty, connectionError } = this.props;
     const { useSSH, sshAuthType, privateKey, id } = currentValues;
 
     return (
-      <Form onSubmit={handleSubmit(this.submit)}>
+      <Form onSubmit={this.submit}>
         <LeftFieldsContainer>
           <InputGroup>
             <Label>Connection name</Label>
@@ -260,7 +214,7 @@ class ConnectForm extends Component {
               />
             </ToggleArea>
           </ToggleGroup>
-          <span style={{ color: 'red' }}>{this.state.err}</span>
+          <span style={{ color: 'red' }}>{connectionError}</span>
         </LeftFieldsContainer>
 
         <RightFieldsContainer>
@@ -376,9 +330,9 @@ class ConnectForm extends Component {
             >
               Save
             </Button>
-            <Button type="submit">
+            <LaddaButton isLoading={this.props.isLoading} type="submit">
               Connect
-            </Button>
+            </LaddaButton>
           </ButtonsGroup>
         </RightFieldsContainer>
       </Form>
@@ -391,6 +345,8 @@ function mapStateToProps(state: State) {
   return {
     favoritesLength: state.favorites.allIds.length,
     currentValues: getFormValues('connectForm')(state),
+    isLoading: state.ui.isLoading,
+    connectionError: state.ui.connectionError,
   };
 }
 
@@ -398,6 +354,7 @@ function mapDispatchToProps(dispatch: Dispatch): {[key: string]: Function} {
   return bindActionCreators({
     ...uiActions,
     ...favoritesActions,
+    ...connectActions,
     changeField: (field, value) => dispatch(change('connectForm', field, value)),
   }, dispatch);
 }

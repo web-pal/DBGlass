@@ -9,7 +9,6 @@ import {
   fillFavorites as fillFavoritesAction,
 } from '../actions/favorites';
 
-
 export function* saveFavorite() {
   while (true) {
     const { payload } = yield take('favorites/ADD_REQUEST');
@@ -74,5 +73,14 @@ export function* fetchFavorites() {
     } else {
       yield put(selectFavoriteRequestAction(null));
     }
+  }
+}
+
+export function* saveFavouriteTablesQuantity() {
+  while (true) {
+    const { payload } = yield take('favorites/ADD_FAVORITE_TABLES_QUANTITY');
+    const favorites = yield cps(storage.get, 'DBGlassFavorites');
+    favorites[payload.currentFavoriteId].tablesQuantity = payload.quantity;
+    yield cps(storage.set, 'DBGlassFavorites', favorites);
   }
 }
