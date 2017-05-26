@@ -15,6 +15,11 @@ export default function ui(state: uiState = initialState, action: Action) {
         ...state,
         isConnected: action.payload,
       };
+    case 'ui/SET_CONNECTION_ERROR':
+      return {
+        ...state,
+        connectionError: action.payload,
+      };
     case 'ui/TOGGLE_MENU':
       return {
         ...state,
@@ -24,11 +29,6 @@ export default function ui(state: uiState = initialState, action: Action) {
       return {
         ...state,
         isLoading: action.payload,
-      };
-    case 'ui/TOGGLE_CONNECTION_ERROR':
-      return {
-        ...state,
-        connectionError: action.payload,
       };
     default:
       return state;

@@ -3,15 +3,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-  Field, reduxForm, SubmissionError,
+  Field, reduxForm,
   getFormValues, change,
 } from 'redux-form';
 
 import * as uiActions from '../../actions/ui';
 import * as favoritesActions from '../../actions/favorites';
 import * as connectActions from '../../actions/connect';
-import { configureConnect, connectDB } from '../../utils/pgDB';
-import sshConnect from '../../utils/sshForward';
 import {
   renderRadio,
   renderField,
@@ -52,10 +50,8 @@ type Props = {
   changeField: () => void,
   addFavoriteRequest: () => void,
   removeFavoriteRequest: () => void,
-  setConnectedState: () => void,
-  handleSubmit: () => void,
   startSubmitRequest: () => void,
-  toggleConnectionError: () => void,
+  setConnectionError: () => void,
   favoritesLength: number,
   currentValues: ?Favorite,
   valid: boolean,
@@ -90,15 +86,14 @@ class ConnectForm extends Component {
 
   save = (event) => {
     event.preventDefault();
-    this.props.toggleConnectionError('');
+    this.props.setConnectionError('');
 
     const values = this.props.currentValues;
     if (values) {
       const { useSSH, privateKey, sshAuthType } = values;
-      console.log('values', values);
 
       if (useSSH && sshAuthType === 'key' && !privateKey) {
-        this.props.toggleConnectionError('Missing private key');
+        this.props.setConnectionError('Missing private key');
       } else {
         const favorite = values;
         if (!values.connectionName) {
@@ -120,64 +115,10 @@ class ConnectForm extends Component {
     }
   }
 
-  sub = (event) => {
+  submit = (event) => {
     event.preventDefault();
     this.props.startSubmitRequest(this.props.currentValues);
   }
-
-  // We don't use saga here because of redux-form
-  // https://github.com/redux-saga/redux-saga/issues/161
-  submit = (data: Favorite) => {
-    const {
-      useSSH, sshHost, sshPort, sshUsername, sshPassword,
-      sshKeyPassword, sshAuthType, privateKey, port, address,
-    } = data;
-    this.setState({ err: '' });
-    configureConnect(data);
-    let promise = null;
-    if (useSSH) {
-      if (sshAuthType === 'key' && !privateKey) {
-        return new Promise(resolve => resolve({ err: 'Missing private key', isConnected: false })).then(result => {
-          this.setState({ err: result.err });
-        });
-      }
-      const sshParams = {
-        host: sshHost,
-        port: sshPort,
-        username: sshUsername,
-        sshAuthType,
-        password: sshPassword,
-        passphrase: sshKeyPassword,
-        privateKey,
-      };
-      promise = new Promise(
-        resolve => sshConnect(
-          { ...sshParams, dbPort: port, dbAddress: address },
-          (err, freePort) => {
-            if (err) {
-              resolve({ err, isConnected: false });
-            } else {
-              configureConnect({ ...data, port: freePort });
-              connectDB((isConnected, error) => {
-                resolve({ err: error, isConnected });
-              });
-            }
-          }));
-    } else {
-      promise = new Promise(resolve => connectDB((isConnected, err) => {
-        resolve({ err, isConnected });
-      }));
-    }
-    return promise.then((result) => {
-      if (!result.isConnected) {
-        console.log('err', result.err);
-        this.setState({ err: result.err });
-        throw new SubmissionError(result.err);
-      } else {
-        this.props.setConnectedState(true);
-      }
-    });
-  };
 
   onSSHAuthTypeChange = (event) => {
     if (this.props.currentValues) {
@@ -192,11 +133,11 @@ class ConnectForm extends Component {
     if (!this.props.currentValues) {
       return <div />;
     }
-    const { currentValues, handleSubmit, valid, dirty, connectionError } = this.props;
+    const { currentValues, valid, dirty, connectionError } = this.props;
     const { useSSH, sshAuthType, privateKey, id } = currentValues;
 
     return (
-      <Form onSubmit={this.sub}>
+      <Form onSubmit={this.submit}>
         <LeftFieldsContainer>
           <InputGroup>
             <Label>Connection name</Label>
