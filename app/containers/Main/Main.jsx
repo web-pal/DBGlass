@@ -6,6 +6,7 @@ import type { Connector } from 'react-redux';
 
 import * as uiActions from '../../actions/ui';
 import * as tablesActions from '../../actions/tables';
+import * as currentTableActions from '../../actions/currentTable';
 import * as favoritesActions from '../../actions/favorites';
 import type { Dispatch, Tables, State } from '../../types';
 import { getTables, getTablesQuantity } from '../../selectors/tables';
@@ -13,6 +14,7 @@ import { getTables, getTablesQuantity } from '../../selectors/tables';
 import { getCurrentDBName } from '../../selectors/tableName';
 
 import FavoritesSwitcher from './FavoritesSwitcher/FavoritesSwitcher';
+import MainContent from './MainContent/MainContent';
 
 import {
   MainContainer,
@@ -35,6 +37,7 @@ type Props = {
   fetchTablesRequest: () => void,
   toggleMenu: () => void,
   addFavoriteTablesQuantity: () => void,
+  fetchTableData: () => void,
   tables: Tables,
   currentDBName: string,
   isMenuOpen: boolean,
@@ -65,7 +68,7 @@ class Main extends Component {
 
   render() {
     const {
-      tables, currentDBName, isMenuOpen, toggleMenu, isConnected, tablesQuantity,
+      tables, currentDBName, isMenuOpen, toggleMenu, isConnected, tablesQuantity, fetchTableData,
     }: Props = this.props;
     const tablesBeforeLoading =
       tablesQuantity ?
@@ -95,6 +98,7 @@ class Main extends Component {
               {tables.map(table =>
                 <Table
                   key={table.id}
+                  onClick={() => fetchTableData(table.tableName)}
                 >
                   <TableIcon className="fa fa-table" />
                   <span title={table.tableName}>
@@ -106,6 +110,7 @@ class Main extends Component {
           </TablesContent>
         </TablesSidebar>
         <FavoritesSwitcher />
+        <MainContent />
       </MainContainer>
 
     );
@@ -113,7 +118,9 @@ class Main extends Component {
 }
 
 function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
-  return bindActionCreators({ ...uiActions, ...tablesActions, ...favoritesActions }, dispatch);
+  return bindActionCreators(
+    { ...uiActions, ...tablesActions, ...favoritesActions, ...currentTableActions }, dispatch,
+  );
 }
 
 function mapStateToProps(state: State) {

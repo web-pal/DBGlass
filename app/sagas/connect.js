@@ -3,7 +3,7 @@ import { startSubmit, stopSubmit } from 'redux-form';
 
 import sshConnect from '../utils/sshForward';
 import { configureConnect, connectDB } from '../utils/pgDB';
-import { setConnectedState, toggleConnectingLadda } from '../actions/ui';
+import { setConnectedState, toggleConnectingLadda, toggleConnectionError } from '../actions/ui';
 
 
 export function* startConnect() {
@@ -19,7 +19,9 @@ export function* startConnect() {
     yield put(startSubmit('connectForm'));
     if (useSSH) {
       if (sshAuthType === 'key' && !privateKey) {
+        yield put(toggleConnectionError('Missing private key'));
         yield put(stopSubmit('connectForm', { _error: 'Missing private key' }));
+        yield put(toggleConnectingLadda(false));
       }
       const sshParams = {
         host: sshHost,
@@ -35,9 +37,11 @@ export function* startConnect() {
         configureConnect({ ...data, port: freePort });
         isConnected = yield cps(connectDB);
       } catch (err) {
+        yield put(toggleConnectionError(err));
         isConnected = false;
       }
     } else {
+      yield put(toggleConnectionError(''));
       isConnected = yield cps(connectDB);
     }
     yield put(setConnectedState(isConnected));

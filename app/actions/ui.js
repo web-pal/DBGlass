@@ -18,3 +18,9 @@ export const toggleConnectingLadda = (payload: boolean): Action =>
     type: 'ui/TOGGLE_CONNECTING_LADDA',
     payload,
   });
+
+export const toggleConnectionError = (payload: string): Action =>
+  ({
+    type: 'ui/TOGGLE_CONNECTION_ERROR',
+    payload,
+  });

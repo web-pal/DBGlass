@@ -5,6 +5,7 @@ const initialState: uiState = {
   isConnected: false,
   isMenuOpen: false,
   isLoading: false,
+  connectionError: '',
 };
 
 export default function ui(state: uiState = initialState, action: Action) {
@@ -23,6 +24,11 @@ export default function ui(state: uiState = initialState, action: Action) {
       return {
         ...state,
         isLoading: action.payload,
+      };
+    case 'ui/TOGGLE_CONNECTION_ERROR':
+      return {
+        ...state,
+        connectionError: action.payload,
       };
     default:
       return state;
