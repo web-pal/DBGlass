@@ -29,9 +29,9 @@ export type Action =
 | { type: 'tables/CLEAR_TABLES' }
 | { type: 'currentTable/FETCH_TABLE_DATA_REQUEST', +payload: string }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
+| { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }
 | { type: 'ui/TOGGLE_CONNECTING_LADDA', +payload: boolean }
-| { type: 'ui/TOGGLE_CONNECTION_ERROR', +payload: string }
 | Object
 ;
 

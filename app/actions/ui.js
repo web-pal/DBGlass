@@ -19,8 +19,8 @@ export const toggleConnectingLadda = (payload: boolean): Action =>
     payload,
   });
 
-export const toggleConnectionError = (payload: string): Action =>
+export const setConnectionError = (payload: string): Action =>
   ({
-    type: 'ui/TOGGLE_CONNECTION_ERROR',
+    type: 'ui/SET_CONNECTION_ERROR',
     payload,
   });

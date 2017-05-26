@@ -37,7 +37,7 @@ import type { IdString, Favorites, Dispatch, State } from '../../types';
 type Props = {
   fetchFavoritesRequest: () => void,
   selectFavoriteRequest: () => void,
-  toggleConnectionError: () => void,
+  setConnectionError: () => void,
   currentFavoriteId: ?IdString,
   favorites: Favorites
 };
@@ -52,7 +52,7 @@ class Connect extends Component {
 
   selectFavorite = (id) => {
     this.props.selectFavoriteRequest(id);
-    this.props.toggleConnectionError('');
+    this.props.setConnectionError('');
   }
 
   render() {
