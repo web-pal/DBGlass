@@ -6,11 +6,14 @@ import type {
   FavoriteTablesQuantity,
 } from './favorites';
 import type { TableNormalizePayload, TablesIndexedMap, TablesIds, TablesMetaState } from './tables';
+import type { TableDataNormalizedPayload } from './currentTable';
+
 import type { uiState } from './ui';
 
 export * from './favorites';
 export * from './tables';
 export * from './ui';
+export * from './currentTable';
 
 export type IdString = string;
 
@@ -28,7 +31,10 @@ export type Action =
 | { type: 'tables/FILL', +payload: TableNormalizePayload }
 | { type: 'tables/CLEAR_TABLES' }
 | { type: 'tables/SET_TABLENAME_SEARCH_KEY', +payload: ?IdString }
-| { type: 'currentTable/FETCH_TABLE_DATA_REQUEST', +payload: string }
+| { type: 'tables/FETCH_TABLE_DATA_REQUEST', +payload: Table }
+| { type: 'tables/SELECT_TABLE', +payload: string }
+| { type: 'tables/SET_TABLE_DATA', +payload: TableDataNormalizedPayload }
+| { type: 'tables/RESET_SELECT_TABLE' }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }

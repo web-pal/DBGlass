@@ -9,7 +9,8 @@ import * as tablesActions from '../../actions/tables';
 import * as currentTableActions from '../../actions/currentTable';
 import * as favoritesActions from '../../actions/favorites';
 import type { Dispatch, Tables, State } from '../../types';
-import { getFiltredTables, getTablesQuantity } from '../../selectors/tables';
+
+import { getTables, getFiltredTables, getTablesQuantity } from '../../selectors/tables';
 
 import { getCurrentDBName } from '../../selectors/tableName';
 
@@ -46,12 +47,15 @@ type Props = {
   toggleMenu: () => void,
   addFavoriteTablesQuantity: () => void,
   fetchTableData: () => void,
+  selectTable: () => void,
   tables: Tables,
   currentDBName: string,
   isMenuOpen: boolean,
   isConnected: boolean,
   currentFavoriteId: string,
-  tablesQuantity: ?number
+  tablesQuantity: ?number,
+  currentTable: ?string,
+  isFetched: ?boolean
 };
 
 class Main extends Component {
@@ -74,6 +78,13 @@ class Main extends Component {
     }
   }
 
+  fetchTable = (table) => {
+    this.props.selectTable(table.id);
+    if (!this.props.isFetched) {
+      this.props.fetchTableData(table);
+    }
+  }
+
   render() {
     const {
       tables,
@@ -84,11 +95,13 @@ class Main extends Component {
       tablesQuantity,
       fetchTableData,
       setTableNameSearchKey,
+      currentTable,
     }: Props = this.props;
     const tablesBeforeLoading =
       tablesQuantity ?
       [...Array(tablesQuantity).keys()]
       : [...Array(10).keys()];
+    console.log('isFetched', isFetched);
     return (
       <MainContainer>
         <TablesSidebar>
@@ -113,7 +126,8 @@ class Main extends Component {
               {tables.map(table =>
                 <Table
                   key={table.id}
-                  onClick={() => fetchTableData(table.tableName)}
+                  active={currentTable === table.id}
+                  onClick={() => this.fetchTable(table)}
                 >
                   <TableIcon className="fa fa-table" />
                   <span title={table.tableName}>
@@ -138,7 +152,12 @@ class Main extends Component {
           </SideBarFooter>
         </TablesSidebar>
         <FavoritesSwitcher />
-        <MainContent />
+        {
+          currentTable ?
+            <MainContent />
+            :
+            null
+        }
       </MainContainer>
     );
   }
@@ -158,6 +177,8 @@ function mapStateToProps(state: State) {
     currentFavoriteId: state.favorites.meta.currentFavoriteId,
     isConnected: state.ui.isConnected,
     tablesQuantity: getTablesQuantity({ favorites: state.favorites }),
+    currentTable: state.tables.meta.currentTableId,
+    isFetched: getIsFetched({ tables: state.tables })
   };
 }
 

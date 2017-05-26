@@ -25,5 +25,26 @@ export const getFiltredTables = createSelector(
     return searchKey
       ? filtredTables
       : tablesList;
-  },
+    },
+  );
+
+export const getCurrentTableId = ({ tables }) => tables.meta.currentTableId;
+export const getCurrentTableFieldsIds = ({ tables }) =>
+  tables.byId[tables.meta.currentTableId].fieldsIds;
+export const getCurrentTableFieldsNames = ({ tables }) =>
+  tables.byId[tables.meta.currentTableId].fieldsNames;
+
+export const getTableFieldsNames = createSelector(
+  [getCurrentTableFieldsIds, getCurrentTableFieldsNames],
+  (ids, map) => ids ? ids.map(id => map[id]) : [],
+);
+
+export const getCurrentTableRowsIds = ({ tables }) =>
+  tables.byId[tables.meta.currentTableId].rowsIds;
+export const getCurrentTableRows = ({ tables }) =>
+  tables.byId[tables.meta.currentTableId].rows;
+
+export const getTableRows = createSelector(
+  [getCurrentTableRowsIds, getCurrentTableRows],
+  (ids, map) => ids ? ids.map(id => map[id]) : [],
 );

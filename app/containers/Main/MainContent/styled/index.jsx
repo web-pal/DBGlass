@@ -25,5 +25,11 @@ export const ColumnName = styled.div`
 `;
 
 export const TableContent = styled.div`
-  display: flex;
+  display: block;
+`;
+
+export const Row = styled.div`
+  width: auto;
+  display: inline-block;
+  padding: 32px 21px 10px 21px;
 `;
