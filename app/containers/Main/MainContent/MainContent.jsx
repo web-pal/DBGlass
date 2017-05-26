@@ -11,6 +11,8 @@ import {
   TableContent,
 } from './styled';
 
+import Footer from './Footer/Footer';
+
 // type Props = {
 //   rows: string
 // };
@@ -24,6 +26,7 @@ class MainContent extends Component {
           <ColumnName />
         </TableHeader>
         <TableContent />
+        <Footer />
       </ContentWrapper>
     );
   }
