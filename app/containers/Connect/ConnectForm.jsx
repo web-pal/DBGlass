@@ -55,11 +55,13 @@ type Props = {
   setConnectedState: () => void,
   handleSubmit: () => void,
   startSubmitRequest: () => void,
+  toggleConnectionError: () => void,
   favoritesLength: number,
   currentValues: ?Favorite,
   valid: boolean,
   dirty: boolean,
-  isLoading: boolean
+  isLoading: boolean,
+  connectionError: string
 };
 
 type ConnectFormState = {
@@ -88,14 +90,15 @@ class ConnectForm extends Component {
 
   save = (event) => {
     event.preventDefault();
-    this.setState({ err: '' });
+    this.props.toggleConnectionError('');
 
     const values = this.props.currentValues;
     if (values) {
       const { useSSH, privateKey, sshAuthType } = values;
+      console.log('values', values);
 
       if (useSSH && sshAuthType === 'key' && !privateKey) {
-        this.setState({ err: 'Missing private key' });
+        this.props.toggleConnectionError('Missing private key');
       } else {
         const favorite = values;
         if (!values.connectionName) {
@@ -167,6 +170,7 @@ class ConnectForm extends Component {
     }
     return promise.then((result) => {
       if (!result.isConnected) {
+        console.log('err', result.err);
         this.setState({ err: result.err });
         throw new SubmissionError(result.err);
       } else {
@@ -188,7 +192,7 @@ class ConnectForm extends Component {
     if (!this.props.currentValues) {
       return <div />;
     }
-    const { currentValues, handleSubmit, valid, dirty } = this.props;
+    const { currentValues, handleSubmit, valid, dirty, connectionError } = this.props;
     const { useSSH, sshAuthType, privateKey, id } = currentValues;
 
     return (
@@ -269,7 +273,7 @@ class ConnectForm extends Component {
               />
             </ToggleArea>
           </ToggleGroup>
-          <span style={{ color: 'red' }}>{this.state.err}</span>
+          <span style={{ color: 'red' }}>{connectionError}</span>
         </LeftFieldsContainer>
 
         <RightFieldsContainer>
@@ -401,6 +405,7 @@ function mapStateToProps(state: State) {
     favoritesLength: state.favorites.allIds.length,
     currentValues: getFormValues('connectForm')(state),
     isLoading: state.ui.isLoading,
+    connectionError: state.ui.connectionError,
   };
 }
 

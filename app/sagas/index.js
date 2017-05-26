@@ -6,6 +6,7 @@ import {
   saveFavouriteTablesQuantity,
 } from './favorites';
 import { fetchTables } from './tables';
+import { fetchTableData } from './currentTable';
 import { startConnect } from './connect';
 
 export default function* root() {
@@ -19,5 +20,7 @@ export default function* root() {
     fork(startConnect),
 
     fork(fetchTables),
+
+    fork(fetchTableData),
   ];
 }

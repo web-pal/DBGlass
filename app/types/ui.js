@@ -2,5 +2,6 @@
 export type uiState = {
   isConnected: boolean,
   isMenuOpen: boolean,
-  isLoading: boolean
+  isLoading: boolean,
+  connectionError: string
 };
