@@ -8,6 +8,7 @@ import * as favoritesActions from '../../../actions/favorites';
 import * as connectActions from '../../../actions/connect';
 import * as uiActions from '../../../actions/ui';
 import * as tablesActions from '../../../actions/tables';
+import * as currentTableActions from '../../../actions/currentTable';
 import type { Dispatch, Favorites, State } from '../../../types';
 import { getFavorites } from '../../../selectors/favorites';
 
@@ -29,6 +30,7 @@ type Props = {
   toggleMenu: () => void,
   startSubmitRequest: () => void,
   selectFavoriteRequest: () => void,
+  resetSelectTable: () => void,
   favorites: Favorites,
   isMenuOpen: boolean
 };
@@ -40,6 +42,7 @@ class FavoritesSwitcher extends Component {
     this.props.setConnectedState(false);
     this.props.clearTables();
     this.props.toggleMenu(false);
+    this.props.resetSelectTable();
   }
 
   connectToDB = (favorite) => {
@@ -86,7 +89,7 @@ class FavoritesSwitcher extends Component {
 
 function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
   return bindActionCreators(
-    { ...favoritesActions, ...connectActions, ...uiActions, ...tablesActions }, dispatch,
+    { ...favoritesActions, ...connectActions, ...uiActions, ...tablesActions, ...currentTableActions }, dispatch,
   );
 }
 
