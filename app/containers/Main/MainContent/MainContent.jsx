@@ -13,10 +13,6 @@ import {
 
 import Footer from './Footer/Footer';
 
-// type Props = {
-//   rows: string
-// };
-
 class MainContent extends Component {
   render() {
     return (
