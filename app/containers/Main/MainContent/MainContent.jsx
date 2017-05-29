@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
 import type { State, FieldsIndexedMap } from '../../../types';
 
-import { Grid, AutoSizer } from 'react-virtualized';
+import { Grid, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized';
 
 import { getTableFieldsNames, getTableRows } from '../../../selectors/tables';
 
@@ -26,46 +26,68 @@ type Props = {
   rows: any
 };
 
+const cache = new CellMeasurerCache({
+  defaultWidth: 180,
+  minWidth: 100,
+  fixedHeight: true,
+});
+
 class MainContent extends Component {
   props: Props;
 
-  cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
+  cellRenderer = ({ columnIndex, key, parent, rowIndex, style }) => {
+    const tableData = this.props.fieldsNames.concat(this.props.rows);
     return (
-      <Cell
+      <CellMeasurer
+        cache={cache}
+        columnIndex={columnIndex}
         key={key}
-        style={style}
+        parent={parent}
+        rowIndex={rowIndex}
       >
-        <CellContainer>
-          <CellText>
-            {this.props.rows[rowIndex][columnIndex]}
-          </CellText>
-        </CellContainer>
-      </Cell>
+        <Cell
+          key={key}
+          style={{
+            ...style,
+            height: 60,
+            whiteSpace: 'nowrap',
+          }}
+          background={rowIndex}
+        >
+          {
+            rowIndex === 0 ?
+              <ColumnName>
+                {tableData[rowIndex][columnIndex]}
+              </ColumnName>
+              :
+              <CellContainer>
+                <CellText>
+                  {tableData[rowIndex][columnIndex]}
+                </CellText>
+              </CellContainer>
+          }
+        </Cell>
+      </CellMeasurer>
     );
   }
 
   render() {
     const { fieldsNames, rows }: Props = this.props;
+    const tableData = fieldsNames.concat(rows);
     return (
       <ContentWrapper>
-        <TableHeader>
-          {
-          fieldsNames.map((field, index) =>
-            <ColumnName key={index}>
-              {field.fieldName}
-            </ColumnName>)
-          }
-        </TableHeader>
+        <TableHeader />
         <TableContent>
-          <AutoSizer data-id="auto">
+          <AutoSizer>
             {({ height, width }) => (
               <Grid
                 cellRenderer={this.cellRenderer}
-                columnCount={rows.length ? rows[0].length : 0}
-                columnWidth={120}
+                columnCount={tableData.length ? tableData[0].length : 0}
+                columnWidth={cache.columnWidth}
+                deferredMeasurementCache={cache}
                 height={height}
-                rowCount={rows.length}
-                rowHeight={50}
+                rowCount={tableData.length}
+                rowHeight={60}
                 width={width}
               />
             )}

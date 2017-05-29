@@ -36,7 +36,11 @@ export const getCurrentTableFieldsNames = ({ tables }) =>
 
 export const getTableFieldsNames = createSelector(
   [getCurrentTableFieldsIds, getCurrentTableFieldsNames],
-  (ids, map) => ids ? ids.map(id => map[id]) : [],
+  // (ids, map) => ids ? ids.map(id => map[id]) : [],
+  (ids, map) => {
+    console.log('selector', ids, map);
+    return ids ? [ids.map(id => map[id].fieldName)] : []
+  },
 );
 
 export const getCurrentTableRowsIds = ({ tables }) =>
