@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Button = styled.button`
   font-family: Harmonia Sans;
   display: flex;
+  padding: 0 10px;
   flex-grow: 1;
   padding: 0 15px;
   height: 29px;
@@ -24,4 +25,8 @@ export const Button = styled.button`
         color: #333;
       }`
   };
+`;
+
+export const Icon = styled.i`
+  margin-right: 9px;
 `;
