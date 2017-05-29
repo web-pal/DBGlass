@@ -6,6 +6,7 @@ export const ContentWrapper = styled.div`
   height: 100%;
   overflow: auto;
   background: #eee;
+  justify-content: space-between;
 
   display: flex;
   flex-flow: column nowrap;
