@@ -9,7 +9,7 @@ import * as tablesActions from '../../actions/tables';
 import * as currentTableActions from '../../actions/currentTable';
 import * as favoritesActions from '../../actions/favorites';
 import type { Dispatch, Tables, State } from '../../types';
-import { getTables, getTablesQuantity } from '../../selectors/tables';
+import { getFiltredTables, getTablesQuantity } from '../../selectors/tables';
 
 import { getCurrentDBName } from '../../selectors/tableName';
 
@@ -42,6 +42,7 @@ import {
 
 type Props = {
   fetchTablesRequest: () => void,
+  searchTables: () => void,
   toggleMenu: () => void,
   addFavoriteTablesQuantity: () => void,
   fetchTableData: () => void,
@@ -75,7 +76,14 @@ class Main extends Component {
 
   render() {
     const {
-      tables, currentDBName, isMenuOpen, toggleMenu, isConnected, tablesQuantity, fetchTableData,
+      tables,
+      currentDBName,
+      isMenuOpen,
+      toggleMenu,
+      isConnected,
+      tablesQuantity,
+      fetchTableData,
+      searchTables,
     }: Props = this.props;
     const tablesBeforeLoading =
       tablesQuantity ?
@@ -117,7 +125,7 @@ class Main extends Component {
           </TablesContent>
           <Filter>
             <SearchIcon className="fa fa-search" />
-            <TablesSearch />
+            <TablesSearch onChange={(e) => searchTables(e.target.value)}/>
           </Filter>
           <SideBarFooter>
             <CreateTableButton>
@@ -142,7 +150,7 @@ function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
 
 function mapStateToProps(state: State) {
   return {
-    tables: getTables({ tables: state.tables }),
+    tables: getFiltredTables({ tables: state.tables }),
     currentDBName: getCurrentDBName({ favorites: state.favorites }),
     isMenuOpen: state.ui.isMenuOpen,
     currentFavoriteId: state.favorites.meta.currentFavoriteId,
