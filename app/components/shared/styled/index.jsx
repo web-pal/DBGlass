@@ -4,9 +4,11 @@ export const Button = styled.button`
   font-family: Harmonia Sans;
   display: flex;
   flex-grow: 1;
-  padding: 7px 15px;
+  padding: 0 15px;
+  height: 29px;
   justify-content: center;
   align-items: center;
+  line-height: 16px;
   background-color: ${props => props.backgroundColor ? props.backgroundColor : '#10a78a'};
   font-size: 14px;
   color: white;
