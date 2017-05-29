@@ -79,10 +79,14 @@ class Main extends Component {
   }
 
   fetchTable = (table) => {
+    setTimeout(() => {
+      // when user clicks, it needs a timeout while
+      // isFetched-property for currently selected table cheanges
+      if (!this.props.isFetched) {
+        this.props.fetchTableData(table);
+      }
+    }, 100);
     this.props.selectTable(table.id);
-    if (!this.props.isFetched) {
-      this.props.fetchTableData(table);
-    }
   }
 
   render() {
@@ -101,7 +105,6 @@ class Main extends Component {
       tablesQuantity ?
       [...Array(tablesQuantity).keys()]
       : [...Array(10).keys()];
-    console.log('isFetched', isFetched);
     return (
       <MainContainer>
         <TablesSidebar>
@@ -178,7 +181,7 @@ function mapStateToProps(state: State) {
     isConnected: state.ui.isConnected,
     tablesQuantity: getTablesQuantity({ favorites: state.favorites }),
     currentTable: state.tables.meta.currentTableId,
-    isFetched: getIsFetched({ tables: state.tables })
+    isFetched: getIsFetched({ tables: state.tables }),
   };
 }
 

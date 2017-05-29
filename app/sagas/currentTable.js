@@ -21,8 +21,6 @@ export function* fetchTableData() {
       };
       return rId;
     });
-    // console.log(rowsIds, rows);
-    // need to add tableStructure
     // console.log(result);
     const fieldsIds = [];
     const fieldsNames = {};
@@ -35,7 +33,7 @@ export function* fetchTableData() {
       return fId;
     });
     // console.log(fieldsIds, fieldsNames);
-    yield put(setTableData({ // rows {index: {obj}}
+    yield put(setTableData({
       id,
       rowsIds,
       rows,

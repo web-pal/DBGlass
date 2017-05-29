@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
 import type { State, FieldsIndexedMap } from '../../../types';
 
+import { Grid, AutoSizer } from 'react-virtualized';
+
 import { getTableFieldsNames, getTableRows } from '../../../selectors/tables';
 
 import {
@@ -12,7 +14,9 @@ import {
   TableHeader,
   ColumnName,
   TableContent,
-  Row,
+  Cell,
+  CellText,
+  CellContainer,
 } from './styled';
 
 import Footer from './Footer/Footer';
@@ -25,31 +29,47 @@ type Props = {
 class MainContent extends Component {
   props: Props;
 
+  cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
+    return (
+      <Cell
+        key={key}
+        style={style}
+      >
+        <CellContainer>
+          <CellText>
+            {this.props.rows[rowIndex][columnIndex]}
+          </CellText>
+        </CellContainer>
+      </Cell>
+    );
+  }
+
   render() {
     const { fieldsNames, rows }: Props = this.props;
     return (
       <ContentWrapper>
         <TableHeader>
           {
-            fieldsNames.length ?
-            fieldsNames.map((field, index) =>
-              <ColumnName key={index}>
-                {field.fieldName}
-              </ColumnName>)
-              :
-              null
+          fieldsNames.map((field, index) =>
+            <ColumnName key={index}>
+              {field.fieldName}
+            </ColumnName>)
           }
         </TableHeader>
         <TableContent>
-          {
-            rows.length ?
-            rows.map((row, index) =>
-              <Row key={index}>
-                {row[fieldsNames[index].fieldName]}
-              </Row>)
-              :
-              null
-          }
+          <AutoSizer data-id="auto">
+            {({ height, width }) => (
+              <Grid
+                cellRenderer={this.cellRenderer}
+                columnCount={rows.length ? rows[0].length : 0}
+                columnWidth={120}
+                height={height}
+                rowCount={rows.length}
+                rowHeight={50}
+                width={width}
+              />
+            )}
+          </AutoSizer>
         </TableContent>
         <Footer />
       </ContentWrapper>

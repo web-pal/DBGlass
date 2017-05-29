@@ -46,5 +46,5 @@ export const getCurrentTableRows = ({ tables }) =>
 
 export const getTableRows = createSelector(
   [getCurrentTableRowsIds, getCurrentTableRows],
-  (ids, map) => ids ? ids.map(id => map[id]) : [],
+  (ids, map) => ids ? ids.map(id => Object.values(map[id])) : [],
 );
