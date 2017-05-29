@@ -31,6 +31,13 @@ import {
   MaskTop,
   MaskBottom,
   MaskShort,
+  SearchIcon,
+  Filter,
+  TablesSearch,
+  SideBarFooter,
+  CreateTableButton,
+  CircleIcon,
+  Title
 } from './styled';
 
 type Props = {
@@ -108,6 +115,16 @@ class Main extends Component {
               )}
             </TablesContainer>
           </TablesContent>
+          <Filter>
+            <SearchIcon className="fa fa-search" />
+            <TablesSearch />
+          </Filter>
+          <SideBarFooter>
+            <CreateTableButton>
+              <CircleIcon className="fa fa-plus-circle" />
+              <Title>New Table</Title>
+            </CreateTableButton>
+          </SideBarFooter>
         </TablesSidebar>
         <FavoritesSwitcher />
         <MainContent />

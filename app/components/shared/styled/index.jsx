@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 
 export const Button = styled.button`
+  font-family: Harmonia Sans;
   display: flex;
   flex-grow: 1;
+  padding: 7px 15px;
   justify-content: center;
-  height: 29px;
   align-items: center;
   background-color: ${props => props.backgroundColor ? props.backgroundColor : '#10a78a'};
   font-size: 14px;
