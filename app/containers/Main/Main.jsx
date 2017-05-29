@@ -89,7 +89,6 @@ class Main extends Component {
       tablesQuantity ?
       [...Array(tablesQuantity).keys()]
       : [...Array(10).keys()];
-    // console.log('isFetched', isFetched, currentTable);
     return (
       <MainContainer>
         <TablesSidebar>

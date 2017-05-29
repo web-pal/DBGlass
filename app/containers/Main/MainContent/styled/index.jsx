@@ -12,20 +12,18 @@ export const ContentWrapper = styled.div`
 `;
 
 export const TableHeader = styled.div`
-  width: calc(100% - 20px);
+  min-width: calc(100% - 230px);
   background: #ddd;
   height: 60px;
   padding: 0 10px;
+  position: absolute;
 `;
 
 export const ColumnName = styled.div`
-  ${''/* width: auto; */}
-  width: 100px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
   display: inline-block;
   padding: 32px 10px 10px 10px;
+  font-weight: 700;
+  color: #35404b;
 `;
 
 export const TableContent = styled.div`
@@ -42,22 +40,18 @@ export const Row = styled.div`
 export const Cell = styled.div`
   width: auto;
   min-width: 100px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
   font-size: 13px;
   font-weight: 300;
   color: #939393;
   display: inline-block;
-  border-left: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  display: table-cell;
-  border-collapse: collapse;
+  border-left: ${props => props.background === 0 ? 'none' : '1px solid #ccc'};
+  border-bottom: ${props => props.background === 0 ? 'none' : '1px solid #ccc'};
+  background: ${props => props.background === 0 ? '#ddd' : '#eee'}
 `;
 
 export const CellText = styled.span`
   display: inline-block;
-  width: 70px;
+  max-width: 250px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
