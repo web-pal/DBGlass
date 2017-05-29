@@ -34,6 +34,11 @@ export const Table = styled.li`
   overflow: hidden;
   text-overflow: ellipsis;
 
+  border-left: ${props => props.active ? '2px solid #10a78a' : ''};
+  background-color: ${props => props.active ? '#2f2f2f' : ''};
+  color: ${props => props.active ? '#fff' : ''};
+  font-weight: ${props => props.active ? '400' : '100'};
+
   &:hover {
     color: #fff;
     background-color: #2f2f2f;

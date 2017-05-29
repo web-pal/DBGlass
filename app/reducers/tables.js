@@ -2,7 +2,7 @@
 import { combineReducers } from 'redux';
 import _ from 'lodash';
 
-import type { TablesIds, TablesIndexedMap, Action } from '../types';
+import type { TablesIds, TablesIndexedMap, TableMetaState, Action } from '../types';
 
 function allItems(state: TablesIds = [], action: Action) {
   switch (action.type) {
@@ -26,8 +26,39 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
       };
     case 'tables/CLEAR_TABLES':
       return {};
+    case 'tables/SET_TABLE_DATA':
+      return {
+        ...state,
+        [+action.payload.id]: {
+          ...state[+action.payload.id],
+          ...action.payload,
+        },
+      };
     case 'CLEAR_ALL_REDUCERS':
       return {};
+    default:
+      return state;
+  }
+}
+
+const initialMeta: TableMetaState = {
+  currentTableId: null,
+};
+
+function meta(state: TableMetaState = initialMeta, action: Action) {
+  switch (action.type) {
+    case 'tables/SELECT_TABLE':
+      return {
+        ...state,
+        currentTableId: action.payload,
+      };
+    case 'tables/RESET_SELECT_TABLE':
+      return {
+        ...state,
+        currentTableId: null,
+      };
+    case 'CLEAR_ALL_REDUCERS':
+      return initialMeta;
     default:
       return state;
   }
@@ -36,4 +67,5 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
 export default combineReducers({
   byId: itemsById,
   allIds: allItems,
+  meta,
 });
