@@ -34,13 +34,11 @@ export const getCurrentTableRows = ({ tables }) =>
 
 export const getTableRows = createSelector(
   [getCurrentTableRowsIds, getCurrentTableRows],
-  (ids, map) => ids ? ids.map(id => map[id]) : [],
+  // (ids, map) => ids ? ids.map(id => map[id]) : [],
+  (ids, map) => ids ? ids.map(id => Object.values(map[id])) : [],
 );
 
 export const getIsFetched = createSelector(
   [getCurrentTableId, getTablesMap],
-  (id, map) => {
-    console.log(id, map);
-    return id ? Object.values(map).filter(item => item.id === id)[0].isFetched : false;
-  },
+  (id, map) => id ? Object.values(map).filter(item => item.id === id)[0].isFetched : false,
 );

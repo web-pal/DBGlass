@@ -70,21 +70,26 @@ class Main extends Component {
   }
 
   fetchTable = (table) => {
+    // console.log('fetch table', table, this.props.isFetched, this.props.currentTable);
+    setTimeout(() => {
+      // when user clicks, it needs a timeout while
+      // isFetched-property for currently selected table cheanges
+      if (!this.props.isFetched) {
+        this.props.fetchTableData(table);
+      }
+    }, 100);
     this.props.selectTable(table.id);
-    if (!this.props.isFetched) {
-      this.props.fetchTableData(table);
-    }
   }
 
   render() {
     const {
-      tables, currentDBName, isMenuOpen, toggleMenu, isConnected, tablesQuantity, currentTable, isFetched,
+      tables, currentDBName, isMenuOpen, toggleMenu, isConnected, tablesQuantity, currentTable,
     }: Props = this.props;
     const tablesBeforeLoading =
       tablesQuantity ?
       [...Array(tablesQuantity).keys()]
       : [...Array(10).keys()];
-    console.log('isFetched', isFetched);
+    // console.log('isFetched', isFetched, currentTable);
     return (
       <MainContainer>
         <TablesSidebar>
@@ -149,7 +154,7 @@ function mapStateToProps(state: State) {
     isConnected: state.ui.isConnected,
     tablesQuantity: getTablesQuantity({ favorites: state.favorites }),
     currentTable: state.tables.meta.currentTableId,
-    isFetched: getIsFetched({ tables: state.tables })
+    isFetched: getIsFetched({ tables: state.tables }),
   };
 }
 
