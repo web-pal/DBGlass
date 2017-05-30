@@ -3,5 +3,6 @@ export type uiState = {
   isConnected: boolean,
   isMenuOpen: boolean,
   isLoading: boolean,
-  connectionError: string
+  connectionError: string,
+  isTablesFetched: boolean
 };
