@@ -49,8 +49,9 @@ class MainContent extends Component {
           key={key}
           style={{
             ...style,
-            height: 60,
+            height: rowIndex === 0 ? 60 : 45,
             whiteSpace: 'nowrap',
+            position: rowIndex === 0 ? 'fixed' : 'absolute',
           }}
           background={rowIndex}
         >
@@ -71,6 +72,8 @@ class MainContent extends Component {
     );
   }
 
+  rowHeight = (index) => index.index === 0 ? 60 : 45;
+
   render() {
     const { fieldsNames, rows }: Props = this.props;
     const tableData = fieldsNames.concat(rows);
@@ -87,7 +90,7 @@ class MainContent extends Component {
                 deferredMeasurementCache={cache}
                 height={height}
                 rowCount={tableData.length}
-                rowHeight={60}
+                rowHeight={this.rowHeight}
                 width={width}
               />
             )}

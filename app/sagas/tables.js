@@ -5,10 +5,13 @@ import {
 } from '../actions/tables';
 import { executeSQL } from '../utils/pgDB';
 
+import { addFavoriteTablesQuantity } from '../actions/favorites';
+import { selectTable, fetchTableData } from '../actions/currentTable';
+import { toggleIsFetchedTables } from '../actions/ui';
 
 export function* fetchTables() {
   while (true) {
-    yield take('tables/FETCH_REQUEST');
+    const { payload } = yield take('tables/FETCH_REQUEST');
     const query = `
       SELECT table_name
       FROM information_schema.tables
@@ -25,6 +28,7 @@ export function* fetchTables() {
       tables[id] = {
         id,
         tableName: t.table_name,
+        isFetched: false,
       };
       return id;
     });
@@ -32,5 +36,22 @@ export function* fetchTables() {
       ids: tablesIds,
       map: tables,
     }));
+
+    yield put(toggleIsFetchedTables(true));
+
+    if (payload) {
+      yield put(addFavoriteTablesQuantity({
+        currentFavoriteId: payload, quantity: tablesIds.length,
+      }));
+    }
+
+    if (tablesIds.length) {
+      yield put(selectTable(tables[tablesIds[0]].id));
+      yield put(fetchTableData({
+        id: tables[tablesIds[0]].id,
+        tableName: tables[tablesIds[0]].tableName,
+        isFetched: false,
+      }));
+    }
   }
 }

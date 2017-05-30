@@ -6,7 +6,6 @@ export type TablesIds = Array<IdString>;
 export type Table = {
   id: ?IdString,
   tableName: string,
-  // if save data about fields and rows
   rowsIds: ?RowsIds,
   rows: ?RowsIndexedMap,
   fieldsIds: ?FieldsIds,

@@ -5,16 +5,15 @@ export const ContentWrapper = styled.div`
   width: calc(100% - 210px);
   height: 100%;
   overflow: auto;
-  background: #eee;
   justify-content: space-between;
-
+  background: #fff;
   display: flex;
   flex-flow: column nowrap;
 `;
 
 export const TableHeader = styled.div`
   min-width: calc(100% - 230px);
-  background: #ddd;
+  background: #f0f0f0;
   height: 60px;
   padding: 0 10px;
   position: absolute;
@@ -47,9 +46,7 @@ export const Cell = styled.div`
   font-weight: 300;
   color: #939393;
   display: inline-block;
-  border-left: ${props => props.background === 0 ? 'none' : '1px solid #ccc'};
-  border-bottom: ${props => props.background === 0 ? 'none' : '1px solid #ccc'};
-  background: ${props => props.background === 0 ? '#ddd' : '#eee'}
+  background: ${props => props.background === 0 ? '#f0f0f0' : '#fff'}
 `;
 
 export const CellText = styled.span`
@@ -58,8 +55,15 @@ export const CellText = styled.span`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  line-height: 16px;
+  min-height: 16px;
 `;
 
 export const CellContainer = styled.div`
-  padding: 10px;
+  padding: 11px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.047);
+
+  &:hover {
+    box-shadow: inset 0 0 6px 1px #dedede;
+  }
 `;

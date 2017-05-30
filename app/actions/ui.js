@@ -24,3 +24,9 @@ export const setConnectionError = (payload: string): Action =>
     type: 'ui/SET_CONNECTION_ERROR',
     payload,
   });
+
+export const toggleIsFetchedTables = (payload: boolean): Action =>
+  ({
+    type: 'ui/TOGGLE_IS_FETCH_TABLES',
+    payload,
+  });

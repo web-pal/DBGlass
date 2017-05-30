@@ -1,8 +1,11 @@
 // @flow
 import type { Action, TableNormalizePayload, IdString } from '../types';
 
-export const fetchTablesRequest = (): Action =>
-  ({ type: 'tables/FETCH_REQUEST' });
+export const fetchTablesRequest = (payload: ?IdString): Action =>
+  ({
+    type: 'tables/FETCH_REQUEST',
+    payload,
+  });
 
 export const fillTables = (payload: TableNormalizePayload): Action =>
   ({

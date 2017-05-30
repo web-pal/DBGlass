@@ -27,7 +27,7 @@ export type Action =
 | { type: 'favorites/SELECT', +payload: ?IdString }
 | { type: 'favorites/REMOVE', +payload: IdString }
 | { type: 'favorites/ADD_FAVORITE_TABLES_QUANTITY', +payload: FavoriteTablesQuantity }
-| { type: 'tables/FETCH_REQUEST' }
+| { type: 'tables/FETCH_REQUEST', +payload: ?IdString }
 | { type: 'tables/FILL', +payload: TableNormalizePayload }
 | { type: 'tables/CLEAR_TABLES' }
 | { type: 'tables/SET_TABLENAME_SEARCH_KEY', +payload: ?IdString }
@@ -39,6 +39,7 @@ export type Action =
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }
 | { type: 'ui/TOGGLE_CONNECTING_LADDA', +payload: boolean }
+| { type: 'ui/TOGGLE_IS_FETCH_TABLES', +payload: boolean }
 | Object
 ;
 

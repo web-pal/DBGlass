@@ -31,6 +31,7 @@ type Props = {
   startSubmitRequest: () => void,
   selectFavoriteRequest: () => void,
   resetSelectTable: () => void,
+  toggleIsFetchedTables: () => void,
   favorites: Favorites,
   isMenuOpen: boolean
 };
@@ -43,6 +44,7 @@ class FavoritesSwitcher extends Component {
     this.props.clearTables();
     this.props.toggleMenu(false);
     this.props.resetSelectTable();
+    this.props.toggleIsFetchedTables(false);
   }
 
   connectToDB = (favorite) => {

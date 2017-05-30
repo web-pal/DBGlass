@@ -6,6 +6,7 @@ const initialState: uiState = {
   isMenuOpen: false,
   isLoading: false,
   connectionError: '',
+  isTablesFetched: false,
 };
 
 export default function ui(state: uiState = initialState, action: Action) {
@@ -29,6 +30,11 @@ export default function ui(state: uiState = initialState, action: Action) {
       return {
         ...state,
         isLoading: action.payload,
+      };
+    case 'ui/TOGGLE_IS_FETCH_TABLES':
+      return {
+        ...state,
+        isTablesFetched: action.payload,
       };
     default:
       return state;

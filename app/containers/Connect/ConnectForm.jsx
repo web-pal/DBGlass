@@ -102,6 +102,7 @@ class ConnectForm extends Component {
         if (!values.id) {
           favorite.id = (this.props.favoritesLength + 1).toString();
         }
+        favorite.tablesQuantity = 0;
         this.props.addFavoriteRequest(favorite);
       }
     }
