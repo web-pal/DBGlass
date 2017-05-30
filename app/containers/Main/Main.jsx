@@ -94,7 +94,6 @@ class Main extends Component {
       tablesQuantity,
       currentTable,
     }: Props = this.props;
-    console.log(isTablesFetched);
     return (
       <MainContainer>
         <TablesSidebar>

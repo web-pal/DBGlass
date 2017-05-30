@@ -15,7 +15,6 @@ export const TableHeader = styled.div`
   min-width: calc(100% - 230px);
   background: #f0f0f0;
   height: 60px;
-  padding: 0 10px;
   position: absolute;
 `;
 
@@ -30,7 +29,9 @@ export const ColumnName = styled.div`
 
 export const TableContent = styled.div`
   display: block;
-  height: 100%;
+  height: calc(100% - 60px);
+  top: 60px;
+  position: relative;
 `;
 
 export const Row = styled.div`
@@ -46,7 +47,7 @@ export const Cell = styled.div`
   font-weight: 300;
   color: #939393;
   display: inline-block;
-  background: ${props => props.background === 0 ? '#f0f0f0' : '#fff'}
+  background: #fff;
 `;
 
 export const CellText = styled.span`
@@ -65,5 +66,11 @@ export const CellContainer = styled.div`
 
   &:hover {
     box-shadow: inset 0 0 6px 1px #dedede;
+  }
+`;
+
+export const GridWrapper = styled.div`
+  &>div {
+    overflow: hidden!important;
   }
 `;
