@@ -153,6 +153,10 @@ export const Filter = styled.div`
 export const TablesSearch = styled(Input)`
   width: 100%;
   padding: 3px 8px;
+  &:focus {
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  }
 `;
 export const SideBarFooter = styled.div`
   height: 50px;
