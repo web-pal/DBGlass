@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
 import type { State, FieldsIndexedMap } from '../../../types';
 
-import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
+import { Grid, AutoSizer, CellMeasurer, CellMeasurerCache, ScrollSync } from 'react-virtualized';
 
 import { getTableFieldsNames, getTableRows } from '../../../selectors/tables';
 
@@ -27,36 +27,58 @@ type Props = {
   rows: any
 };
 
+const cache = new CellMeasurerCache({
+  defaultWidth: 250,
+  minWidth: 100,
+  fixedHeight: true,
+});
+
 class MainContent extends Component {
   props: Props;
 
-  cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
+  cellRenderer = ({ columnIndex, key, parent, rowIndex, style }) => {
     return (
-      <Cell
+      <CellMeasurer
+        cache={cache}
+        columnIndex={columnIndex}
         key={key}
-        style={{
-          ...style,
-          height: 45,
-          whiteSpace: 'nowrap',
-        }}
+        parent={parent}
+        rowIndex={rowIndex}
       >
-        <CellContainer>
-          <CellText>
-            {this.props.rows[rowIndex][columnIndex]}
-          </CellText>
-        </CellContainer>
-      </Cell>
+        <Cell
+          key={key}
+          style={{
+            ...style,
+            height: 45,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <CellContainer>
+            <CellText>
+              {this.props.rows[rowIndex][columnIndex]}
+            </CellText>
+          </CellContainer>
+        </Cell>
+      </CellMeasurer>
     );
   }
 
-  headerRenderer = ({ columnIndex, key, rowIndex, style }) => {
+  headerRenderer = ({ columnIndex, key, parent, rowIndex, style }) => {
     return (
-      <ColumnName
+      <CellMeasurer
+        cache={cache}
+        columnIndex={columnIndex}
         key={key}
-        style={style}
+        parent={parent}
+        rowIndex={rowIndex}
       >
-        {this.props.fieldsNames[rowIndex][columnIndex]}
-      </ColumnName>
+        <ColumnName
+          key={key}
+          style={style}
+        >
+          {this.props.fieldsNames[rowIndex][columnIndex]}
+        </ColumnName>
+      </CellMeasurer>
     );
   }
 
@@ -76,7 +98,8 @@ class MainContent extends Component {
                     <Grid
                       cellRenderer={this.headerRenderer}
                       columnCount={fieldsNames.length ? fieldsNames[0].length : 0}
-                      columnWidth={250}
+                      columnWidth={cache.columnWidth}
+                      deferredMeasurementCache={cache}
                       height={height}
                       rowCount={fieldsNames.length}
                       rowHeight={60}
@@ -94,7 +117,8 @@ class MainContent extends Component {
                   <Grid
                     cellRenderer={this.cellRenderer}
                     columnCount={rows.length ? rows[0].length : 0}
-                    columnWidth={250}
+                    columnWidth={cache.columnWidth}
+                    deferredMeasurementCache={cache}
                     height={height}
                     rowCount={rows.length}
                     rowHeight={45}
