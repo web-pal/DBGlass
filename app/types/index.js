@@ -27,7 +27,7 @@ export type Action =
 | { type: 'tables/FETCH_REQUEST' }
 | { type: 'tables/FILL', +payload: TableNormalizePayload }
 | { type: 'tables/CLEAR_TABLES' }
-| { type: 'tables/SEARCH_TABLES', +payload: ?IdString }
+| { type: 'tables/SET_TABLENAME_SEARCH_KEY', +payload: ?IdString }
 | { type: 'currentTable/FETCH_TABLE_DATA_REQUEST', +payload: string }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }

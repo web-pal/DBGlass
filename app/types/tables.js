@@ -19,5 +19,5 @@ export type TableNormalizePayload = {
 };
 
 export type TablesMetaState = {
-  found: ?string
+  tableNameSearchKey: ?string
 };

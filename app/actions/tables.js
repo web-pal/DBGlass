@@ -14,9 +14,9 @@ export const clearTables = (): Action =>
   ({ type: 'tables/CLEAR_TABLES' });
 
 
-export const searchTables = (payload: ?IdString): Action =>
+export const setTableNameSearchKey = (payload: ?IdString): Action =>
   ({
-    type: 'tables/SEARCH_TABLES',
+    type: 'tables/SET_TABLENAME_SEARCH_KEY',
     payload,
   });
 

@@ -42,7 +42,7 @@ import {
 
 type Props = {
   fetchTablesRequest: () => void,
-  searchTables: () => void,
+  setTableNameSearchKey: () => void,
   toggleMenu: () => void,
   addFavoriteTablesQuantity: () => void,
   fetchTableData: () => void,
@@ -83,7 +83,7 @@ class Main extends Component {
       isConnected,
       tablesQuantity,
       fetchTableData,
-      searchTables,
+      setTableNameSearchKey,
     }: Props = this.props;
     const tablesBeforeLoading =
       tablesQuantity ?
@@ -126,7 +126,7 @@ class Main extends Component {
           <Filter>
             <SearchIcon className="fa fa-search" />
             <TablesSearch
-              onChange={(e) => searchTables(e.target.value)}
+              onChange={(e) => setTableNameSearchKey(e.target.value)}
               placeholder="Search"
             />
           </Filter>

@@ -34,15 +34,15 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
 }
 
 const initialMeta: TablesMetaState = {
-  found: null,
+  tableNameSearchKey: null,
 };
 
 function meta(state: TablesMetaState = initialMeta, action: Action) {
   switch (action.type) {
-    case 'tables/SEARCH_TABLES':
+    case 'tables/SET_TABLENAME_SEARCH_KEY':
       return {
         ...state,
-        found: action.payload,
+        tableNameSearchKey: action.payload,
       };
     default:
       return state;
