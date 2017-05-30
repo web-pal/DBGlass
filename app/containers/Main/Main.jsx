@@ -37,7 +37,7 @@ import {
   SideBarFooter,
   CreateTableButton,
   CircleIcon,
-  Title
+  Title,
 } from './styled';
 
 type Props = {
@@ -125,7 +125,10 @@ class Main extends Component {
           </TablesContent>
           <Filter>
             <SearchIcon className="fa fa-search" />
-            <TablesSearch onChange={(e) => searchTables(e.target.value)}/>
+            <TablesSearch
+              onChange={(e) => searchTables(e.target.value)}
+              placeholder="Search"
+            />
           </Filter>
           <SideBarFooter>
             <CreateTableButton>
@@ -137,7 +140,6 @@ class Main extends Component {
         <FavoritesSwitcher />
         <MainContent />
       </MainContainer>
-
     );
   }
 }

@@ -20,11 +20,10 @@ export const getTablesQuantity = createSelector(
 export const getFiltredTables = createSelector(
   [getTablesByIds, getTablesMap, getTablesFound],
   (ids, map, found) => {
-    console.log(found)
     const tablesList = ids.map(id => map[id]);
     const filtredTables = found && tablesList.filter(item => item.tableName.includes(found));
     return found
       ? filtredTables
-      : tablesList
+      : tablesList;
   },
 );

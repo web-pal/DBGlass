@@ -1,8 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import type { Connector } from 'react-redux';
 
 import {
   ContentWrapper,

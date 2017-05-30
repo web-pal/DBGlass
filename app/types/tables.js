@@ -15,8 +15,9 @@ export type TablesIndexedMap = {
 
 export type TableNormalizePayload = {
   ids: TablesIds,
-  map: TablesIndexedMap,
+  map: TablesIndexedMap
 };
+
 export type TablesMetaState = {
-  found: ?string,
+  found: ?string
 };

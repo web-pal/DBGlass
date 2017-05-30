@@ -52,5 +52,5 @@ function meta(state: TablesMetaState = initialMeta, action: Action) {
 export default combineReducers({
   byId: itemsById,
   allIds: allItems,
-  meta
+  meta,
 });

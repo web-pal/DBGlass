@@ -138,18 +138,18 @@ export const MaskShort = styled.div`
   width: 35px;
   background: #3b3b3f
 `;
-
 export const SearchIcon = styled.i`
-  margin: 2px 5px 0 0;
-  opacity: 0.65;
-  color: #fff;
+  position: absolute;
+  right: 23px;
+  font-size: 13px !important;
+  top: 6px;
 `;
 export const Filter = styled.div`
+  position: relative;
   display: flex;
-  padding: 0 10px;
+  padding: 0 15px;
   margin: 0 0 5px;
 `;
-
 export const TablesSearch = styled(Input)`
   width: 100%;
   padding: 3px 8px;

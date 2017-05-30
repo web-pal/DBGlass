@@ -19,3 +19,4 @@ export const searchTables = (payload: ?IdString): Action =>
     type: 'tables/SEARCH_TABLES',
     payload,
   });
+
