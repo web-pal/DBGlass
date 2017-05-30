@@ -2,7 +2,7 @@
 import { combineReducers } from 'redux';
 import _ from 'lodash';
 
-import type { TablesIds, TablesIndexedMap, Action } from '../types';
+import type { TablesIds, TablesIndexedMap, Action, TablesMetaState } from '../types';
 
 function allItems(state: TablesIds = [], action: Action) {
   switch (action.type) {
@@ -33,7 +33,24 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
   }
 }
 
+const initialMeta: TablesMetaState = {
+  tableNameSearchKey: null,
+};
+
+function meta(state: TablesMetaState = initialMeta, action: Action) {
+  switch (action.type) {
+    case 'tables/SET_TABLENAME_SEARCH_KEY':
+      return {
+        ...state,
+        tableNameSearchKey: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   byId: itemsById,
   allIds: allItems,
+  meta,
 });

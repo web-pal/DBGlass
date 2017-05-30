@@ -5,7 +5,7 @@ import type {
   FavoriteNormalizePayload, FavoritesIds, FavoritesMetaState,
   FavoriteTablesQuantity,
 } from './favorites';
-import type { TableNormalizePayload, TablesIndexedMap, TablesIds } from './tables';
+import type { TableNormalizePayload, TablesIndexedMap, TablesIds, TablesMetaState } from './tables';
 import type { uiState } from './ui';
 
 export * from './favorites';
@@ -27,6 +27,7 @@ export type Action =
 | { type: 'tables/FETCH_REQUEST' }
 | { type: 'tables/FILL', +payload: TableNormalizePayload }
 | { type: 'tables/CLEAR_TABLES' }
+| { type: 'tables/SET_TABLENAME_SEARCH_KEY', +payload: ?IdString }
 | { type: 'currentTable/FETCH_TABLE_DATA_REQUEST', +payload: string }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
@@ -45,7 +46,8 @@ export type State = {
   },
   +tables: {
     +byId: TablesIndexedMap,
-    +allIds: TablesIds
+    +allIds: TablesIds,
+    +meta: TablesMetaState
   }
 };
 

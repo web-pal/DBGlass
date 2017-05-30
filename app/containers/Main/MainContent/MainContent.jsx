@@ -1,8 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import type { Connector } from 'react-redux';
 
 import {
   ContentWrapper,
@@ -11,9 +8,7 @@ import {
   TableContent,
 } from './styled';
 
-// type Props = {
-//   rows: string
-// };
+import Footer from './Footer/Footer';
 
 class MainContent extends Component {
   render() {
@@ -24,6 +19,7 @@ class MainContent extends Component {
           <ColumnName />
         </TableHeader>
         <TableContent />
+        <Footer />
       </ContentWrapper>
     );
   }

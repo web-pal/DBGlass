@@ -1,4 +1,6 @@
 import styled, { keyframes } from 'styled-components';
+import { Input } from '../../../components/shared/InputComponents/styled';
+import { Button } from '../../../components/shared/styled';
 
 export const MainContainer = styled.div`
   display: flex;
@@ -10,12 +12,12 @@ export const TablesSidebar = styled.div`
   flex-basis: 210px;
   max-width: 210px;
   z-index: 12;
+  background: #3b3b3f;
 `;
 export const TablesContent = styled.div`
   display: flex;
   flex-flow: column nowrap;
   flex-grow: 1;
-  background-color: #3b3b3f;
 `;
 export const TablesContainer = styled.ul`
   list-style: none;
@@ -136,3 +138,48 @@ export const MaskShort = styled.div`
   width: 35px;
   background: #3b3b3f
 `;
+export const SearchIcon = styled.i`
+  position: absolute;
+  right: 23px;
+  font-size: 13px !important;
+  top: 6px;
+`;
+export const Filter = styled.div`
+  position: relative;
+  display: flex;
+  padding: 0 15px;
+  margin: 0 0 5px;
+`;
+export const TablesSearch = styled(Input)`
+  width: 100%;
+  padding: 3px 8px;
+  &:focus {
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  }
+`;
+export const SideBarFooter = styled.div`
+  height: 50px;
+  display: flex;
+  border-top: 1px solid black;
+  align-items: center;
+  justify-content: center;
+`;
+export const CreateTableButton = styled(Button)`
+  text-transform: uppercase;
+  flex-grow: 0;
+  background: #3b3b3f;
+  color: #10a78a;
+  margin: 0;
+  &:hover {
+    color: #10a78a;
+  }
+`;
+export const CircleIcon = styled.i`
+  margin-right: 5px;
+  color: #10a78a;
+`;
+export const Title = styled.span`
+  height: 13px;
+`;
+

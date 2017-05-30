@@ -17,3 +17,7 @@ export type TableNormalizePayload = {
   ids: TablesIds,
   map: TablesIndexedMap
 };
+
+export type TablesMetaState = {
+  tableNameSearchKey: ?string
+};
