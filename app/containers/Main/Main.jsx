@@ -74,7 +74,6 @@ class Main extends Component {
     const {
       tables, currentDBName, isMenuOpen, toggleMenu, isTablesFetched, tablesQuantity, currentTable,
     }: Props = this.props;
-    console.log(isTablesFetched);
     return (
       <MainContainer>
         <TablesSidebar>

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
 import type { State, FieldsIndexedMap } from '../../../types';
 
-import { Grid, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized';
+import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
 
 import { getTableFieldsNames, getTableRows } from '../../../selectors/tables';
 
@@ -17,6 +17,7 @@ import {
   Cell,
   CellText,
   CellContainer,
+  GridWrapper,
 } from './styled';
 
 type Props = {
@@ -24,77 +25,86 @@ type Props = {
   rows: any
 };
 
-const cache = new CellMeasurerCache({
-  defaultWidth: 180,
-  minWidth: 100,
-  fixedHeight: true,
-});
-
 class MainContent extends Component {
   props: Props;
 
-  cellRenderer = ({ columnIndex, key, parent, rowIndex, style }) => {
-    const tableData = this.props.fieldsNames.concat(this.props.rows);
+  cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
     return (
-      <CellMeasurer
-        cache={cache}
-        columnIndex={columnIndex}
+      <Cell
         key={key}
-        parent={parent}
-        rowIndex={rowIndex}
+        style={{
+          ...style,
+          height: 45,
+          whiteSpace: 'nowrap',
+        }}
       >
-        <Cell
-          key={key}
-          style={{
-            ...style,
-            height: rowIndex === 0 ? 60 : 45,
-            whiteSpace: 'nowrap',
-            position: rowIndex === 0 ? 'fixed' : 'absolute',
-          }}
-          background={rowIndex}
-        >
-          {
-            rowIndex === 0 ?
-              <ColumnName>
-                {tableData[rowIndex][columnIndex]}
-              </ColumnName>
-              :
-              <CellContainer>
-                <CellText>
-                  {tableData[rowIndex][columnIndex]}
-                </CellText>
-              </CellContainer>
-          }
-        </Cell>
-      </CellMeasurer>
+        <CellContainer>
+          <CellText>
+            {this.props.rows[rowIndex][columnIndex]}
+          </CellText>
+        </CellContainer>
+      </Cell>
     );
   }
 
-  rowHeight = (index) => index.index === 0 ? 60 : 45;
+  headerRenderer = ({ columnIndex, key, rowIndex, style }) => {
+    return (
+      <ColumnName
+        key={key}
+        style={style}
+      >
+        {this.props.fieldsNames[rowIndex][columnIndex]}
+      </ColumnName>
+    );
+  }
 
   render() {
     const { fieldsNames, rows }: Props = this.props;
-    const tableData = fieldsNames.concat(rows);
+    const headerGridStyle = {
+      overflow: 'hidden',
+    };
     return (
-      <ContentWrapper>
-        <TableHeader />
-        <TableContent>
-          <AutoSizer>
-            {({ height, width }) => (
-              <Grid
-                cellRenderer={this.cellRenderer}
-                columnCount={tableData.length ? tableData[0].length : 0}
-                columnWidth={cache.columnWidth}
-                deferredMeasurementCache={cache}
-                height={height}
-                rowCount={tableData.length}
-                rowHeight={this.rowHeight}
-                width={width}
-              />
-            )}
-          </AutoSizer>
-        </TableContent>
-      </ContentWrapper>
+      <ScrollSync>
+        {({ clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => (
+          <ContentWrapper>
+            <TableHeader>
+              <AutoSizer>
+                {({ height, width }) =>
+                  <GridWrapper>
+                    <Grid
+                      cellRenderer={this.headerRenderer}
+                      columnCount={fieldsNames.length ? fieldsNames[0].length : 0}
+                      columnWidth={250}
+                      height={height}
+                      rowCount={fieldsNames.length}
+                      rowHeight={60}
+                      width={width}
+                      scrollLeft={scrollLeft}
+                      style={headerGridStyle}
+                    />
+                  </GridWrapper>
+                }
+              </AutoSizer>
+            </TableHeader>
+            <TableContent>
+              <AutoSizer>
+                {({ height, width }) => (
+                  <Grid
+                    cellRenderer={this.cellRenderer}
+                    columnCount={rows.length ? rows[0].length : 0}
+                    columnWidth={250}
+                    height={height}
+                    rowCount={rows.length}
+                    rowHeight={45}
+                    width={width}
+                    onScroll={onScroll}
+                  />
+                )}
+              </AutoSizer>
+            </TableContent>
+          </ContentWrapper>
+        )}
+      </ScrollSync>
     );
   }
 }

@@ -39,8 +39,3 @@ export const getTableRows = createSelector(
   [getCurrentTableRowsIds, getCurrentTableRows],
   (ids, map) => ids ? ids.map(id => Object.values(map[id])) : [],
 );
-
-export const getIsFetched = createSelector(
-  [getCurrentTableId, getTablesMap],
-  (id, map) => id ? Object.values(map).filter(item => item.id === id)[0].isFetched : false,
-);
