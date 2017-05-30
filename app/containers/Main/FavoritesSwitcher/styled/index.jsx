@@ -32,11 +32,10 @@ export const Favourites = styled.ul`
 `;
 
 export const Favorite = styled.li`
-  color: #989898;
   cursor: pointer;
   font-size: 14px;
   padding: 10px 15px;
-  font-weight: 100;
+  font-weight: 400;
 
   &:hover {
     color: #10a78a;
