@@ -3,7 +3,7 @@ import { getFavoritesMap } from './favorites';
 
 export const getTablesMap = ({ tables }) => tables.byId;
 export const getTablesByIds = ({ tables }) => tables.allIds;
-export const getTablesFound = ({ tables }) => tables.meta.tableNameSearchKey;
+export const getTableNameSearchKey = ({ tables }) => tables.meta.tableNameSearchKey;
 
 export const getTables = createSelector(
   [getTablesByIds, getTablesMap],
@@ -18,11 +18,11 @@ export const getTablesQuantity = createSelector(
 );
 
 export const getFiltredTables = createSelector(
-  [getTablesByIds, getTablesMap, getTablesFound],
-  (ids, map, found) => {
+  [getTablesByIds, getTablesMap, getTableNameSearchKey],
+  (ids, map, searchKey) => {
     const tablesList = ids.map(id => map[id]);
-    const filtredTables = tablesList.filter(item => item.tableName.includes(found));
-    return found
+    const filtredTables = tablesList.filter(item => item.tableName.includes(searchKey));
+    return searchKey
       ? filtredTables
       : tablesList;
   },
