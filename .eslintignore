@@ -1,6 +1,6 @@
-main.js
-main.js.map
-release/
-dist/
+flow-typed/
 scripts/
-node_modules/
+app/dist/
+app/main.js
+node_modules
+dll

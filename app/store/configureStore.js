@@ -1,8 +1,6 @@
-const configureStoreDev = require('./configureStore.development');
-const configureStoreProd = require('./configureStore.production');
-
+// @flow
 if (process.env.NODE_ENV === 'production') {
-  module.exports = configureStoreProd;
+  module.exports = require('./configureStore.production'); // eslint-disable-line global-require
 } else {
-  module.exports = configureStoreDev;
+  module.exports = require('./configureStore.development'); // eslint-disable-line global-require
 }

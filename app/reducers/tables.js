@@ -1,52 +1,56 @@
-import * as types from '../constants/tablesConstants';
-import { RESET_STATE } from '../constants/currentTableConstants';
+// @flow
+import { combineReducers } from 'redux';
+import _ from 'lodash';
 
-export default function tables(tablesDefault = [], action) {
+import type { TablesIds, TablesIndexedMap, Action, TablesMetaState } from '../types';
+
+function allItems(state: TablesIds = [], action: Action) {
   switch (action.type) {
-    case types.GET_TABLES:
-      return action.tables;
-    case types.SET_CURRENT_TABLE:
-      if (action.tableName) {
-        tablesDefault.map((item) => {
-          /* eslint no-param-reassign: [2, { "props": false }] */
-          if (item.table_name === action.tableName) {
-            window.localStorage.setItem('currentTable', action.tableName);
-            item.isCurrent = true;
-          } else {
-            item.isCurrent = false;
-          }
-          return null;
-        });
-      }
-      return tablesDefault.slice();
-    case types.CHANGE_TABLE_NAME:
-      tablesDefault.forEach((item) => {
-        if (item.isCurrent) {
-          window.localStorage.setItem('currentTable', action.newTableName);
-          item.table_name = action.newTableName;
-        }
-      });
-      return tablesDefault.slice();
-    case types.CREATE_TABLE:
-      tablesDefault.push({
-        table_name: action.tableName,
-        foreignKeys: [],
-        isCurrent: false
-      });
-      return tablesDefault.slice();
-    case types.SEARCH_TABLES:
-      tablesDefault.forEach((item) => {
-        if (action.keyword) {
-          item.isHide = !item.table_name.includes(action.keyword);
-        } else {
-          item.isHide = false;
-        }
-      });
-      return tablesDefault.slice();
-    case types.CLEAR_TABLES:
-    case RESET_STATE:
+    case 'tables/FILL':
+      return _.union(state, action.payload.ids);
+    case 'tables/CLEAR_TABLES':
+      return [];
+    case 'CLEAR_ALL_REDUCERS':
       return [];
     default:
-      return tablesDefault;
+      return state;
   }
 }
+
+function itemsById(state: TablesIndexedMap = {}, action: Action) {
+  switch (action.type) {
+    case 'tables/FILL':
+      return {
+        ...state,
+        ...action.payload.map,
+      };
+    case 'tables/CLEAR_TABLES':
+      return {};
+    case 'CLEAR_ALL_REDUCERS':
+      return {};
+    default:
+      return state;
+  }
+}
+
+const initialMeta: TablesMetaState = {
+  tableNameSearchKey: null,
+};
+
+function meta(state: TablesMetaState = initialMeta, action: Action) {
+  switch (action.type) {
+    case 'tables/SET_TABLENAME_SEARCH_KEY':
+      return {
+        ...state,
+        tableNameSearchKey: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({
+  byId: itemsById,
+  allIds: allItems,
+  meta,
+});
