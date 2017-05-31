@@ -3,13 +3,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Measure from 'react-measure';
-import type { Dispatch } from '../../../types';
+
+import type { Connector } from 'react-redux';
+import type { Dispatch, MeasureType } from '../../../types';
 
 import * as uiActions from '../../../actions/ui';
 import { getDataForMeasure } from '../../../selectors/ui';
 
-const MeasureCells = ({ forMeasure, setMeasureWidth }:
-{ forMeasure: Array<Object>, setMeasureWidth: Function }) =>
+type Props = {
+  setMeasureWidth: (Object) => void,
+  forMeasure: Array<MeasureType>
+};
+
+const MeasureCells = ({ forMeasure, setMeasureWidth }: Props) =>
   <div>
     {forMeasure.map((item) =>
       <Measure

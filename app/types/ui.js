@@ -1,12 +1,14 @@
 // @flow
 
+export type MeasureType = {
+  name: string,
+  value: string,
+  isMeasured: boolean,
+  width: ?number
+};
+
 export type dataForMeasure = {
-  [number | string]: {
-    name: string,
-    value: string,
-    isMeasured: boolean,
-    width: ?number
-  }
+  [number | string]: MeasureType
 };
 
 export type uiState = {

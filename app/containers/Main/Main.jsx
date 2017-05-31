@@ -6,7 +6,6 @@ import type { Connector } from 'react-redux';
 
 import * as uiActions from '../../actions/ui';
 import * as tablesActions from '../../actions/tables';
-import * as currentTableActions from '../../actions/currentTable';
 import * as favoritesActions from '../../actions/favorites';
 
 import type { Dispatch, Tables, State, IdString } from '../../types';
@@ -156,7 +155,7 @@ class Main extends Component {
 
 function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
   return bindActionCreators(
-    { ...uiActions, ...tablesActions, ...favoritesActions, ...currentTableActions }, dispatch,
+    { ...uiActions, ...tablesActions, ...favoritesActions }, dispatch,
   );
 }
 
