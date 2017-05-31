@@ -9,7 +9,7 @@ import * as connectActions from '../../../actions/connect';
 import * as uiActions from '../../../actions/ui';
 import * as tablesActions from '../../../actions/tables';
 import * as currentTableActions from '../../../actions/currentTable';
-import type { Dispatch, Favorites, State } from '../../../types';
+import type { Dispatch, Favorites, State, IdString } from '../../../types';
 import { getFavorites } from '../../../selectors/favorites';
 
 import {
@@ -25,13 +25,13 @@ import {
 } from './styled';
 
 type Props = {
-  setConnectedState: () => void,
+  setConnectedState: (boolean) => void,
   clearTables: () => void,
-  toggleMenu: () => void,
-  startSubmitRequest: () => void,
-  selectFavoriteRequest: () => void,
-  resetSelectTable: () => void,
-  toggleIsFetchedTables: () => void,
+  toggleMenu: (boolean) => void,
+  startSubmitRequest: (Favorite) => void,
+  selectFavoriteRequest: (?IdString) => void,
+  resetSelectTable: (?string) => void,
+  toggleIsFetchedTables: (boolean) => void,
   favorites: Favorites,
   isMenuOpen: boolean
 };

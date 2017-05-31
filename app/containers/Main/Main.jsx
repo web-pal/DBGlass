@@ -44,11 +44,11 @@ import {
 } from './styled';
 
 type Props = {
-  fetchTablesRequest: () => void,
-  setTableNameSearchKey: () => void,
-  toggleMenu: () => void,
-  fetchTableData: () => void,
-  selectTable: () => void,
+  fetchTablesRequest: (?IdString) => void,
+  setTableNameSearchKey: (?IdString) => void,
+  toggleMenu: (boolean) => void,
+  fetchTableData: (Table) => void,
+  selectTable: (?string) => void,
   tables: Tables,
   currentDBName: string,
   isMenuOpen: boolean,

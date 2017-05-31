@@ -7,6 +7,8 @@ import {
   getFormValues, change,
 } from 'redux-form';
 
+import type { IdString } from '../../types';
+
 import * as uiActions from '../../actions/ui';
 import * as favoritesActions from '../../actions/favorites';
 import * as connectActions from '../../actions/connect';
@@ -47,11 +49,11 @@ const required = value => (value ? undefined : 'Required');
 const requiredIfUseSSH = (value, allValues) => ((value || !allValues.useSSH) ? undefined : 'Required');
 
 type Props = {
-  changeField: () => void,
-  addFavoriteRequest: () => void,
-  removeFavoriteRequest: () => void,
-  startSubmitRequest: () => void,
-  setConnectionError: () => void,
+  changeField: (string, string) => void,
+  addFavoriteRequest: (Favorite) => void,
+  removeFavoriteRequest: (IdString) => void,
+  startSubmitRequest: (?Favorite) => void,
+  setConnectionError: (string) => void,
   favoritesLength: number,
   currentValues: ?Favorite,
   valid: boolean,

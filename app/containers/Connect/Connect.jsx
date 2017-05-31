@@ -36,8 +36,8 @@ import type { IdString, Favorites, Dispatch, State } from '../../types';
 
 type Props = {
   fetchFavoritesRequest: () => void,
-  selectFavoriteRequest: () => void,
-  setConnectionError: () => void,
+  selectFavoriteRequest: (?IdString) => void,
+  setConnectionError: (string) => void,
   currentFavoriteId: ?IdString,
   favorites: Favorites
 };
