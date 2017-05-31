@@ -8,7 +8,7 @@ import type {
 import type { TableNormalizePayload, TablesIndexedMap, TablesIds, Table } from './tables';
 import type { TableMetaState, TableDataNormalizedPayload } from './currentTable';
 
-import type { uiState } from './ui';
+import type { uiState, dataForMeasure } from './ui';
 
 export * from './favorites';
 export * from './tables';
@@ -39,6 +39,8 @@ export type Action =
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }
 | { type: 'ui/TOGGLE_CONNECTING_LADDA', +payload: boolean }
 | { type: 'ui/TOGGLE_IS_FETCH_TABLES', +payload: boolean }
+| { type: 'ui/SET_DATA_FOR_MEASURE', +payload: dataForMeasure }
+| { type: 'ui/SET_MEASURE_WIDTH', +payload: { width: number, key: string } }
 | Object
 ;
 
@@ -56,7 +58,6 @@ export type State = {
     +meta: TableMetaState
   }
 };
-
 
 export type Store = ReduxStore<State, Action>;
 export type Dispatch = ReduxDispatch<Action>;

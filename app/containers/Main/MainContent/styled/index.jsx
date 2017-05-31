@@ -15,8 +15,10 @@ export const TableHeader = styled.div`
   min-width: calc(100% - 230px);
   background: #f0f0f0;
   height: 60px;
-  ${''/* padding: 0 10px; */}
   position: absolute;
+  &>div {
+    overflow: hidden!important;
+  }
 `;
 
 export const ColumnName = styled.div`

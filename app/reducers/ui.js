@@ -7,6 +7,7 @@ const initialState: uiState = {
   isLoading: false,
   connectionError: '',
   isTablesFetched: false,
+  dataForMeasure: {},
 };
 
 export default function ui(state: uiState = initialState, action: Action) {
@@ -36,6 +37,27 @@ export default function ui(state: uiState = initialState, action: Action) {
         ...state,
         isTablesFetched: action.payload,
       };
+    case 'ui/SET_DATA_FOR_MEASURE':
+      return {
+        ...state,
+        dataForMeasure: {
+          ...state.dataForMeasure,
+          ...action.payload,
+        },
+      };
+    case 'ui/SET_MEASURE_WIDTH': {
+      const measure = state.dataForMeasure[action.payload.key];
+      return {
+        ...state,
+        dataForMeasure: {
+          ...state.dataForMeasure,
+          [action.payload.key]: {
+            ...measure,
+            width: action.payload.width,
+          },
+        },
+      };
+    }
     default:
       return state;
   }

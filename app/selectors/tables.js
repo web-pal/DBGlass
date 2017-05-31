@@ -14,7 +14,8 @@ export const getCurrentFavoriteId = ({ favorites }) => favorites.meta.currentFav
 export const getTablesQuantity = createSelector(
   [getCurrentFavoriteId, getFavoritesMap],
   (id, map) => {
-    const tablesQuantity = id ? Object.values(map).filter(item => item.id === id)[0].tablesQuantity : 10;
+    const tablesQuantity = id ?
+      Object.values(map).filter(item => item.id === id)[0].tablesQuantity : 10;
     return [...Array(tablesQuantity).keys()];
   },
 );
@@ -22,12 +23,12 @@ export const getTablesQuantity = createSelector(
 export const getCurrentTableId = ({ tables }) => tables.meta.currentTableId;
 export const getCurrentTableFieldsIds = ({ tables }) =>
   tables.byId[tables.meta.currentTableId].fieldsIds;
-export const getCurrentTableFieldsNames = ({ tables }) =>
-  tables.byId[tables.meta.currentTableId].fieldsNames;
+export const getCurrentTableFields = ({ tables }) =>
+  tables.byId[tables.meta.currentTableId].fields;
 
-export const getTableFieldsNames = createSelector(
-  [getCurrentTableFieldsIds, getCurrentTableFieldsNames],
-  (ids, map) => ids ? [ids.map(id => map[id].fieldName)] : [],
+export const getTableFields = createSelector(
+  [getCurrentTableFieldsIds, getCurrentTableFields],
+  (ids, map) => ids ? ids.map(id => map[id].fieldName) : [],
 );
 
 export const getCurrentTableRowsIds = ({ tables }) =>
