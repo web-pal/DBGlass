@@ -6,6 +6,8 @@ const initialState: uiState = {
   isMenuOpen: false,
   isLoading: false,
   connectionError: '',
+  isTablesFetched: false,
+  dataForMeasure: {},
 };
 
 export default function ui(state: uiState = initialState, action: Action) {
@@ -30,6 +32,32 @@ export default function ui(state: uiState = initialState, action: Action) {
         ...state,
         isLoading: action.payload,
       };
+    case 'ui/TOGGLE_IS_FETCH_TABLES':
+      return {
+        ...state,
+        isTablesFetched: action.payload,
+      };
+    case 'ui/SET_DATA_FOR_MEASURE':
+      return {
+        ...state,
+        dataForMeasure: {
+          ...state.dataForMeasure,
+          ...action.payload,
+        },
+      };
+    case 'ui/SET_MEASURE_WIDTH': {
+      const measure = state.dataForMeasure[action.payload.key];
+      return {
+        ...state,
+        dataForMeasure: {
+          ...state.dataForMeasure,
+          [action.payload.key]: {
+            ...measure,
+            width: action.payload.width,
+          },
+        },
+      };
+    }
     default:
       return state;
   }

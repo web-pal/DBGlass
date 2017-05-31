@@ -9,6 +9,7 @@ export const ContentWrapper = styled.div`
   border-top: 1px solid rgba(0, 0, 0, 0.2);
   padding: 0 15px;
   background: #fff;
+  z-index: 12;
 `;
 
 export const SettingButtonsGroup = styled.div`

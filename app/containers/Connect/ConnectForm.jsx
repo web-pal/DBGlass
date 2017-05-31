@@ -36,7 +36,7 @@ import {
   InputWithButton,
 } from './styled';
 
-import type { Favorite, State, Dispatch } from '../../types';
+import type { Favorite, State, Dispatch, IdString } from '../../types';
 
 const os = require('electron').remote.require('os');
 const path = require('electron').remote.require('path');
@@ -47,11 +47,11 @@ const required = value => (value ? undefined : 'Required');
 const requiredIfUseSSH = (value, allValues) => ((value || !allValues.useSSH) ? undefined : 'Required');
 
 type Props = {
-  changeField: () => void,
-  addFavoriteRequest: () => void,
-  removeFavoriteRequest: () => void,
-  startSubmitRequest: () => void,
-  setConnectionError: () => void,
+  changeField: (string, string) => void,
+  addFavoriteRequest: (Favorite) => void,
+  removeFavoriteRequest: (IdString) => void,
+  startSubmitRequest: (?Favorite) => void,
+  setConnectionError: (string) => void,
   favoritesLength: number,
   currentValues: ?Favorite,
   valid: boolean,
@@ -102,6 +102,7 @@ class ConnectForm extends Component {
         if (!values.id) {
           favorite.id = (this.props.favoritesLength + 1).toString();
         }
+        favorite.tablesQuantity = 0;
         this.props.addFavoriteRequest(favorite);
       }
     }

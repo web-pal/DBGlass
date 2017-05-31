@@ -5,5 +5,5 @@ export const getCurrentFavoriteId = ({ favorites }) => favorites.meta.currentFav
 
 export const getCurrentDBName = createSelector(
   [getCurrentFavoriteId, getFavoritesMap],
-  (id, favoritesMap) => Object.values(favoritesMap).filter(db => db.id === id)[0].database,
+  (id, favoritesMap) => id ? Object.values(favoritesMap).filter(db => db.id === id)[0].database : '',
 );
