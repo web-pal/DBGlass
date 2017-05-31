@@ -5,7 +5,8 @@ import type {
   FavoriteNormalizePayload, FavoritesIds, FavoritesMetaState,
   FavoriteTablesQuantity,
 } from './favorites';
-import type { TableNormalizePayload, TablesIndexedMap, TablesIds, TablesMetaState } from './tables';
+
+import type { TableNormalizePayload, TablesIndexedMap, TablesIds, TablesMetaState, Table } from './tables';
 import type { TableDataNormalizedPayload } from './currentTable';
 
 import type { uiState, dataForMeasure } from './ui';

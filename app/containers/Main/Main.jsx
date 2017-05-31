@@ -88,7 +88,6 @@ class Main extends Component {
       isMenuOpen,
       toggleMenu,
       tablesQuantity,
-      fetchTableData,
       setTableNameSearchKey,
       currentTable,
       isTablesFetched,

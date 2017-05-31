@@ -29,8 +29,8 @@ export const getFiltredTables = createSelector(
     return searchKey
       ? filtredTables
       : tablesList;
-    },
-  );
+  },
+);
 
 export const getCurrentTableId = ({ tables }) => tables.meta.currentTableId;
 export const getCurrentTableFieldsIds = ({ tables }) =>
