@@ -17,5 +17,5 @@ export type TableDataNormalizedPayload = {
   rowsIds: RowsIds,
   rows: RowsIndexedMap,
   fieldsIds: FieldsIds,
-  fieldsNames: FieldsIndexedMap
+  fields: FieldsIndexedMap
 };

@@ -9,7 +9,7 @@ export type Table = {
   rowsIds: ?RowsIds,
   rows: ?RowsIndexedMap,
   fieldsIds: ?FieldsIds,
-  fieldsNames: ?FieldsIndexedMap,
+  fields: ?FieldsIndexedMap,
   isFetched: ?boolean
 };
 export type Tables = Array<Table>;

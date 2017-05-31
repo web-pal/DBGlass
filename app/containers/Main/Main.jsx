@@ -17,6 +17,7 @@ import { getCurrentDBName } from '../../selectors/tableName';
 
 import FavoritesSwitcher from './FavoritesSwitcher/FavoritesSwitcher';
 import MainContent from './MainContent/MainContent';
+import MeasureCells from './MeasureCells/MeasureCells';
 
 import {
   MainContainer,
@@ -143,6 +144,7 @@ class Main extends Component {
             </CreateTableButton>
           </SideBarFooter>
         </TablesSidebar>
+        <MeasureCells />
         <FavoritesSwitcher />
         {
           currentTable ?

@@ -16,6 +16,9 @@ export const TableHeader = styled.div`
   background: #f0f0f0;
   height: 60px;
   position: absolute;
+  &>div {
+    overflow: hidden!important;
+  }
 `;
 
 export const ColumnName = styled.div`
