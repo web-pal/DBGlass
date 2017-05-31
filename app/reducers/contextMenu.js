@@ -1,19 +1,21 @@
 // @flow
-import type { ContextMenuMetaState, Action } from '../types';
+import type { ContextMenuState, Action } from '../types';
 
-const initialMeta: ContextMenuMetaState = {
+const initialState: ContextMenuState = {
   elementSerialNumber: 0,
   elementType: '',
+  elementName: '',
 };
 
-export default function contextMenu(state: ContextMenuMetaState = initialMeta, action: Action) {
+export default function contextMenu(state: ContextMenuState = initialState, action: Action) {
   switch (action.type) {
     case 'contextMenu/TOGGLE_CONTEXT_MENU': {
-      const { elementType, elementSerialNumber } = action.payload;
+      const { elementType, elementSerialNumber, elementName } = action.payload;
       return {
         ...state,
         elementSerialNumber,
         elementType,
+        elementName,
       };
     }
     default:

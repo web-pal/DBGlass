@@ -1,5 +1,6 @@
 // @flow
-export type ContextMenuMetaState = {
+export type ContextMenuState = {
   elementSerialNumber: number,
-  elementType: string
+  elementType: string,
+  elementName: string
 };

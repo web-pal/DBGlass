@@ -7,12 +7,14 @@ import type {
 } from './favorites';
 import type { TableNormalizePayload, TablesIndexedMap, TablesIds, TablesMetaState } from './tables';
 import type { uiState } from './ui';
-import type { ContextMenuMetaState } from './contextMenu';
+import type { ContextMenuState } from './contextMenu';
+import type { ModalState } from './modal';
 
 export * from './favorites';
 export * from './tables';
 export * from './ui';
 export * from './contextMenu';
+export * from './modal';
 
 export type IdString = string;
 
@@ -35,14 +37,17 @@ export type Action =
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }
 | { type: 'ui/TOGGLE_CONNECTING_LADDA', +payload: boolean }
-| { type: 'contextMenu/TOGGLE_CONTEXT_MENU', +payload: ContextMenuMetaState}
+| { type: 'contextMenu/TOGGLE_CONTEXT_MENU', +payload: ContextMenuState}
+| { type: 'modal/TOGGLE_MODAL', +payload: ModalState }
+| { type: 'modal/HIDE_MODAL' }
 | Object
 ;
 
 
 export type State = {
   +ui: uiState,
-  +contextMenu: ContextMenuMetaState,
+  +modal: ModalState,
+  +contextMenu: ContextMenuState,
   +favorites: {
     +byId: FavoritesIndexedMap,
     +allIds: FavoritesIds,

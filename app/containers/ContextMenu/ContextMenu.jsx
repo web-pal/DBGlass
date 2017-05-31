@@ -6,12 +6,14 @@ import type { Connector } from 'react-redux';
 import { remote } from 'electron';
 
 import * as contextMenuActions from '../../actions/contextMenu';
+import * as modalActions from '../../actions/modal';
+import { getValuesForModal } from './utils';
 
 import type { Dispatch, State, ContextMenuMetaState } from '../../types';
 
 type Props = {
-  contextMenu: ContextMenuMetaState
-  // toggleConfirmationModal: () => void
+  contextMenu: ContextMenuMetaState,
+  toggleModal: () => void
 };
 
 const { Menu, MenuItem } = remote;
@@ -32,12 +34,14 @@ class ContextMenu extends Component {
   createMenu = () => {
     this.tableMenu = new Menu();
     const dropTable = () => {
-      console.log('drop');
-      // this.props.toggleConfirmationModal('drop');
+      const { contextMenu, toggleModal } = this.props;
+      const values = getValuesForModal(contextMenu, 'drop');
+      toggleModal('ConfirmationModal', values);
     };
     const truncateTable = () => {
-      console.log('truncate');
-      // this.props.toggleConfirmationModal('truncate');
+      const { contextMenu, toggleModal } = this.props;
+      const values = getValuesForModal(contextMenu, 'truncate');
+      toggleModal('ConfirmationModal', values);
     };
     const dropTableItem = new MenuItem({
       label: 'Drop table',
@@ -67,7 +71,7 @@ class ContextMenu extends Component {
 }
 
 function mapDispatchToProps(dispatch: Dispatch): {[key: string]: Function} {
-  return bindActionCreators({ ...contextMenuActions }, dispatch);
+  return bindActionCreators({ ...contextMenuActions, ...modalActions }, dispatch);
 }
 
 function mapStateToProps(state: State) {

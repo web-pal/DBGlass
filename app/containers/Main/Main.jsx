@@ -17,6 +17,7 @@ import { getCurrentDBName } from '../../selectors/tableName';
 
 import FavoritesSwitcher from './FavoritesSwitcher/FavoritesSwitcher';
 import MainContent from './MainContent/MainContent';
+import ModalContainer from '../../components/shared/Modal/ModalContainer';
 
 import {
   MainContainer,
@@ -76,8 +77,8 @@ class Main extends Component {
       );
     }
   }
-  handleRightClick = tableId => {
-    this.props.toggleContextMenu('table', +tableId);
+  handleRightClick = (tableId, tableName) => {
+    this.props.toggleContextMenu('table', +tableId, tableName);
   }
 
   render() {
@@ -120,7 +121,7 @@ class Main extends Component {
                 <Table
                   key={table.id}
                   onClick={() => fetchTableData(table.tableName)}
-                  onContextMenu={() => this.handleRightClick(table.id)}
+                  onContextMenu={() => this.handleRightClick(table.id, table.tableName)}
                 >
                   <TableIcon className="fa fa-table" />
                   <span title={table.tableName}>
@@ -144,6 +145,7 @@ class Main extends Component {
             </CreateTableButton>
           </SideBarFooter>
         </TablesSidebar>
+        <ModalContainer />
         <FavoritesSwitcher />
         <MainContent />
       </MainContainer>

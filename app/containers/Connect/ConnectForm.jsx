@@ -11,9 +11,9 @@ import * as uiActions from '../../actions/ui';
 import * as favoritesActions from '../../actions/favorites';
 import * as connectActions from '../../actions/connect';
 import {
-  renderRadio,
-  renderField,
-  renderSlider,
+  RenderRadio,
+  RenderField,
+  RenderSlider,
 } from '../../components/shared/InputComponents';
 
 import { Button } from '../../components/shared/styled';
@@ -143,7 +143,7 @@ class ConnectForm extends Component {
             <Label>Connection name</Label>
             <Field
               name="connectionName"
-              component={renderField}
+              component={RenderField}
               type="text"
               className="connectFormInput"
               placeholder="Connection name"
@@ -153,7 +153,7 @@ class ConnectForm extends Component {
             <Label>User*</Label>
             <Field
               name="user"
-              component={renderField}
+              component={RenderField}
               type="text"
               className="connectFormInput"
               placeholder="User"
@@ -164,7 +164,7 @@ class ConnectForm extends Component {
             <Label>Password</Label>
             <Field
               name="password"
-              component={renderField}
+              component={RenderField}
               type="password"
               className="connectFormInput"
               placeholder="Password"
@@ -174,7 +174,7 @@ class ConnectForm extends Component {
             <Label>Address*</Label>
             <Field
               name="address"
-              component={renderField}
+              component={RenderField}
               type="text"
               className="connectFormInput"
               placeholder="Address"
@@ -185,7 +185,7 @@ class ConnectForm extends Component {
             <Label>Database*</Label>
             <Field
               name="database"
-              component={renderField}
+              component={RenderField}
               type="text"
               className="connectFormInput"
               placeholder="Database name"
@@ -196,7 +196,7 @@ class ConnectForm extends Component {
             <Label>Port*</Label>
             <Field
               name="port"
-              component={renderField}
+              component={RenderField}
               type="text"
               className="connectFormInput"
               placeholder="Port"
@@ -208,7 +208,7 @@ class ConnectForm extends Component {
             <ToggleArea>
               <Field
                 name="ssl"
-                component={renderSlider}
+                component={RenderSlider}
                 type="checkbox"
                 normalize={value => value || false}
               />
@@ -223,7 +223,7 @@ class ConnectForm extends Component {
             <Field
               name="sshUsername"
               disabled={!useSSH}
-              component={renderField}
+              component={RenderField}
               type="text"
               className="connectFormInput"
               placeholder="SSH User"
@@ -235,7 +235,7 @@ class ConnectForm extends Component {
             <Field
               name="sshHost"
               disabled={!useSSH}
-              component={renderField}
+              component={RenderField}
               type="text"
               placeholder="SSH Server"
             />
@@ -245,7 +245,7 @@ class ConnectForm extends Component {
             <Field
               name="sshPort"
               disabled={!useSSH}
-              component={renderField}
+              component={RenderField}
               type="text"
               placeholder="SSH Port"
             />
@@ -256,7 +256,7 @@ class ConnectForm extends Component {
               <Field
                 name="sshAuthType"
                 disabled={!useSSH}
-                component={renderRadio}
+                component={RenderRadio}
                 onChange={this.onSSHAuthTypeChange}
                 type="radio"
                 value="password"
@@ -267,7 +267,7 @@ class ConnectForm extends Component {
               <Field
                 name="sshAuthType"
                 disabled={!useSSH}
-                component={renderRadio}
+                component={RenderRadio}
                 onChange={this.onSSHAuthTypeChange}
                 type="radio"
                 value="key"
@@ -282,7 +282,7 @@ class ConnectForm extends Component {
                 <Field
                   name="sshKeyPassword"
                   disabled={!useSSH}
-                  component={renderField}
+                  component={RenderField}
                   type="password"
                   placeholder="Key Password"
                 />
@@ -297,7 +297,7 @@ class ConnectForm extends Component {
               <Field
                 name="sshPassword"
                 disabled={!useSSH}
-                component={renderField}
+                component={RenderField}
                 type="text"
                 placeholder="SSH Password"
               />
@@ -308,7 +308,7 @@ class ConnectForm extends Component {
             <ToggleArea>
               <Field
                 name="useSSH"
-                component={renderSlider}
+                component={RenderSlider}
                 type="checkbox"
                 normalize={value => value || false}
               />
