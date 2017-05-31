@@ -6,11 +6,9 @@ import type { Connector } from 'react-redux';
 
 import * as uiActions from '../../actions/ui';
 import * as tablesActions from '../../actions/tables';
-import * as currentTableActions from '../../actions/currentTable';
 import * as favoritesActions from '../../actions/favorites';
 import * as contextMenuActions from '../../actions/contextMenu';
-
-import type { Dispatch, Tables, State } from '../../types';
+import type { Dispatch, Tables, State, IdString } from '../../types';
 import { getFiltredTables, getTablesQuantity } from '../../selectors/tables';
 
 import { getCurrentDBName } from '../../selectors/tableName';
@@ -18,6 +16,7 @@ import { getCurrentDBName } from '../../selectors/tableName';
 import FavoritesSwitcher from './FavoritesSwitcher/FavoritesSwitcher';
 import MainContent from './MainContent/MainContent';
 import ModalContainer from '../../components/shared/Modal/ModalContainer';
+import MeasureCells from './MeasureCells/MeasureCells';
 
 import {
   MainContainer,
@@ -44,41 +43,45 @@ import {
 } from './styled';
 
 type Props = {
-  fetchTablesRequest: () => void,
-  setTableNameSearchKey: () => void,
   toggleContextMenu: () => void,
-  toggleMenu: () => void,
-  addFavoriteTablesQuantity: () => void,
-  fetchTableData: () => void,
+  fetchTablesRequest: (?IdString) => void,
+  setTableNameSearchKey: (?IdString) => void,
+  toggleMenu: (boolean) => void,
+  fetchTableData: (Table) => void,
+  selectTable: (?string) => void,
   tables: Tables,
   currentDBName: string,
   isMenuOpen: boolean,
-  isConnected: boolean,
-  currentFavoriteId: string,
-  tablesQuantity: ?number
+  isTablesFetched: boolean,
+  currentFavoriteId: ?IdString,
+  tablesQuantity: Array<number>,
+  currentTable: ?string
 };
 
 class Main extends Component {
   props: Props;
 
   componentDidMount() {
-    this.props.fetchTablesRequest();
-    window.addEventListener('mousedown', (e) => {
-      if (!e.target.matches('#switcherWrapper, #switcherWrapper *, #menuSwitcher, #menuSwitcher *')) {
-        this.props.toggleMenu(false);
-      }
-    }, false);
+    this.props.fetchTablesRequest(this.props.currentFavoriteId);
+    window.addEventListener('mousedown', this.favoritesSwitcherToggler, false);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.tables !== this.props.tables) {
-      this.props.addFavoriteTablesQuantity(
-        { currentFavoriteId: this.props.currentFavoriteId, quantity: nextProps.tables.length },
-      );
+  componentWillUnmount() {
+    window.removeEventListener('mosuedown', this.favoritesSwitcherToggler, false);
+  }
+
+  favoritesSwitcherToggler = (e) => {
+    if (!e.target.matches('#switcherWrapper, #switcherWrapper *, #menuSwitcher, #menuSwitcher *')) {
+      this.props.toggleMenu(false);
     }
   }
   handleRightClick = (tableId, tableName) => {
     this.props.toggleContextMenu('table', +tableId, tableName);
+  }
+
+  fetchTable = (table) => {
+    this.props.selectTable(table.id);
+    this.props.fetchTableData(table);
   }
 
   render() {
@@ -87,15 +90,11 @@ class Main extends Component {
       currentDBName,
       isMenuOpen,
       toggleMenu,
-      isConnected,
       tablesQuantity,
-      fetchTableData,
       setTableNameSearchKey,
+      currentTable,
+      isTablesFetched,
     }: Props = this.props;
-    const tablesBeforeLoading =
-      tablesQuantity ?
-      [...Array(tablesQuantity).keys()]
-      : [...Array(10).keys()];
     return (
       <MainContainer>
         <TablesSidebar>
@@ -104,8 +103,8 @@ class Main extends Component {
             <Pin className="fa fa-chevron-right" />
           </MenuSwitcher>
           <TablesContent>
-            <LoaderContainer display={!isConnected}>
-              {tablesBeforeLoading.map((index) =>
+            <LoaderContainer display={!isTablesFetched}>
+              {tablesQuantity.map((index) =>
                 <TableLoader key={index}>
                   <TableIcon className="fa fa-table" />
                   <AnimatedLoader>
@@ -116,12 +115,13 @@ class Main extends Component {
                 </TableLoader>,
               )}
             </LoaderContainer>
-            <TablesContainer display={isConnected}>
+            <TablesContainer display={isTablesFetched}>
               {tables.map(table =>
                 <Table
                   key={table.id}
-                  onClick={() => fetchTableData(table.tableName)}
                   onContextMenu={() => this.handleRightClick(table.id, table.tableName)}
+                  active={currentTable === table.id}
+                  onClick={() => this.fetchTable(table)}
                 >
                   <TableIcon className="fa fa-table" />
                   <span title={table.tableName}>
@@ -146,8 +146,14 @@ class Main extends Component {
           </SideBarFooter>
         </TablesSidebar>
         <ModalContainer />
+        <MeasureCells />
         <FavoritesSwitcher />
-        <MainContent />
+        {
+          currentTable ?
+            <MainContent />
+            :
+            null
+        }
       </MainContainer>
     );
   }
@@ -159,7 +165,6 @@ function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
       ...uiActions,
       ...tablesActions,
       ...favoritesActions,
-      ...currentTableActions,
       ...contextMenuActions,
     }, dispatch,
   );
@@ -171,8 +176,9 @@ function mapStateToProps(state: State) {
     currentDBName: getCurrentDBName({ favorites: state.favorites }),
     isMenuOpen: state.ui.isMenuOpen,
     currentFavoriteId: state.favorites.meta.currentFavoriteId,
-    isConnected: state.ui.isConnected,
     tablesQuantity: getTablesQuantity({ favorites: state.favorites }),
+    currentTable: state.tables.meta.currentTableId,
+    isTablesFetched: state.ui.isTablesFetched,
   };
 }
 

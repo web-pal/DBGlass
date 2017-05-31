@@ -1,11 +1,16 @@
 // @flow
-import type { IdString } from './';
+import type { IdString, RowsIds, RowsIndexedMap, FieldsIds, FieldsIndexedMap } from './';
 
 export type TablesIds = Array<IdString>;
 
 export type Table = {
   id: ?IdString,
-  tableName: string
+  tableName: string,
+  rowsIds: ?RowsIds,
+  rows: ?RowsIndexedMap,
+  fieldsIds: ?FieldsIds,
+  fields: ?FieldsIndexedMap,
+  isFetched: ?boolean
 };
 export type Tables = Array<Table>;
 
@@ -19,5 +24,6 @@ export type TableNormalizePayload = {
 };
 
 export type TablesMetaState = {
-  tableNameSearchKey: ?string
+  tableNameSearchKey: ?string,
+  currentTableId: ?string
 };

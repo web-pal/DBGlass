@@ -26,6 +26,14 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
       };
     case 'tables/CLEAR_TABLES':
       return {};
+    case 'tables/SET_TABLE_DATA':
+      return {
+        ...state,
+        [+action.payload.id]: {
+          ...state[+action.payload.id],
+          ...action.payload,
+        },
+      };
     case 'CLEAR_ALL_REDUCERS':
       return {};
     default:
@@ -35,6 +43,7 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
 
 const initialMeta: TablesMetaState = {
   tableNameSearchKey: null,
+  currentTableId: null,
 };
 
 function meta(state: TablesMetaState = initialMeta, action: Action) {
@@ -44,6 +53,18 @@ function meta(state: TablesMetaState = initialMeta, action: Action) {
         ...state,
         tableNameSearchKey: action.payload,
       };
+    case 'tables/SELECT_TABLE':
+      return {
+        ...state,
+        currentTableId: action.payload,
+      };
+    case 'tables/RESET_SELECT_TABLE':
+      return {
+        ...state,
+        currentTableId: null,
+      };
+    case 'CLEAR_ALL_REDUCERS':
+      return initialMeta;
     default:
       return state;
   }

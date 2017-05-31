@@ -1,8 +1,14 @@
 // @flow
-import type { Action, TableNormalizePayload, IdString } from '../types';
+import type {
+  Action, IdString,
+  Table, TableNormalizePayload, TableDataNormalizedPayload,
+} from '../types';
 
-export const fetchTablesRequest = (): Action =>
-  ({ type: 'tables/FETCH_REQUEST' });
+export const fetchTablesRequest = (payload: ?IdString): Action =>
+  ({
+    type: 'tables/FETCH_REQUEST',
+    payload,
+  });
 
 export const fillTables = (payload: TableNormalizePayload): Action =>
   ({
@@ -20,3 +26,25 @@ export const setTableNameSearchKey = (payload: ?IdString): Action =>
     payload,
   });
 
+export const fetchTableData = (payload: Table): Action =>
+  ({
+    type: 'tables/FETCH_TABLE_DATA_REQUEST',
+    payload,
+  });
+
+export const selectTable = (payload: string): Action =>
+  ({
+    type: 'tables/SELECT_TABLE',
+    payload,
+  });
+
+export const setTableData = (payload: TableDataNormalizedPayload): Action =>
+  ({
+    type: 'tables/SET_TABLE_DATA',
+    payload,
+  });
+
+export const resetSelectTable = (): Action =>
+  ({
+    type: 'tables/RESET_SELECT_TABLE',
+  });
