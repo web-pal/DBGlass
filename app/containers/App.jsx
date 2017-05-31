@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Connect from './Connect/Connect';
 import Main from './Main/Main';
 import type { State } from '../types';
+import ContextMenu from './ContextMenu/ContextMenu';
 
 type Props = {
   isConnected: boolean
@@ -12,6 +13,7 @@ type Props = {
 
 const App = ({ isConnected }: Props) =>
   <div id="wrapper">
+    <ContextMenu />
     {isConnected
       ? <Main />
       : <Connect />

@@ -8,6 +8,8 @@ import * as uiActions from '../../actions/ui';
 import * as tablesActions from '../../actions/tables';
 import * as currentTableActions from '../../actions/currentTable';
 import * as favoritesActions from '../../actions/favorites';
+import * as contextMenuActions from '../../actions/contextMenu';
+
 import type { Dispatch, Tables, State } from '../../types';
 import { getFiltredTables, getTablesQuantity } from '../../selectors/tables';
 
@@ -43,6 +45,7 @@ import {
 type Props = {
   fetchTablesRequest: () => void,
   setTableNameSearchKey: () => void,
+  toggleContextMenu: () => void,
   toggleMenu: () => void,
   addFavoriteTablesQuantity: () => void,
   fetchTableData: () => void,
@@ -72,6 +75,9 @@ class Main extends Component {
         { currentFavoriteId: this.props.currentFavoriteId, quantity: nextProps.tables.length },
       );
     }
+  }
+  handleRightClick = tableId => {
+    this.props.toggleContextMenu('table', +tableId);
   }
 
   render() {
@@ -114,6 +120,7 @@ class Main extends Component {
                 <Table
                   key={table.id}
                   onClick={() => fetchTableData(table.tableName)}
+                  onContextMenu={() => this.handleRightClick(table.id)}
                 >
                   <TableIcon className="fa fa-table" />
                   <span title={table.tableName}>
@@ -146,7 +153,13 @@ class Main extends Component {
 
 function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
   return bindActionCreators(
-    { ...uiActions, ...tablesActions, ...favoritesActions, ...currentTableActions }, dispatch,
+    {
+      ...uiActions,
+      ...tablesActions,
+      ...favoritesActions,
+      ...currentTableActions,
+      ...contextMenuActions,
+    }, dispatch,
   );
 }
 
