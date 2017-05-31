@@ -1,12 +1,15 @@
+// @flow
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Measure from 'react-measure';
+import type { Dispatch } from '../../../types';
 
 import * as uiActions from '../../../actions/ui';
 import { getDataForMeasure } from '../../../selectors/ui';
 
-const MeasureCells = ({ forMeasure, setMeasureWidth }) =>
+const MeasureCells = ({ forMeasure, setMeasureWidth }:
+{ forMeasure: Array<Object>, setMeasureWidth: Function }) =>
   <div>
     {forMeasure.map((item) =>
       <Measure
@@ -31,8 +34,13 @@ function mapStateToProps({ ui }) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
   return bindActionCreators({ ...uiActions }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MeasureCells);
+const connector: Connector<{}, Props> = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+
+export default connector(MeasureCells);
