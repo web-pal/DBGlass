@@ -92,8 +92,6 @@ class Main extends Component {
       setTableNameSearchKey,
       currentTable,
       isTablesFetched,
-      tablesQuantity,
-      currentTable,
     }: Props = this.props;
     return (
       <MainContainer>

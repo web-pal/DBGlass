@@ -21,9 +21,9 @@ import {
 import Footer from './Footer/Footer';
 
 type Props = {
-  fields: any,
-  rows: any,
-  dataForMeasure: any
+  fields: Array<string>,
+  rows: Array<Array<any>>,
+  dataForMeasure: Object
 };
 
 
@@ -94,6 +94,7 @@ class MainContent extends Component {
                 </div>
               }
             </AutoSizer>
+            <Footer />
           </ContentWrapper>
         )}
       </ScrollSync>

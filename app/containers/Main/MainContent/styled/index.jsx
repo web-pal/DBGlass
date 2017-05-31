@@ -9,6 +9,7 @@ export const ContentWrapper = styled.div`
   background: #fff;
   display: flex;
   flex-flow: column nowrap;
+  overflow: hidden;
 `;
 
 export const TableHeader = styled.div`
@@ -55,16 +56,12 @@ export const Cell = styled.div`
 
 export const CellText = styled.span`
   display: inline-block;
-  max-width: 250px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
   line-height: 16px;
   min-height: 16px;
 `;
 
 export const CellContainer = styled.div`
-  padding: 11px 10px;
+  padding: 14px 10px;
   border: 1px solid rgba(0, 0, 0, 0.047);
 
   &:hover {
