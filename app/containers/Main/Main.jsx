@@ -11,7 +11,7 @@ import * as favoritesActions from '../../actions/favorites';
 
 import type { Dispatch, Tables, State, IdString } from '../../types';
 
-import { getTables, getFiltredTables, getTablesQuantity } from '../../selectors/tables';
+import { getFiltredTables, getTablesQuantity } from '../../selectors/tables';
 
 import { getCurrentDBName } from '../../selectors/tableName';
 

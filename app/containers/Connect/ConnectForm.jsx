@@ -7,8 +7,6 @@ import {
   getFormValues, change,
 } from 'redux-form';
 
-import type { IdString } from '../../types';
-
 import * as uiActions from '../../actions/ui';
 import * as favoritesActions from '../../actions/favorites';
 import * as connectActions from '../../actions/connect';
@@ -38,7 +36,7 @@ import {
   InputWithButton,
 } from './styled';
 
-import type { Favorite, State, Dispatch } from '../../types';
+import type { Favorite, State, Dispatch, IdString } from '../../types';
 
 const os = require('electron').remote.require('os');
 const path = require('electron').remote.require('path');
