@@ -48,3 +48,18 @@ export const resetSelectTable = (): Action =>
   ({
     type: 'tables/RESET_SELECT_TABLE',
   });
+
+export const dropTableRequest = (tableName: string, parameters: ?Object): Action =>
+  ({
+    type: 'tables/DROP_TABLE_REQUEST',
+    payload: {
+      tableName,
+      parameters,
+    },
+  });
+
+export const dropTable = (payload: string): Action =>
+  ({
+    type: 'tables/DROP_TABLE',
+    payload,
+  });

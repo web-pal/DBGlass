@@ -39,6 +39,8 @@ export type Action =
 | { type: 'tables/SELECT_TABLE', +payload: string }
 | { type: 'tables/SET_TABLE_DATA', +payload: TableDataNormalizedPayload }
 | { type: 'tables/RESET_SELECT_TABLE' }
+| { type: 'tables/DROP_TABLE_REQUEST', +payload: Object }
+| { type: 'tables/DROP_TABLE', +payload: Object }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }
@@ -51,7 +53,6 @@ export type Action =
 | { type: 'modal/HIDE_MODAL' }
 | Object
 ;
-
 
 export type State = {
   +ui: uiState,

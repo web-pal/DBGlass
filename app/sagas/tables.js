@@ -6,6 +6,7 @@ import {
   selectTable as selectTableAction,
   setTableData as setTableDataAction,
   fetchTableData as fetchTableDataAction,
+  dropTable as dropTableAction,
 } from '../actions/tables';
 import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
 
@@ -80,6 +81,13 @@ function* fetchTableData({ payload: { id, tableName, isFetched } }) {
     const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
     yield fork(saveData, result);
   }
+}
+
+export function* dropTable() {
+  const { payload: { tableName, parameters } } = yield take('tables/DROP_TABLE_REQUEST');
+  const query = `DROP TABLE ${tableName}`;
+  yield cps(executeSQL, query, []);
+  yield put(dropTableAction(tableName));
 }
 
 export function* fetchTableDataWatch() {

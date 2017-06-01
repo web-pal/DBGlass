@@ -36,6 +36,10 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
       };
     case 'CLEAR_ALL_REDUCERS':
       return {};
+    case 'tables/DROP_TABLE': {
+      console.log(state);
+      return state;
+    }
     default:
       return state;
   }
