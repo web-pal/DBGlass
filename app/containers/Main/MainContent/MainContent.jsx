@@ -83,7 +83,6 @@ class MainContent extends Component {
                       columnWidth={({ index }) => dataForMeasure[fields[index]].width}
                       columnCount={fields.length}
                       height={height}
-                      overscanColumnCount={10}
                       cellRenderer={this.cellRenderer}
                       rowHeight={45}
                       rowCount={rows.length}
