@@ -6,7 +6,7 @@ import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
 import type { Connector } from 'react-redux';
 import type { State } from '../../../types';
 
-import { getTableFields, getTableRows } from '../../../selectors/tables';
+import { getTableFields, getTableRows, getDataForMeasure } from '../../../selectors/tables';
 
 import {
   ContentWrapper,
@@ -105,7 +105,7 @@ function mapStateToProps(state: State) {
   return {
     fields: getTableFields({ tables: state.tables }),
     rows: getTableRows({ tables: state.tables }),
-    dataForMeasure: state.ui.dataForMeasure,
+    dataForMeasure: getDataForMeasure({ tables: state.tables }),
   };
 }
 

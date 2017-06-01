@@ -34,6 +34,31 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
           ...action.payload,
         },
       };
+    case 'tables/SET_DATA_FOR_MEASURE':
+      return {
+        ...state,
+        [action.payload.id]: {
+          ...state[+action.payload.id],
+          dataForMeasure: {
+            ...state[+action.payload.id].dataForMeasure,
+            ...action.payload.dataForMeasure,
+          },
+        },
+      };
+    case 'tables/SET_MEASURE_WIDTH':
+      return {
+        ...state,
+        [action.payload.tableId]: {
+          ...state[+action.payload.tableId],
+          dataForMeasure: {
+            ...state[+action.payload.tableId].dataForMeasure,
+            [action.payload.key]: {
+              ...state[+action.payload.tableId].dataForMeasure[action.payload.key],
+              width: action.payload.width,
+            },
+          },
+        },
+      };
     case 'CLEAR_ALL_REDUCERS':
       return {};
     default:

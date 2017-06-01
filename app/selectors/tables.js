@@ -55,12 +55,45 @@ export const getTableRows = createSelector(
       return [];
     }
     return ids.map(id => {
-      const a = [];
-      const u = map[id];
-      for (const key of Object.keys(fields)) {
-        a.push(u[fields[key].fieldName]);
+      const rowsArr = [];
+      const currentRow = map[id];
+      for (const key of Object.keys(fields)) { // eslint-disable-line
+        rowsArr.push(currentRow[fields[key].fieldName]);
       }
-      return a;
+      return rowsArr;
     });
-  }
+  },
+);
+
+export const getDataForMeasure = createSelector(
+  [getCurrentTableId, getTablesMap],
+  (id, map) => {
+    if (id) {
+      const data = Object.values(map).filter(item => item.id === id)[0].dataForMeasure;
+      return data;
+    }
+    return {};
+  },
+);
+
+export const getDataForMeasureCells = createSelector(
+  [getCurrentTableId, getTablesMap],
+  (id, map) => {
+    if (id) {
+      const data = Object.values(map).filter(item => item.id === id)[0].dataForMeasure;
+      const measureArr = [];
+      for (const key of Object.keys(data)) { // eslint-disable-line
+        if (!data[key].isMeasured) {
+          measureArr.push(data[key]);
+        }
+      }
+      return measureArr;
+    }
+    return [];
+  },
+);
+
+export const getCurrentTable = createSelector(
+  ({ tables }) => tables.meta.currentTableId,
+  (currentTableId) => currentTableId || '1',
 );
