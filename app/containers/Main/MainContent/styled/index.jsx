@@ -46,7 +46,6 @@ export const Row = styled.div`
 
 export const Cell = styled.div`
   width: auto;
-  min-width: 100px;
   font-size: 13px;
   font-weight: 300;
   color: #939393;
@@ -56,8 +55,8 @@ export const Cell = styled.div`
 
 export const CellText = styled.span`
   display: inline-block;
-  line-height: 16px;
-  min-height: 16px;
+  line-height: 12px;
+  min-height: 10px;
 `;
 
 export const CellContainer = styled.div`

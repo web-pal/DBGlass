@@ -2,6 +2,7 @@
 import type {
   Action, IdString,
   Table, TableNormalizePayload, TableDataNormalizedPayload,
+  dataForMeasure,
 } from '../types';
 
 export const fetchTablesRequest = (payload: ?IdString): Action =>
@@ -47,4 +48,20 @@ export const setTableData = (payload: TableDataNormalizedPayload): Action =>
 export const resetSelectTable = (): Action =>
   ({
     type: 'tables/RESET_SELECT_TABLE',
+  });
+
+export const setDataForMeasure = (payload: {
+  dataForMeasure: dataForMeasure, id: IdString
+}): Action =>
+  ({
+    type: 'tables/SET_DATA_FOR_MEASURE',
+    payload,
+  });
+
+export const setMeasureWidth = (payload: {
+  tableId: IdString, width: number, key: string
+}): Action =>
+  ({
+    type: 'tables/SET_MEASURE_WIDTH',
+    payload,
   });
