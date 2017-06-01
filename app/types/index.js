@@ -46,8 +46,6 @@ export type Action =
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }
 | { type: 'ui/TOGGLE_CONNECTING_LADDA', +payload: boolean }
 | { type: 'ui/TOGGLE_IS_FETCH_TABLES', +payload: boolean }
-| { type: 'ui/SET_DATA_FOR_MEASURE', +payload: dataForMeasure }//
-| { type: 'ui/SET_MEASURE_WIDTH', +payload: { width: number, key: string } }//
 | { type: 'contextMenu/TOGGLE_CONTEXT_MENU', +payload: ContextMenuState}
 | { type: 'modal/TOGGLE_MODAL', +payload: ModalState }
 | { type: 'modal/HIDE_MODAL' }

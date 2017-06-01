@@ -60,7 +60,7 @@ export const CellText = styled.span`
 `;
 
 export const CellContainer = styled.div`
-  padding: 14px 10px;
+  padding: 14px 5px;
   border: 1px solid rgba(0, 0, 0, 0.047);
 
   &:hover {
