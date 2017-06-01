@@ -49,6 +49,18 @@ export const getCurrentTableRows = ({ tables }) =>
   tables.byId[tables.meta.currentTableId].rows;
 
 export const getTableRows = createSelector(
-  [getCurrentTableRowsIds, getCurrentTableRows],
-  (ids, map) => ids ? ids.map(id => Object.values(map[id])) : [],
+  [getCurrentTableRowsIds, getCurrentTableRows, getCurrentTableFields],
+  (ids, map, fields) => {
+    if (!ids) {
+      return [];
+    }
+    return ids.map(id => {
+      const a = [];
+      const u = map[id];
+      for (const key of Object.keys(fields)) {
+        a.push(u[fields[key].fieldName]);
+      }
+      return a;
+    });
+  }
 );

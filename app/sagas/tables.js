@@ -1,5 +1,5 @@
 import { delay } from 'redux-saga';
-import { take, takeEvery, cps, put } from 'redux-saga/effects';
+import { take, takeEvery, cps, put, fork } from 'redux-saga/effects';
 
 import {
   fillTables as fillTablesAction,
@@ -7,7 +7,7 @@ import {
   setTableData as setTableDataAction,
   fetchTableData as fetchTableDataAction,
 } from '../actions/tables';
-import { executeSQL } from '../utils/pgDB';
+import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
 
 import { addFavoriteTablesQuantity } from '../actions/favorites';
 import {
@@ -15,6 +15,13 @@ import {
   setDataForMeasure as setDataForMeasureAction,
 } from '../actions/ui';
 
+
+function* saveData({ dataForMeasure, data }) {
+  yield put(setDataForMeasureAction(dataForMeasure));
+  yield delay(100); // This delay needs to measure cells
+
+  yield put(setTableDataAction(data));
+}
 
 export function* fetchTables() {
   while (true) {
@@ -68,52 +75,10 @@ function* fetchTableData({ payload: { id, tableName, isFetched } }) {
     const query = `
       SELECT *
       FROM ${tableName}
+      LIMIT 1000
     `;
-    const result = yield cps(executeSQL, query, []);
-    const rows = {};
-    const dataForMeasure = {};
-
-    const fields = {};
-    const fieldsIds = result.fields.map((field, index) => {
-      const fId = index.toString();
-      fields[fId] = {
-        fieldName: field.name,
-      };
-      dataForMeasure[field.name] = {
-        value: field.name.toString(),
-        name: field.name.toString(),
-        isMeasured: false,
-        width: null,
-      };
-      return fId;
-    });
-
-    const rowsIds = result.rows.map((row, index) => {
-      const rId = index.toString();
-      rows[rId] = {
-        ...row,
-      };
-      Object.keys(row).forEach(key => {
-        const value = row[key] ? row[key].toString() : '';
-        if (dataForMeasure[key].value.length < value.length) {
-          dataForMeasure[key].value = row[key].toString();
-          dataForMeasure[key].isMeasured = false;
-        }
-      });
-      return rId;
-    });
-
-    yield put(setDataForMeasureAction(dataForMeasure));
-    yield delay(100); // This delay needs to measure cells
-
-    yield put(setTableDataAction({
-      id,
-      rowsIds,
-      rows,
-      fieldsIds,
-      fields,
-      isFetched: true,
-    }));
+    const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
+    yield fork(saveData, result);
   }
 }
 

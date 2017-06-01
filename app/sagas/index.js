@@ -19,7 +19,6 @@ export default function* root() {
     fork(startConnect),
 
     fork(fetchTables),
-
     fork(fetchTableDataWatch),
   ];
 }
