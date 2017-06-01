@@ -1,6 +1,5 @@
-import { delay, eventChannel } from 'redux-saga';
-import { take, takeEvery, cps, put, call, fork } from 'redux-saga/effects';
-import { ipcRenderer } from 'electron';
+import { delay } from 'redux-saga';
+import { take, takeEvery, cps, put, fork } from 'redux-saga/effects';
 
 import {
   fillTables as fillTablesAction,
@@ -8,7 +7,7 @@ import {
   setTableData as setTableDataAction,
   fetchTableData as fetchTableDataAction,
 } from '../actions/tables';
-import { executeSQL } from '../utils/pgDB';
+import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
 
 import { addFavoriteTablesQuantity } from '../actions/favorites';
 import {
@@ -17,32 +16,12 @@ import {
 } from '../actions/ui';
 
 
-function ipcRendererChannel() {
-  return eventChannel((emitter) => {
-    ipcRenderer.on('normalizeHeavyDataDone', (event, data) => {
-      emitter(data);
-    });
-    return () => {
-      console.log('123');
-    };
-  });
-}
-
 function* saveData({ dataForMeasure, data }) {
   yield put(setDataForMeasureAction(dataForMeasure));
   yield delay(100); // This delay needs to measure cells
 
   yield put(setTableDataAction(data));
 }
-
-export function* handleNormalizedHeavyData() {
-  const chan = yield call(ipcRendererChannel);
-  while (true) {
-    const result = yield take(chan);
-    yield fork(saveData, result);
-  }
-}
-
 
 export function* fetchTables() {
   while (true) {
@@ -98,8 +77,8 @@ function* fetchTableData({ payload: { id, tableName, isFetched } }) {
       FROM ${tableName}
       LIMIT 1000
     `;
-    const result = yield cps(executeSQL, query, []);
-    ipcRenderer.send('normalizeHeavyData', { result, id });
+    const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
+    yield fork(saveData, result);
   }
 }
 
