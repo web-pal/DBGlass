@@ -1,5 +1,6 @@
-import { delay } from 'redux-saga';
-import { take, takeEvery, cps, put } from 'redux-saga/effects';
+import { delay, eventChannel } from 'redux-saga';
+import { take, takeEvery, cps, put, call, fork } from 'redux-saga/effects';
+import { ipcRenderer } from 'electron';
 
 import {
   fillTables as fillTablesAction,
@@ -14,6 +15,33 @@ import {
   toggleIsFetchedTables as toggleIsFetchedTablesAction,
   setDataForMeasure as setDataForMeasureAction,
 } from '../actions/ui';
+
+
+function ipcRendererChannel() {
+  return eventChannel((emitter) => {
+    ipcRenderer.on('normalizeHeavyDataDone', (event, data) => {
+      emitter(data);
+    });
+    return () => {
+      console.log('123');
+    };
+  });
+}
+
+function* saveData({ dataForMeasure, data }) {
+  yield put(setDataForMeasureAction(dataForMeasure));
+  yield delay(100); // This delay needs to measure cells
+
+  yield put(setTableDataAction(data));
+}
+
+export function* handleNormalizedHeavyData() {
+  const chan = yield call(ipcRendererChannel);
+  while (true) {
+    const result = yield take(chan);
+    yield fork(saveData, result);
+  }
+}
 
 
 export function* fetchTables() {
@@ -68,52 +96,10 @@ function* fetchTableData({ payload: { id, tableName, isFetched } }) {
     const query = `
       SELECT *
       FROM ${tableName}
+      LIMIT 1000
     `;
     const result = yield cps(executeSQL, query, []);
-    const rows = {};
-    const dataForMeasure = {};
-
-    const fields = {};
-    const fieldsIds = result.fields.map((field, index) => {
-      const fId = index.toString();
-      fields[fId] = {
-        fieldName: field.name,
-      };
-      dataForMeasure[field.name] = {
-        value: field.name.toString(),
-        name: field.name.toString(),
-        isMeasured: false,
-        width: null,
-      };
-      return fId;
-    });
-
-    const rowsIds = result.rows.map((row, index) => {
-      const rId = index.toString();
-      rows[rId] = {
-        ...row,
-      };
-      Object.keys(row).forEach(key => {
-        const value = row[key] ? row[key].toString() : '';
-        if (dataForMeasure[key].value.length < value.length) {
-          dataForMeasure[key].value = row[key].toString();
-          dataForMeasure[key].isMeasured = false;
-        }
-      });
-      return rId;
-    });
-
-    yield put(setDataForMeasureAction(dataForMeasure));
-    yield delay(100); // This delay needs to measure cells
-
-    yield put(setTableDataAction({
-      id,
-      rowsIds,
-      rows,
-      fieldsIds,
-      fields,
-      isFetched: true,
-    }));
+    ipcRenderer.send('normalizeHeavyData', { result, id });
   }
 }
 

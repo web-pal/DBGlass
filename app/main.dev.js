@@ -54,6 +54,54 @@ app.on('before-quit', () => {
   }
 });
 
+ipcMain.on('normalizeHeavyData', (event, { result, id }) => {
+  const fields = {};
+  const rows = {};
+  const dataForMeasure = {};
+
+  const fieldsIds = result.fields.map((field, index) => {
+    const fId = index.toString();
+    fields[fId] = {
+      fieldName: field.name,
+    };
+    dataForMeasure[field.name] = {
+      value: field.name.toString(),
+      name: field.name.toString(),
+      isMeasured: false,
+      width: null,
+    };
+    return fId;
+  });
+
+  const rowsIds = result.rows.map((row, index) => {
+    const rId = index.toString();
+    rows[rId] = {
+      ...row,
+    };
+    Object.keys(row).forEach(key => {
+      const value = row[key] ? row[key].toString() : '';
+      if (dataForMeasure[key].value.length < value.length) {
+        dataForMeasure[key].value = row[key].toString();
+        dataForMeasure[key].isMeasured = false;
+      }
+    });
+    return rId;
+  });
+
+  if (mainWindow) {
+    mainWindow.webContents.send('normalizeHeavyDataDone', {
+      dataForMeasure,
+      data: {
+        id,
+        rowsIds,
+        rows,
+        fieldsIds,
+        fields,
+        isFetched: true,
+      },
+    });
+  }
+});
 
 function createWindow(callback) {
   // disabling chrome frames differ on OSX and other platforms
