@@ -97,3 +97,8 @@ export const getCurrentTable = createSelector(
   ({ tables }) => tables.meta.currentTableId,
   (currentTableId) => currentTableId || '1',
 );
+
+export const getCurrentSelectedTable = createSelector(
+  [getCurrentTableId, getTablesMap],
+  (id, map) => id ? Object.values(map).filter(item => item.id === id)[0].isFetched : false,
+);
