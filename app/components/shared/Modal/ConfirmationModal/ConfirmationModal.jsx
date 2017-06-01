@@ -19,9 +19,10 @@ import {
   ButtonsGroup,
   ModalTools,
   ToolContainer,
-  ToolName,
+  ToolHeader,
   ToolDescription,
   ActionDescription,
+  ToolName,
 } from './styled';
 
 type Props = {
@@ -57,28 +58,32 @@ class ConfirmationModal extends Component {
                 {
                   actionType === 'truncate' &&
                   <ToolContainer>
-                    <Field
-                      name="restartIdentity"
-                      component={RenderRadio}
-                      type="checkbox"
-                    />
-                    <ToolName>
-                      Restart Identity
-                    </ToolName>
+                    <ToolHeader>
+                      <Field
+                        name="restartIdentity"
+                        component={RenderRadio}
+                        type="checkbox"
+                      />
+                      <ToolName>
+                        Restart Identity
+                      </ToolName>
+                    </ToolHeader>
                     <ToolDescription>
                       Also reset sequences owned by the truncated tables(s).
                     </ToolDescription>
                   </ToolContainer>
                 }
                 <ToolContainer>
-                  <Field
-                    name="Cascade"
-                    component={RenderRadio}
-                    type="checkbox"
-                  />
-                  <ToolName>
-                    Cascade
-                  </ToolName>
+                  <ToolHeader>
+                    <Field
+                      name="Cascade"
+                      component={RenderRadio}
+                      type="checkbox"
+                    />
+                    <ToolName>
+                      Cascade
+                    </ToolName>
+                  </ToolHeader>
                   <ToolDescription>
                     Also truncate tables with foreign key constraints
                     depending on the truncated tables.

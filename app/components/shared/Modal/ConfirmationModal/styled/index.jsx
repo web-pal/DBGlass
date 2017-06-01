@@ -18,6 +18,7 @@ export const Content = styled.div`
 `;
 
 export const CloseButton = styled(Button)`
+  background-color: rgba(245, 80, 29, 0.92);
   padding: 8px 16px;
 `;
 
@@ -38,7 +39,9 @@ export const ToolContainer = styled.div`
   margin: 30px 0;
 `;
 
-export const ToolName = styled.div`
+export const ToolHeader = styled.div`
+  display: flex;
+  margin-bottom: 5px;
 `;
 
 export const ToolDescription = styled.div`
@@ -47,3 +50,8 @@ export const ToolDescription = styled.div`
 export const ActionDescription = styled.div`
   font: normal 18px/24px 'Ubuntu',sans-serif;
 `;
+
+export const ToolName = styled.div`
+  margin-left: 10px;
+`;
+
