@@ -7,15 +7,15 @@ import type { Connector } from 'react-redux';
 import * as uiActions from '../../actions/ui';
 import * as tablesActions from '../../actions/tables';
 import * as favoritesActions from '../../actions/favorites';
-
+import * as contextMenuActions from '../../actions/contextMenu';
 import type { Dispatch, Tables, State, IdString } from '../../types';
-
 import { getFiltredTables, getTablesQuantity } from '../../selectors/tables';
 
 import { getCurrentDBName } from '../../selectors/tableName';
 
 import FavoritesSwitcher from './FavoritesSwitcher/FavoritesSwitcher';
 import MainContent from './MainContent/MainContent';
+import ModalContainer from '../../components/shared/Modal/ModalContainer';
 import MeasureCells from './MeasureCells/MeasureCells';
 
 import {
@@ -43,6 +43,7 @@ import {
 } from './styled';
 
 type Props = {
+  toggleContextMenu: () => void,
   fetchTablesRequest: (?IdString) => void,
   setTableNameSearchKey: (?IdString) => void,
   toggleMenu: (boolean) => void,
@@ -73,6 +74,9 @@ class Main extends Component {
     if (!e.target.matches('#switcherWrapper, #switcherWrapper *, #menuSwitcher, #menuSwitcher *')) {
       this.props.toggleMenu(false);
     }
+  }
+  handleRightClick = (tableId, tableName) => {
+    this.props.toggleContextMenu('table', +tableId, tableName);
   }
 
   fetchTable = (table) => {
@@ -115,6 +119,7 @@ class Main extends Component {
               {tables.map(table =>
                 <Table
                   key={table.id}
+                  onContextMenu={() => this.handleRightClick(table.id, table.tableName)}
                   active={currentTable === table.id}
                   onClick={() => this.fetchTable(table)}
                 >
@@ -140,6 +145,7 @@ class Main extends Component {
             </CreateTableButton>
           </SideBarFooter>
         </TablesSidebar>
+        <ModalContainer />
         <MeasureCells />
         <FavoritesSwitcher />
         {
@@ -155,7 +161,12 @@ class Main extends Component {
 
 function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
   return bindActionCreators(
-    { ...uiActions, ...tablesActions, ...favoritesActions }, dispatch,
+    {
+      ...uiActions,
+      ...tablesActions,
+      ...favoritesActions,
+      ...contextMenuActions,
+    }, dispatch,
   );
 }
 

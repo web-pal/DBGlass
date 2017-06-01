@@ -10,7 +10,7 @@ import {
   CustomSlider,
 } from './styled';
 
-export const renderRadio = ({ input, label, type, disabled }) => ( // eslint-disable-line
+export const RenderRadio = ({ input, label, type, disabled }) => ( // eslint-disable-line
   <RadioContainer>
     <Radio
       {...input}
@@ -21,7 +21,7 @@ export const renderRadio = ({ input, label, type, disabled }) => ( // eslint-dis
   </RadioContainer>
 );
 
-export const renderField = ({ input, label, disabled, placeholder, type, meta: { touched, error, warning } }) => // eslint-disable-line
+export const RenderField = ({ input, label, disabled, placeholder, type, meta: { touched, error, warning } }) => // eslint-disable-line
   <Input
     {...input}
     disabled={disabled}
@@ -31,7 +31,7 @@ export const renderField = ({ input, label, disabled, placeholder, type, meta: {
     type={type}
   />;
 
-export const renderSlider = ({ input, label, type, disabled }) => ( // eslint-disable-line
+export const RenderSlider = ({ input, label, type, disabled }) => ( // eslint-disable-line
   <SliderContainer>
     <Slider
       {...input}

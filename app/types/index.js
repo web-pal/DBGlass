@@ -5,15 +5,18 @@ import type {
   FavoriteNormalizePayload, FavoritesIds, FavoritesMetaState,
   FavoriteTablesQuantity,
 } from './favorites';
+import type { ContextMenuState } from './contextMenu';
+import type { ModalState } from './modal';
 
 import type { TableNormalizePayload, TablesIndexedMap, TablesIds, TablesMetaState, Table } from './tables';
 import type { TableDataNormalizedPayload } from './currentTable';
-
 import type { uiState, dataForMeasure } from './ui';
 
 export * from './favorites';
 export * from './tables';
 export * from './ui';
+export * from './contextMenu';
+export * from './modal';
 export * from './currentTable';
 
 export type IdString = string;
@@ -43,12 +46,17 @@ export type Action =
 | { type: 'ui/TOGGLE_IS_FETCH_TABLES', +payload: boolean }
 | { type: 'ui/SET_DATA_FOR_MEASURE', +payload: dataForMeasure }
 | { type: 'ui/SET_MEASURE_WIDTH', +payload: { width: number, key: string } }
+| { type: 'contextMenu/TOGGLE_CONTEXT_MENU', +payload: ContextMenuState}
+| { type: 'modal/TOGGLE_MODAL', +payload: ModalState }
+| { type: 'modal/HIDE_MODAL' }
 | Object
 ;
 
 
 export type State = {
   +ui: uiState,
+  +modal: ModalState,
+  +contextMenu: ContextMenuState,
   +favorites: {
     +byId: FavoritesIndexedMap,
     +allIds: FavoritesIds,
