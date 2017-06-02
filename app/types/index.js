@@ -8,9 +8,9 @@ import type {
 import type { ContextMenuState } from './contextMenu';
 import type { ModalState } from './modal';
 
-import type { TableNormalizePayload, TablesIndexedMap, TablesIds, TablesMetaState, Table } from './tables';
+import type { TableNormalizePayload, TablesIndexedMap, TablesIds, TablesMetaState, Table, dataForMeasure } from './tables';
 import type { TableDataNormalizedPayload } from './currentTable';
-import type { uiState, dataForMeasure } from './ui';
+import type { uiState } from './ui';
 
 export * from './favorites';
 export * from './tables';
@@ -39,13 +39,13 @@ export type Action =
 | { type: 'tables/SELECT_TABLE', +payload: string }
 | { type: 'tables/SET_TABLE_DATA', +payload: TableDataNormalizedPayload }
 | { type: 'tables/RESET_SELECT_TABLE' }
+| { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: dataForMeasure, id: IdString } }
+| { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableId: IdString, width: number, key: string } }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }
 | { type: 'ui/TOGGLE_CONNECTING_LADDA', +payload: boolean }
 | { type: 'ui/TOGGLE_IS_FETCH_TABLES', +payload: boolean }
-| { type: 'ui/SET_DATA_FOR_MEASURE', +payload: dataForMeasure }
-| { type: 'ui/SET_MEASURE_WIDTH', +payload: { width: number, key: string } }
 | { type: 'contextMenu/TOGGLE_CONTEXT_MENU', +payload: ContextMenuState}
 | { type: 'modal/TOGGLE_MODAL', +payload: ModalState }
 | { type: 'modal/HIDE_MODAL' }

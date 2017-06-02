@@ -6,18 +6,17 @@ import {
   selectTable as selectTableAction,
   setTableData as setTableDataAction,
   fetchTableData as fetchTableDataAction,
+  setDataForMeasure as setDataForMeasureAction,
 } from '../actions/tables';
 import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
 
 import { addFavoriteTablesQuantity } from '../actions/favorites';
 import {
   toggleIsFetchedTables as toggleIsFetchedTablesAction,
-  setDataForMeasure as setDataForMeasureAction,
 } from '../actions/ui';
 
-
 function* saveData({ dataForMeasure, data }) {
-  yield put(setDataForMeasureAction(dataForMeasure));
+  yield put(setDataForMeasureAction({ dataForMeasure, id: data.id }));
   yield delay(100); // This delay needs to measure cells
 
   yield put(setTableDataAction(data));
@@ -43,6 +42,7 @@ export function* fetchTables() {
         id,
         tableName: t.table_name,
         isFetched: false,
+        dataForMeasure: {},
       };
       return id;
     });
@@ -65,6 +65,7 @@ export function* fetchTables() {
         id: tables[tablesIds[0]].id,
         tableName: tables[tablesIds[0]].tableName,
         isFetched: false,
+        dataForMeasure: {},
       }));
     }
   }
