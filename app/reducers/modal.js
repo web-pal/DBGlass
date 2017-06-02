@@ -6,6 +6,7 @@ const initialState: ModalState = {
   show: false,
   values: {},
   payload: {},
+  error: {},
 };
 
 export default function modal(state: ModalState = initialState, action: Action) {

@@ -4,6 +4,7 @@ import type { IdString } from './';
 export type ModalState = {
   component: ?IdString,
   show: boolean,
-  values: Object,
+  values: ?Object,
+  error: ?Object,
   payload: Object
 };

@@ -13,7 +13,10 @@ import {
 import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
 
 import { addFavoriteTablesQuantity } from '../actions/favorites';
-import { hideModal as hideModalAction } from '../actions/modal';
+import { 
+  hideModal as hideModalAction,
+  toggleModal as toggleModalAction,
+} from '../actions/modal';
 
 import {
   toggleIsFetchedTables as toggleIsFetchedTablesAction,
@@ -100,10 +103,14 @@ export function* dropTable({
   },
 }) {
   const query = `DROP TABLE IF EXISTS "public"."${tableName}" ${parameters ? (parameters.cascade && 'CASCADE') : ''}`;
-  yield cps(executeSQL, query, []);
-  if (currentTableId === selectedTableId) yield put(resetSelectTableAction());
-  yield put(dropTableAction(selectedTableId));
-  yield put(hideModalAction());
+  try {
+    yield cps(executeSQL, query, []);
+    if (currentTableId === selectedTableId) yield put(resetSelectTableAction());
+    yield put(dropTableAction(selectedTableId));
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(toggleModalAction('ErrorModal', error));
+  }
 }
 
 export function* dropTableRequest() {
@@ -123,9 +130,13 @@ export function* truncateTable({
     ${parameters ? (parameters.restartIdentity && 'RESTART IDENTITY') : ''}
     ${parameters ? (parameters.cascade && 'CASCADE') : ''}
   `;
-  yield cps(executeSQL, query, []);
-  yield put(truncateTableAction(selectedTableId));
-  yield put(hideModalAction());
+  try {
+    yield cps(executeSQL, query, []);
+    yield put(truncateTableAction(selectedTableId));
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(toggleModalAction('ErrorModal', error));
+  }
 }
 
 export function* truncateTableRequest() {

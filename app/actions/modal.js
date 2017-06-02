@@ -1,12 +1,13 @@
 // @flow
 import type { Action } from '../types';
 
-export const toggleModal = (component: string, values: Object): Action =>
+export const toggleModal = (component: string, values: ?Object, error: ?Object): Action =>
   ({
     type: 'modal/TOGGLE_MODAL',
     payload: {
       component,
       values,
+      error,
     },
   });
 
