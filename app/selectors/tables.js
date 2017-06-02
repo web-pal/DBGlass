@@ -102,3 +102,8 @@ export const getCurrentSelectedTable = createSelector(
   [getCurrentTableId, getTablesMap],
   (id, map) => id ? Object.values(map).filter(item => item.id === id)[0].isFetched : false,
 );
+
+export const getCurrentTableName = createSelector(
+  [getCurrentTableId, getTablesMap],
+  (id, map) => Object.values(map).filter(item => item.id === id)[0].tableName,
+);

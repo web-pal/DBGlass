@@ -6,7 +6,7 @@ import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
 import type { Connector } from 'react-redux';
 import type { State } from '../../../types';
 
-import { getTableFields, getTableRows, getDataForMeasure } from '../../../selectors/tables';
+import { getTableFields, getTableRows, getDataForMeasure, getCurrentTableName } from '../../../selectors/tables';
 
 import {
   ContentWrapper,
@@ -16,6 +16,10 @@ import {
   Cell,
   CellText,
   CellContainer,
+  EmptyBlock,
+  EmptyBlockTitle,
+  InsertButton,
+  Icon,
 } from './styled';
 
 import Footer from './Footer/Footer';
@@ -23,7 +27,8 @@ import Footer from './Footer/Footer';
 type Props = {
   fields: Array<string>,
   rows: Array<Array<any>>,
-  dataForMeasure: Object
+  dataForMeasure: Object,
+  currentTableName: string
 };
 
 
@@ -57,7 +62,7 @@ class MainContent extends Component {
   );
 
   render() {
-    const { fields, rows, dataForMeasure }: Props = this.props;
+    const { fields, rows, dataForMeasure, currentTableName }: Props = this.props;
     return (
       <ScrollSync>
         {({ onScroll, scrollLeft }) => (
@@ -79,17 +84,30 @@ class MainContent extends Component {
                     />
                   </TableHeader>
                   <TableContent>
-                    <Grid
-                      columnWidth={({ index }) => dataForMeasure[fields[index]].width}
-                      columnCount={fields.length}
-                      height={height}
-                      overscanColumnCount={10}
-                      cellRenderer={this.cellRenderer}
-                      rowHeight={45}
-                      rowCount={rows.length}
-                      onScroll={onScroll}
-                      width={width}
-                    />
+                    {
+                      rows.length ?
+                        <Grid
+                          columnWidth={({ index }) => dataForMeasure[fields[index]].width}
+                          columnCount={fields.length}
+                          height={height}
+                          overscanColumnCount={10}
+                          cellRenderer={this.cellRenderer}
+                          rowHeight={45}
+                          rowCount={rows.length}
+                          onScroll={onScroll}
+                          width={width}
+                        />
+                        :
+                        <EmptyBlock>
+                          <EmptyBlockTitle>
+                            Table {currentTableName} is empty
+                          </EmptyBlockTitle>
+                          <InsertButton>
+                            <Icon className="fa fa-plus" />
+                            Insert Row
+                          </InsertButton>
+                        </EmptyBlock>
+                    }
                   </TableContent>
                 </div>
               }
@@ -107,6 +125,7 @@ function mapStateToProps(state: State) {
     fields: getTableFields({ tables: state.tables }),
     rows: getTableRows({ tables: state.tables }),
     dataForMeasure: getDataForMeasure({ tables: state.tables }),
+    currentTableName: getCurrentTableName({ tables: state.tables }),
   };
 }
 
