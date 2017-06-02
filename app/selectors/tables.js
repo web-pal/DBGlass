@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { getFavoritesMap } from './favorites';
 
@@ -73,13 +74,17 @@ export const getDataForMeasure = createSelector(
 );
 
 export const getDataForMeasureCells = createSelector(
-  [getCurrentTableId, getTablesMap],
-  (id, map) => {
-    if (id) {
-      const data = Object.values(map).filter(item => item.id === id)[0].dataForMeasure;
-      return Object.values(data).filter(item => !item.isMeasured);
-    }
-    return [];
+  [getTablesByIds, getTablesMap],
+  (ids, map) => {
+    const arr = [];
+    ids.forEach(id => {
+      if (Object.keys(map[id].dataForMeasure).length) {
+        const data = Object.values(map[id].dataForMeasure).filter(item => !item.isMeasured);
+        data.forEach(item => _.assign(item, { tableId: id }));
+        arr.push(...data);
+      }
+    });
+    return arr;
   },
 );
 

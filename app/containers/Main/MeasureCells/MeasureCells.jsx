@@ -5,30 +5,34 @@ import { bindActionCreators } from 'redux';
 import Measure from 'react-measure';
 
 import type { Connector } from 'react-redux';
-import type { Dispatch, MeasureType } from '../../../types';
+import type { Dispatch } from '../../../types';
 
 import * as tablesActions from '../../../actions/tables';
-import { getCurrentTable, getDataForMeasureCells } from '../../../selectors/tables';
+import { getDataForMeasureCells } from '../../../selectors/tables';
 
 type Props = {
   setMeasureWidth: (Object) => void,
-  forMeasure: Array<MeasureType>,
-  currentTableId: string
+  forMeasure: Array<{
+    name: string,
+    value: string,
+    isMeasured: boolean,
+    width: ?number,
+    tableId: string
+  }>
 };
 
 class MeasureCells extends Component {
   props: Props;
 
   render() {
-    const { forMeasure, currentTableId, setMeasureWidth }: Props = this.props;
-
+    const { forMeasure, setMeasureWidth }: Props = this.props;
     return (
       <div>
         {forMeasure.map((item) =>
           <Measure
             key={item.name}
             onResize={({ entry }) => setMeasureWidth({
-              tableId: currentTableId, width: entry.width + 20, key: item.name,
+              tableId: item.tableId, width: entry.width + 20, key: item.name,
             })}// width: entry.width + 20, because cells are positioned absolutely
           >
             {({ measureRef }) =>
@@ -49,7 +53,6 @@ class MeasureCells extends Component {
 function mapStateToProps({ tables }) {
   return {
     forMeasure: getDataForMeasureCells({ tables }),
-    currentTableId: getCurrentTable({ tables }),
   };
 }
 
