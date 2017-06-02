@@ -40,6 +40,11 @@ export const TableContent = styled.div`
   height: calc(100% - 60px);
   top: 60px;
   position: relative;
+
+  &>div>div:first-child {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.047);
+    border-right: 1px solid rgba(0, 0, 0, 0.047);
+  }
 `;
 
 export const Row = styled.div`
@@ -59,8 +64,10 @@ export const Cell = styled.div`
 
 export const CellText = styled.span`
   display: inline-block;
-  line-height: 12px;
   min-height: 10px;
+  font: 400 13px / 35px Harmonia Sans;
+  line-height: inherit;
+  color: #515151;
 `;
 
 export const CellContainer = styled.div`
@@ -68,7 +75,7 @@ export const CellContainer = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.047);
 
   &:hover {
-    box-shadow: inset 0 0 6px 1px #dedede;
+    box-shadow: inset 0 0 6px 1px #f0f0f0;
   }
 `;
 
