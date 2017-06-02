@@ -65,6 +65,7 @@ export function* fetchTables() {
         id: tables[tablesIds[0]].id,
         tableName: tables[tablesIds[0]].tableName,
         isFetched: false,
+        dataForMeasure: {},
       }));
     }
   }

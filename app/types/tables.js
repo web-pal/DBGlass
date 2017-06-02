@@ -11,7 +11,7 @@ export type Table = {
   fieldsIds: ?FieldsIds,
   fields: ?FieldsIndexedMap,
   isFetched: ?boolean,
-  dataForMeasure: ?Object
+  dataForMeasure: {} | dataForMeasure
 };
 export type Tables = Array<Table>;
 

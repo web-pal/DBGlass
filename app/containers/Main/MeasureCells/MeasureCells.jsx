@@ -8,35 +8,28 @@ import type { Connector } from 'react-redux';
 import type { Dispatch, MeasureType } from '../../../types';
 
 import * as tablesActions from '../../../actions/tables';
-import { getCurrentTable, getDataForMeasureCells, getCurrentSelectedTable } from '../../../selectors/tables';
+import { getCurrentTable, getDataForMeasureCells } from '../../../selectors/tables';
 
 type Props = {
   setMeasureWidth: (Object) => void,
   forMeasure: Array<MeasureType>,
-  currentTableId: string,
-  currentTableIsFetched: boolean
+  currentTableId: string
 };
 
 class MeasureCells extends Component {
   props: Props;
 
-  setMeasureWidth = (tableId, width, key) => {
-    if (!this.props.currentTableIsFetched) {
-      this.props.setMeasureWidth({ tableId, width, key });
-    }
-  }
-
   render() {
-    const { forMeasure, currentTableId }: Props = this.props;
+    const { forMeasure, currentTableId, setMeasureWidth }: Props = this.props;
 
     return (
       <div>
         {forMeasure.map((item) =>
           <Measure
             key={item.name}
-            onResize={({ entry }) => this.setMeasureWidth(
-              currentTableId, entry.width, item.name,
-            )}
+            onResize={({ entry }) => setMeasureWidth({
+              tableId: currentTableId, width: entry.width + 20, key: item.name,
+            })}// width: entry.width + 20, because cells are positioned absolutely
           >
             {({ measureRef }) =>
               <div
@@ -57,7 +50,6 @@ function mapStateToProps({ tables }) {
   return {
     forMeasure: getDataForMeasureCells({ tables }),
     currentTableId: getCurrentTable({ tables }),
-    currentTableIsFetched: getCurrentSelectedTable({ tables }),
   };
 }
 
