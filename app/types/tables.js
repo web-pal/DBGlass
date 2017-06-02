@@ -10,7 +10,8 @@ export type Table = {
   rows: ?RowsIndexedMap,
   fieldsIds: ?FieldsIds,
   fields: ?FieldsIndexedMap,
-  isFetched: ?boolean
+  isFetched: ?boolean,
+  dataForMeasure: {} | dataForMeasure
 };
 export type Tables = Array<Table>;
 
@@ -26,4 +27,15 @@ export type TableNormalizePayload = {
 export type TablesMetaState = {
   tableNameSearchKey: ?string,
   currentTableId: ?string
+};
+
+export type MeasureType = {
+  name: string,
+  value: string,
+  isMeasured: boolean,
+  width: ?number
+};
+
+export type dataForMeasure = {
+  [number | string]: MeasureType
 };

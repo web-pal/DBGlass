@@ -1,47 +1,63 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Measure from 'react-measure';
 
 import type { Connector } from 'react-redux';
-import type { Dispatch, MeasureType } from '../../../types';
+import type { Dispatch } from '../../../types';
 
-import * as uiActions from '../../../actions/ui';
-import { getDataForMeasure } from '../../../selectors/ui';
+import * as tablesActions from '../../../actions/tables';
+import { getDataForMeasureCells } from '../../../selectors/tables';
 
 type Props = {
   setMeasureWidth: (Object) => void,
-  forMeasure: Array<MeasureType>
+  forMeasure: Array<{
+    name: string,
+    value: string,
+    isMeasured: boolean,
+    width: ?number,
+    tableId: string
+  }>
 };
 
-const MeasureCells = ({ forMeasure, setMeasureWidth }: Props) =>
-  <div>
-    {forMeasure.map((item) =>
-      <Measure
-        key={item.name}
-        onResize={({ entry }) => setMeasureWidth({ width: entry.width, key: item.name })}
-      >
-        {({ measureRef }) =>
-          <div
-            ref={measureRef}
-            style={{ left: '-99999px', position: 'absolute' }}
-          >
-            {item.value}
-          </div>
-        }
-      </Measure>,
-    )}
-  </div>;
+class MeasureCells extends Component {
+  props: Props;
 
-function mapStateToProps({ ui }) {
+  render() {
+    const { forMeasure, setMeasureWidth }: Props = this.props;
+    return (
+      <div>
+        {forMeasure.map((item) =>
+          <Measure
+            key={item.name}
+            onResize={({ entry }) => setMeasureWidth({
+              tableId: item.tableId, width: entry.width + 20, key: item.name,
+            })}// width: entry.width + 20, because cells are positioned absolutely
+          >
+            {({ measureRef }) =>
+              <div
+                ref={measureRef}
+                style={{ left: '-99999px', position: 'absolute' }}
+              >
+                {item.value}
+              </div>
+            }
+          </Measure>,
+        )}
+      </div>
+    );
+  }
+}
+
+function mapStateToProps({ tables }) {
   return {
-    forMeasure: getDataForMeasure({ ui }),
+    forMeasure: getDataForMeasureCells({ tables }),
   };
 }
 
 function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
-  return bindActionCreators({ ...uiActions }, dispatch);
+  return bindActionCreators({ ...tablesActions }, dispatch);
 }
 
 const connector: Connector<{}, Props> = connect(
