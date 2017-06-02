@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import { Button } from '../../../../components/shared/styled';
 
 export const ContentWrapper = styled.div`
   width: calc(100% - 210px);
@@ -10,6 +10,10 @@ export const ContentWrapper = styled.div`
   display: flex;
   flex-flow: column nowrap;
   overflow: hidden;
+
+  &>div:first-child {
+    width: 100%!important;
+  }
 `;
 
 export const TableHeader = styled.div`
@@ -72,4 +76,29 @@ export const GridWrapper = styled.div`
   &>div {
     overflow: hidden!important;
   }
+`;
+
+export const EmptyBlock = styled.div`
+  text-align: center;
+  color: #f1f1f1;
+  font-size: 3em;
+  position: fixed;
+  top: 100px;
+  z-index: 1;
+  min-width: calc(100% - 230px);
+`;
+
+export const EmptyBlockTitle = styled.span`
+  display: block;
+`;
+
+export const InsertButton = styled(Button)`
+  margin: 10px auto;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+  color: #000;
+`;
+
+export const Icon = styled.i`
+  margin-right: 9px;
 `;
