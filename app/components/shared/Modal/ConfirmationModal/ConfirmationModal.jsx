@@ -28,9 +28,12 @@ import {
 
 type Props = {
   hideModal: () => void,
-  dropTableRequest: (string, ?Object) => void,
+  dropTableRequest: (string, ?Object, string, ?string) => void,
+  truncateTableRequest: (string, ?Object, string) => void,
   modal: Object,
-  currentValues: ?Object
+  currentValues: ?Object,
+  selectedTableId: ?string,
+  currentTableId: ?string
 };
 
 class ConfirmationModal extends Component {
@@ -40,6 +43,9 @@ class ConfirmationModal extends Component {
     const {
       dropTableRequest,
       currentValues,
+      selectedTableId,
+      currentTableId,
+      truncateTableRequest,
       modal: {
         values: {
           actionType,
@@ -48,7 +54,9 @@ class ConfirmationModal extends Component {
       },
     } = this.props;
     if (actionType === 'drop') {
-      dropTableRequest(elementName, currentValues);
+      dropTableRequest(elementName, currentValues, selectedTableId, currentTableId);
+    } else {
+      truncateTableRequest(elementName, currentValues, selectedTableId);
     }
   }
   render() {
@@ -103,7 +111,7 @@ class ConfirmationModal extends Component {
                 <ToolContainer>
                   <ToolHeader>
                     <Field
-                      name="Cascade"
+                      name="cascade"
                       component={RenderRadio}
                       type="checkbox"
                     />
@@ -143,6 +151,8 @@ function mapStateToProps(state: State) {
   return {
     currentValues: getFormValues('ConfirmationModal')(state),
     modal: state.modal,
+    selectedTableId: state.contextMenu.elementId,
+    currentTableId: state.tables.meta.currentTableId,
   };
 }
 

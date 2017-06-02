@@ -40,7 +40,9 @@ export type Action =
 | { type: 'tables/SET_TABLE_DATA', +payload: TableDataNormalizedPayload }
 | { type: 'tables/RESET_SELECT_TABLE' }
 | { type: 'tables/DROP_TABLE_REQUEST', +payload: Object }
-| { type: 'tables/DROP_TABLE', +payload: Object }
+| { type: 'tables/DROP_TABLE', +payload: IdString }
+| { type: 'tables/TRUNCATE_TABLE_REQUEST', +payload: Object }
+| { type: 'tables/TRUNCATE_TABLE', +payload: IdString }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }

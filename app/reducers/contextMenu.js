@@ -2,7 +2,7 @@
 import type { ContextMenuState, Action } from '../types';
 
 const initialState: ContextMenuState = {
-  elementSerialNumber: 0,
+  elementId: null,
   elementType: '',
   elementName: '',
 };
@@ -10,10 +10,10 @@ const initialState: ContextMenuState = {
 export default function contextMenu(state: ContextMenuState = initialState, action: Action) {
   switch (action.type) {
     case 'contextMenu/TOGGLE_CONTEXT_MENU': {
-      const { elementType, elementSerialNumber, elementName } = action.payload;
+      const { elementType, elementId, elementName } = action.payload;
       return {
         ...state,
-        elementSerialNumber,
+        elementId,
         elementType,
         elementName,
       };

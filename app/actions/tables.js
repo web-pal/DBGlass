@@ -49,17 +49,44 @@ export const resetSelectTable = (): Action =>
     type: 'tables/RESET_SELECT_TABLE',
   });
 
-export const dropTableRequest = (tableName: string, parameters: ?Object): Action =>
+export const dropTableRequest = (
+  tableName: IdString,
+  parameters: ?Object,
+  selectedTableId: IdString,
+  currentTableId: ?IdString,
+  ): Action =>
   ({
     type: 'tables/DROP_TABLE_REQUEST',
     payload: {
       tableName,
       parameters,
+      selectedTableId,
+      currentTableId,
     },
   });
 
-export const dropTable = (payload: string): Action =>
+export const dropTable = (payload: IdString): Action =>
   ({
     type: 'tables/DROP_TABLE',
+    payload,
+  });
+
+export const truncateTableRequest = (
+  tableName: IdString,
+  parameters: ?Object,
+  selectedTableId: IdString,
+  ): Action =>
+  ({
+    type: 'tables/TRUNCATE_TABLE_REQUEST',
+    payload: {
+      tableName,
+      parameters,
+      selectedTableId,
+    },
+  });
+
+export const truncateTable = (payload: IdString): Action =>
+  ({
+    type: 'tables/TRUNCATE_TABLE',
     payload,
   });

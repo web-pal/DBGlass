@@ -7,10 +7,14 @@ import {
   setTableData as setTableDataAction,
   fetchTableData as fetchTableDataAction,
   dropTable as dropTableAction,
+  resetSelectTable as resetSelectTableAction,
+  truncateTable as truncateTableAction,
 } from '../actions/tables';
 import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
 
 import { addFavoriteTablesQuantity } from '../actions/favorites';
+import { hideModal as hideModalAction } from '../actions/modal';
+
 import {
   toggleIsFetchedTables as toggleIsFetchedTablesAction,
   setDataForMeasure as setDataForMeasureAction,
@@ -83,13 +87,47 @@ function* fetchTableData({ payload: { id, tableName, isFetched } }) {
   }
 }
 
-export function* dropTable() {
-  const { payload: { tableName, parameters } } = yield take('tables/DROP_TABLE_REQUEST');
-  const query = `DROP TABLE ${tableName}`;
-  yield cps(executeSQL, query, []);
-  yield put(dropTableAction(tableName));
-}
-
 export function* fetchTableDataWatch() {
   yield takeEvery('tables/FETCH_TABLE_DATA_REQUEST', fetchTableData);
+}
+
+export function* dropTable({
+  payload: {
+    tableName,
+    selectedTableId,
+    parameters,
+    currentTableId,
+  },
+}) {
+  const query = `DROP TABLE ${tableName} ${parameters ? (parameters.cascade && 'CASCADE') : ''}`;
+  yield cps(executeSQL, query, []);
+  if (currentTableId === selectedTableId) yield put(resetSelectTableAction());
+  yield put(dropTableAction(selectedTableId));
+  yield put(hideModalAction());
+}
+
+export function* dropTableRequest() {
+  yield takeEvery('tables/DROP_TABLE_REQUEST', dropTable);
+}
+
+export function* truncateTable({
+  payload: {
+    tableName,
+    selectedTableId,
+    parameters,
+  },
+}) {
+  const query = `
+    TRUNCATE
+    ${tableName}
+    ${parameters ? (parameters.restartIdentity && 'RESTART IDENTITY') : ''}
+    ${parameters ? (parameters.cascade && 'CASCADE') : ''}
+  `;
+  yield cps(executeSQL, query, []);
+  yield put(truncateTableAction(selectedTableId));
+  yield put(hideModalAction());
+}
+
+export function* truncateTableRequest() {
+  yield takeEvery('tables/TRUNCATE_TABLE_REQUEST', truncateTable);
 }

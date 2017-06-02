@@ -5,7 +5,12 @@ import {
   saveFavorite, removeFavorite,
   saveFavouriteTablesQuantity,
 } from './favorites';
-import { fetchTables, fetchTableDataWatch, dropTable } from './tables';
+import {
+  fetchTables,
+  fetchTableDataWatch,
+  dropTableRequest,
+  truncateTableRequest,
+} from './tables';
 import { startConnect } from './connect';
 
 export default function* root() {
@@ -20,6 +25,7 @@ export default function* root() {
 
     fork(fetchTables),
     fork(fetchTableDataWatch),
-    fork(dropTable),
+    fork(dropTableRequest),
+    fork(truncateTableRequest),
   ];
 }

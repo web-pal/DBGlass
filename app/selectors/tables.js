@@ -62,5 +62,5 @@ export const getTableRows = createSelector(
       }
       return a;
     });
-  }
+  },
 );

@@ -12,6 +12,10 @@ function allItems(state: TablesIds = [], action: Action) {
       return [];
     case 'CLEAR_ALL_REDUCERS':
       return [];
+    case 'tables/DROP_TABLE': {
+      const { payload } = action;
+      return state.filter(id => id !== payload);
+    }
     default:
       return state;
   }
@@ -37,9 +41,19 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
     case 'CLEAR_ALL_REDUCERS':
       return {};
     case 'tables/DROP_TABLE': {
-      console.log(state);
-      return state;
+      const tablesList = state;
+      delete tablesList[+action.payload];
+      return tablesList;
     }
+    case 'tables/TRUNCATE_TABLE':
+      return {
+        ...state,
+        [action.payload]: {
+          ...state[+action.payload],
+          rows: {},
+          rowsIds: [],
+        },
+      };
     default:
       return state;
   }
