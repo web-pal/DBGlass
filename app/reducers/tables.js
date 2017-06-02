@@ -53,6 +53,7 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
           dataForMeasure: {
             ...state[+action.payload.tableId].dataForMeasure,
             [action.payload.key]: {
+              ...state[+action.payload.tableId].dataForMeasure[action.payload.key],
               width: action.payload.width,
               isMeasured: true,
             },

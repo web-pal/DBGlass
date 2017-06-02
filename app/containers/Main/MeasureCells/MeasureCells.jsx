@@ -10,6 +10,10 @@ import type { Dispatch } from '../../../types';
 import * as tablesActions from '../../../actions/tables';
 import { getDataForMeasureCells } from '../../../selectors/tables';
 
+import {
+  Cell,
+} from './styled';
+
 type Props = {
   setMeasureWidth: (Object) => void,
   forMeasure: Array<{
@@ -32,15 +36,17 @@ class MeasureCells extends Component {
           <Measure
             key={item.name}
             onResize={({ entry }) => setMeasureWidth({
-              tableId: item.tableId, width: entry.width + 20, key: item.name,
-            })}// width: entry.width + 20, because cells are positioned absolutely
+              tableId: item.tableId, width: entry.width > 250 ? 250 : entry.width, key: item.name,
+            })}
           >
             {({ measureRef }) =>
               <div
                 ref={measureRef}
                 style={{ left: '-99999px', position: 'absolute' }}
               >
-                {item.value}
+                <Cell>
+                  {item.value}
+                </Cell>
               </div>
             }
           </Measure>,

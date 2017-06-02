@@ -60,6 +60,7 @@ export const Cell = styled.div`
   color: #939393;
   display: inline-block;
   background: #fff;
+  max-width: 250px;
 `;
 
 export const CellText = styled.span`
@@ -71,8 +72,11 @@ export const CellText = styled.span`
 `;
 
 export const CellContainer = styled.div`
-  padding: 14px 5px;
+  padding: 14px 10px;
   border: 1px solid rgba(0, 0, 0, 0.047);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &:hover {
     box-shadow: inset 0 0 6px 1px #f0f0f0;
