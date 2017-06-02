@@ -55,12 +55,8 @@ export const getTableRows = createSelector(
       return [];
     }
     return ids.map(id => {
-      const rowsArr = [];
       const currentRow = map[id];
-      for (const key of Object.keys(fields)) { // eslint-disable-line
-        rowsArr.push(currentRow[fields[key].fieldName]);
-      }
-      return rowsArr;
+      return Object.values(fields).map(field => currentRow[field.fieldName]);
     });
   },
 );
@@ -81,13 +77,7 @@ export const getDataForMeasureCells = createSelector(
   (id, map) => {
     if (id) {
       const data = Object.values(map).filter(item => item.id === id)[0].dataForMeasure;
-      const measureArr = [];
-      for (const key of Object.keys(data)) { // eslint-disable-line
-        if (!data[key].isMeasured) {
-          measureArr.push(data[key]);
-        }
-      }
-      return measureArr;
+      return Object.values(data).filter(item => !item.isMeasured);
     }
     return [];
   },
@@ -96,11 +86,6 @@ export const getDataForMeasureCells = createSelector(
 export const getCurrentTable = createSelector(
   ({ tables }) => tables.meta.currentTableId,
   (currentTableId) => currentTableId || '1',
-);
-
-export const getCurrentSelectedTable = createSelector(
-  [getCurrentTableId, getTablesMap],
-  (id, map) => id ? Object.values(map).filter(item => item.id === id)[0].isFetched : false,
 );
 
 export const getCurrentTableName = createSelector(
