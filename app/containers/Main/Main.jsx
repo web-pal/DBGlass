@@ -43,7 +43,7 @@ import {
 } from './styled';
 
 type Props = {
-  toggleContextMenu: () => void,
+  toggleContextMenu: (string, ?string, string) => void,
   fetchTablesRequest: (?IdString) => void,
   setTableNameSearchKey: (?IdString) => void,
   toggleMenu: (boolean) => void,
@@ -76,7 +76,7 @@ class Main extends Component {
     }
   }
   handleRightClick = (tableId, tableName) => {
-    this.props.toggleContextMenu('table', +tableId, tableName);
+    this.props.toggleContextMenu('table', tableId, tableName);
   }
 
   fetchTable = (table) => {

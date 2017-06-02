@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, getFormValues } from 'redux-form';
 
 import * as modalActions from '../../../../actions/modal';
+import * as tablesActions from '../../../../actions/tables';
 import { capitalizeFirstLetter } from '../../../../utils/helpers';
 import { RenderRadio } from '../../InputComponents';
 import Base from '../Base/Base';
@@ -27,14 +28,48 @@ import {
 
 type Props = {
   hideModal: () => void,
-  values: object
+  dropTableRequest: (string, ?Object, string, ?string) => void,
+  truncateTableRequest: (string, ?Object, string) => void,
+  modal: Object,
+  currentValues: ?Object,
+  selectedTableId: ?string,
+  currentTableId: ?string
 };
 
 class ConfirmationModal extends Component {
   props: Props;
 
+  updateCurrentTable = () => {
+    const {
+      dropTableRequest,
+      currentValues,
+      selectedTableId,
+      currentTableId,
+      truncateTableRequest,
+      modal: {
+        values: {
+          actionType,
+          elementName,
+        },
+      },
+    } = this.props;
+    if (actionType === 'drop') {
+      dropTableRequest(elementName, currentValues, selectedTableId, currentTableId);
+    } else {
+      truncateTableRequest(elementName, currentValues, selectedTableId);
+    }
+  }
   render() {
-    const { hideModal, values: { actionType, elementType, elementName } } = this.props;
+    const {
+      hideModal,
+      modal: {
+        values: {
+          actionType,
+          elementType,
+          elementName,
+        },
+      },
+    } = this.props;
     return (
       <Base onHide={hideModal}>
         <MainContainer>
@@ -76,7 +111,7 @@ class ConfirmationModal extends Component {
                 <ToolContainer>
                   <ToolHeader>
                     <Field
-                      name="Cascade"
+                      name="cascade"
                       component={RenderRadio}
                       type="checkbox"
                     />
@@ -93,7 +128,7 @@ class ConfirmationModal extends Component {
             }
           </Content>
           <ButtonsGroup>
-            <ActionButton>
+            <ActionButton onClick={this.updateCurrentTable}>
               {capitalizeFirstLetter(actionType)}
             </ActionButton>
             <CloseButton
@@ -109,11 +144,16 @@ class ConfirmationModal extends Component {
 }
 
 function mapDispatchToProps(dispatch: Dispatch): {[key: string]: Function} {
-  return bindActionCreators({ ...modalActions }, dispatch);
+  return bindActionCreators({ ...modalActions, ...tablesActions }, dispatch);
 }
 
 function mapStateToProps(state: State) {
-  return state.modal;
+  return {
+    currentValues: getFormValues('ConfirmationModal')(state),
+    modal: state.modal,
+    selectedTableId: state.contextMenu.elementId,
+    currentTableId: state.tables.meta.currentTableId,
+  };
 }
 
 const connector: Connector<{}, Props> = connect(

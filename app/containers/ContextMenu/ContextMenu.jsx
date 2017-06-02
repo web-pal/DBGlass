@@ -26,7 +26,7 @@ class ContextMenu extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.contextMenu.elementSerialNumber) {
+    if (nextProps.contextMenu.elementId) {
       this.popup(nextProps.contextMenu.elementType);
     }
   }

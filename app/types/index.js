@@ -39,6 +39,10 @@ export type Action =
 | { type: 'tables/SELECT_TABLE', +payload: string }
 | { type: 'tables/SET_TABLE_DATA', +payload: TableDataNormalizedPayload }
 | { type: 'tables/RESET_SELECT_TABLE' }
+| { type: 'tables/DROP_TABLE_REQUEST', +payload: Object }
+| { type: 'tables/DROP_TABLE', +payload: IdString }
+| { type: 'tables/TRUNCATE_TABLE_REQUEST', +payload: Object }
+| { type: 'tables/TRUNCATE_TABLE', +payload: IdString }
 | { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: dataForMeasure, id: IdString } }
 | { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableId: IdString, width: number, key: string } }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
@@ -51,7 +55,6 @@ export type Action =
 | { type: 'modal/HIDE_MODAL' }
 | Object
 ;
-
 
 export type State = {
   +ui: uiState,
