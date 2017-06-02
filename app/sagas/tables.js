@@ -99,7 +99,7 @@ export function* dropTable({
     currentTableId,
   },
 }) {
-  const query = `DROP TABLE ${tableName} ${parameters ? (parameters.cascade && 'CASCADE') : ''}`;
+  const query = `DROP TABLE IF EXISTS "public"."${tableName}" ${parameters ? (parameters.cascade && 'CASCADE') : ''}`;
   yield cps(executeSQL, query, []);
   if (currentTableId === selectedTableId) yield put(resetSelectTableAction());
   yield put(dropTableAction(selectedTableId));
@@ -118,8 +118,8 @@ export function* truncateTable({
   },
 }) {
   const query = `
-    TRUNCATE
-    ${tableName}
+    TRUNCATE "public".
+    "${tableName}"
     ${parameters ? (parameters.restartIdentity && 'RESTART IDENTITY') : ''}
     ${parameters ? (parameters.cascade && 'CASCADE') : ''}
   `;

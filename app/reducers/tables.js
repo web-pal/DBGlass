@@ -41,9 +41,7 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
     case 'CLEAR_ALL_REDUCERS':
       return {};
     case 'tables/DROP_TABLE': {
-      const tablesList = state;
-      delete tablesList[+action.payload];
-      return tablesList;
+      return _.omit(state, action.payload);
     }
     case 'tables/TRUNCATE_TABLE':
       return {
