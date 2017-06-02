@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Button } from '../../../components/shared/styled';
 
 export const Ul = styled.ul`
   list-style: none;
@@ -225,4 +226,13 @@ export const MadeBy = styled.span`
 export const CompanyImg = styled.img`
   padding: 15px 10px;
   height: 32px;
+`;
+
+export const RemoveButton = styled(Button)`
+  background-color: #6386e2;
+  margin: 0;
+`;
+
+export const SaveButton = styled(Button)`
+  background-color: #6386e2;
 `;

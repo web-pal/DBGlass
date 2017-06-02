@@ -34,6 +34,8 @@ import {
   Label,
   RadioLabel,
   InputWithButton,
+  RemoveButton,
+  SaveButton,
 } from './styled';
 
 import type { Favorite, State, Dispatch, IdString } from '../../types';
@@ -317,20 +319,16 @@ class ConnectForm extends Component {
           </ToggleGroup>
           <ButtonsGroup>
             {id &&
-              <Button
-                backgroundColor="#6386e2"
-                onClick={this.remove}
-              >
+              <RemoveButton onClick={this.remove}>
                 Remove
-              </Button>
+              </RemoveButton>
             }
-            <Button
-              backgroundColor="#6386e2"
+            <SaveButton
               onClick={this.save}
               disabled={(!valid && !dirty)}
             >
               Save
-            </Button>
+            </SaveButton>
             <LaddaButton isLoading={this.props.isLoading} type="submit">
               Connect
             </LaddaButton>
