@@ -60,7 +60,6 @@ export const Cell = styled.div`
   color: #939393;
   display: inline-block;
   background: #fff;
-  max-width: 250px;
 `;
 
 export const CellText = styled.span`

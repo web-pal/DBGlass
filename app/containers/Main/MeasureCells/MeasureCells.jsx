@@ -36,7 +36,7 @@ class MeasureCells extends Component {
           <Measure
             key={item.name}
             onResize={({ entry }) => setMeasureWidth({
-              tableId: item.tableId, width: entry.width > 250 ? 250 : entry.width, key: item.name,
+              tableId: item.tableId, width: entry.width > 350 ? 350 : entry.width, key: item.name,
             })}
           >
             {({ measureRef }) =>
