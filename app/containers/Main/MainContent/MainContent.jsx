@@ -5,6 +5,7 @@ import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
 
 import type { Connector } from 'react-redux';
 import type { State } from '../../../types';
+import { getTableValue } from '../../../utils/helpers';
 
 import { getTableFields, getTableRows, getDataForMeasure, getCurrentTableName } from '../../../selectors/tables';
 
@@ -46,7 +47,7 @@ class MainContent extends Component {
     >
       <CellContainer>
         <CellText>
-          {this.props.rows[rowIndex][columnIndex]}
+          {getTableValue(this.props.rows[rowIndex][columnIndex])}
         </CellText>
       </CellContainer>
     </Cell>
