@@ -10,11 +10,14 @@ import {
   resetSelectTable as resetSelectTableAction,
   truncateTable as truncateTableAction,
   setDataForMeasure as setDataForMeasureAction,
+  getTableSchema as getTableSchemaAction,
+  setTableSchema as setTableSchemaAction,
+  setTablesConstraints as setTablesConstraintsAction,
 } from '../actions/tables';
 import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
 
 import { addFavoriteTablesQuantity } from '../actions/favorites';
-import { 
+import {
   hideModal as hideModalAction,
   toggleModal as toggleModalAction,
 } from '../actions/modal';
@@ -68,13 +71,18 @@ export function* fetchTables() {
     }
 
     if (tablesIds.length) {
-      yield put(selectTableAction(tables[tablesIds[0]].id));
-      yield put(fetchTableDataAction({
+      const tableData = {
         id: tables[tablesIds[0]].id,
         tableName: tables[tablesIds[0]].tableName,
         isFetched: false,
         dataForMeasure: {},
-      }));
+        structureTable: {},
+      };
+      yield put(selectTableAction(tables[tablesIds[0]].id));
+      yield put(fetchTableDataAction(tableData));
+
+      yield put(getTableSchemaAction(tableData));
+      yield* getTablesConstraints(tables);
     }
   }
 }
@@ -142,4 +150,72 @@ export function* truncateTable({
 
 export function* truncateTableRequest() {
   yield takeEvery('tables/TRUNCATE_TABLE_REQUEST', truncateTable);
+}
+
+export function* getTableSchema({ payload: { id, tableName, isFetched } }) {
+  if (!isFetched) {
+    const query = `select *
+      from information_schema.columns where table_name = '${tableName}'`;
+
+    const result = yield cps(executeSQL, query, []);
+    const structureTable = {};
+
+    result.rows.map((row, index) => {
+      structureTable[index] = {
+        ...row,
+      };
+      return index;
+    });
+    yield put(setTableSchemaAction({ id, structureTable }));
+  }
+}
+
+export function* getTableSchemaWatch() {
+  yield takeEvery('tables/GET_TABLE_SCHEMA', getTableSchema);
+}
+
+export function* getTablesConstraints(tables) {
+  const query = `SELECT tc.constraint_name,
+    tc.constraint_type,
+    tc.table_name,
+    kcu.column_name,
+    tc.is_deferrable,
+    tc.initially_deferred,
+    rc.match_option AS match_type,
+    rc.update_rule AS on_update,
+    rc.delete_rule AS on_delete,
+    ccu.table_name AS references_table,
+    ccu.column_name AS references_field
+    FROM information_schema.table_constraints tc
+    LEFT JOIN information_schema.key_column_usage kcu
+    ON tc.constraint_catalog = kcu.constraint_catalog
+    AND tc.constraint_schema = kcu.constraint_schema
+    AND tc.constraint_name = kcu.constraint_name
+    LEFT JOIN information_schema.referential_constraints rc
+    ON tc.constraint_catalog = rc.constraint_catalog
+    AND tc.constraint_schema = rc.constraint_schema
+    AND tc.constraint_name = rc.constraint_name
+    LEFT JOIN information_schema.constraint_column_usage ccu
+    ON rc.unique_constraint_catalog = ccu.constraint_catalog
+    AND rc.unique_constraint_schema = ccu.constraint_schema
+    AND rc.unique_constraint_name = ccu.constraint_name
+    WHERE lower(tc.constraint_type) in ('foreign key')`;
+  const result = yield cps(executeSQL, query, []);
+  const constraints = {};
+  const constraintsIds = [];
+  result.rows.map((row, index) => {
+    const tableId = Object.values(tables).filter(table => table.tableName === row.table_name)[0].id;
+    constraintsIds.push(tableId);
+
+    constraints[tableId] = {
+      ...row,
+      tableId,
+    };
+
+    return index;
+  });
+
+  for (let i = 0; i < constraintsIds.length; i++) { // eslint-disable-line
+    yield put(setTablesConstraintsAction(constraints[constraintsIds[i]]));
+  }
 }

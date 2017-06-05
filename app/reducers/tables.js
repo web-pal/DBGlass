@@ -64,6 +64,26 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
           },
         },
       };
+    case 'tables/SET_TABLE_SCHEMA':
+      return {
+        ...state,
+        [+action.payload.id]: {
+          ...state[+action.payload.id],
+          structureTable: {
+            ...action.payload.structureTable,
+          },
+        },
+      };
+    case 'tables/SET_TABLES_CONSTRAINTS':
+      return {
+        ...state,
+        [action.payload.tableId]: {
+          ...state[action.payload.tableId],
+          constraints: {
+            ...action.payload,
+          },
+        },
+      };
     case 'CLEAR_ALL_REDUCERS':
       return {};
     case 'tables/DROP_TABLE': {

@@ -107,3 +107,21 @@ export const setMeasureWidth = (payload: {
     type: 'tables/SET_MEASURE_WIDTH',
     payload,
   });
+
+export const getTableSchema = (payload: Table): Action =>
+  ({
+    type: 'tables/GET_TABLE_SCHEMA',
+    payload,
+  });
+
+export const setTableSchema = (payload: {id: IdString, structureTable: {}}): Action =>
+  ({
+    type: 'tables/SET_TABLE_SCHEMA',
+    payload,
+  });
+
+export const setTablesConstraints = (payload: any): Action =>
+  ({
+    type: 'tables/SET_TABLES_CONSTRAINTS',
+    payload,
+  });

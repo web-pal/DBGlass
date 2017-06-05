@@ -27,7 +27,7 @@ export const TablesContainer = styled.ul`
   overflow: auto;
   display: ${props => props.display ? 'block' : 'none'}
 `;
-export const Table = styled.li`
+export const TableContent = styled.li`
   color: #989898;
   cursor: pointer;
   font-size: 14px;
@@ -187,4 +187,3 @@ export const CircleIcon = styled.i`
 export const Title = styled.span`
   height: 13px;
 `;
-
