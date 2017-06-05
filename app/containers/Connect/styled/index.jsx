@@ -79,7 +79,7 @@ export const InputWithButton = styled.div`
 export const RadioGroup = styled.div`
   display: flex;
   flex-flow: row nowrap;
-  margin-top: 40px;
+  margin-top: 44px;
   min-width: 300px;
   justify-content: flex-end;
 `;
