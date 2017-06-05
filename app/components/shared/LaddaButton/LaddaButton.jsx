@@ -9,7 +9,7 @@ import {
 } from './styled';
 
 
-const LaddaButton = ({ isLoading }) => ( // eslint-disable-line
+const LaddaButton = ({ isLoading }: { isLoading: boolean }) => (
   <LButton>
     <Title>
       Connect
