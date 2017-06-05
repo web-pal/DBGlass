@@ -65,6 +65,7 @@ export const Cell = styled.div`
 export const CellText = styled.span`
   display: inline-block;
   min-height: 10px;
+  min-width: 10px;
   font: 400 13px / 35px Harmonia Sans;
   line-height: inherit;
   color: #515151;
