@@ -90,7 +90,7 @@ class MainContent extends Component {
                         <Grid
                           columnWidth={({ index }) => dataForMeasure[fields[index]].width}
                           columnCount={fields.length}
-                          height={height}
+                          height={height - 109}
                           cellRenderer={this.cellRenderer}
                           rowHeight={45}
                           rowCount={rows.length}
