@@ -70,7 +70,6 @@ class MainContent extends Component {
             <AutoSizer>
               {({ height, width }) =>
                 <div>
-                  {console.log(height)}
                   <TableHeader>
                     <Grid
                       columnWidth={({ index }) => dataForMeasure[fields[index]].width}
