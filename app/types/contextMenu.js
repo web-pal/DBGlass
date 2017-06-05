@@ -1,6 +1,6 @@
 // @flow
 export type ContextMenuState = {
-  elementSerialNumber: number,
+  elementId: ?string,
   elementType: string,
   elementName: string
 };

@@ -12,6 +12,10 @@ function allItems(state: TablesIds = [], action: Action) {
       return [];
     case 'CLEAR_ALL_REDUCERS':
       return [];
+    case 'tables/DROP_TABLE': {
+      const { payload } = action;
+      return state.filter(id => id !== payload);
+    }
     default:
       return state;
   }
@@ -34,8 +38,46 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
           ...action.payload,
         },
       };
+    case 'tables/SET_DATA_FOR_MEASURE':
+      return {
+        ...state,
+        [action.payload.id]: {
+          ...state[+action.payload.id],
+          dataForMeasure: {
+            ...state[+action.payload.id].dataForMeasure,
+            ...action.payload.dataForMeasure,
+          },
+        },
+      };
+    case 'tables/SET_MEASURE_WIDTH':
+      return {
+        ...state,
+        [action.payload.tableId]: {
+          ...state[+action.payload.tableId],
+          dataForMeasure: {
+            ...state[+action.payload.tableId].dataForMeasure,
+            [action.payload.key]: {
+              ...state[+action.payload.tableId].dataForMeasure[action.payload.key],
+              width: action.payload.width,
+              isMeasured: true,
+            },
+          },
+        },
+      };
     case 'CLEAR_ALL_REDUCERS':
       return {};
+    case 'tables/DROP_TABLE': {
+      return _.omit(state, action.payload);
+    }
+    case 'tables/TRUNCATE_TABLE':
+      return {
+        ...state,
+        [action.payload]: {
+          ...state[+action.payload],
+          rows: {},
+          rowsIds: [],
+        },
+      };
     default:
       return state;
   }

@@ -6,18 +6,25 @@ import {
   selectTable as selectTableAction,
   setTableData as setTableDataAction,
   fetchTableData as fetchTableDataAction,
+  dropTable as dropTableAction,
+  resetSelectTable as resetSelectTableAction,
+  truncateTable as truncateTableAction,
+  setDataForMeasure as setDataForMeasureAction,
 } from '../actions/tables';
 import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
 
 import { addFavoriteTablesQuantity } from '../actions/favorites';
+import { 
+  hideModal as hideModalAction,
+  toggleModal as toggleModalAction,
+} from '../actions/modal';
+
 import {
   toggleIsFetchedTables as toggleIsFetchedTablesAction,
-  setDataForMeasure as setDataForMeasureAction,
 } from '../actions/ui';
 
-
 function* saveData({ dataForMeasure, data }) {
-  yield put(setDataForMeasureAction(dataForMeasure));
+  yield put(setDataForMeasureAction({ dataForMeasure, id: data.id }));
   yield delay(100); // This delay needs to measure cells
 
   yield put(setTableDataAction(data));
@@ -43,6 +50,7 @@ export function* fetchTables() {
         id,
         tableName: t.table_name,
         isFetched: false,
+        dataForMeasure: {},
       };
       return id;
     });
@@ -65,6 +73,7 @@ export function* fetchTables() {
         id: tables[tablesIds[0]].id,
         tableName: tables[tablesIds[0]].tableName,
         isFetched: false,
+        dataForMeasure: {},
       }));
     }
   }
@@ -84,4 +93,53 @@ function* fetchTableData({ payload: { id, tableName, isFetched } }) {
 
 export function* fetchTableDataWatch() {
   yield takeEvery('tables/FETCH_TABLE_DATA_REQUEST', fetchTableData);
+}
+
+export function* dropTable({
+  payload: {
+    tableName,
+    selectedTableId,
+    parameters,
+    currentTableId,
+  },
+}) {
+  const query = `DROP TABLE IF EXISTS "public"."${tableName}" ${parameters ? (parameters.cascade && 'CASCADE') : ''}`;
+  try {
+    yield cps(executeSQL, query, []);
+    if (currentTableId === selectedTableId) yield put(resetSelectTableAction());
+    yield put(dropTableAction(selectedTableId));
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(toggleModalAction('ErrorModal', error));
+  }
+}
+
+export function* dropTableRequest() {
+  yield takeEvery('tables/DROP_TABLE_REQUEST', dropTable);
+}
+
+export function* truncateTable({
+  payload: {
+    tableName,
+    selectedTableId,
+    parameters,
+  },
+}) {
+  const query = `
+    TRUNCATE "public".
+    "${tableName}"
+    ${parameters ? (parameters.restartIdentity && 'RESTART IDENTITY') : ''}
+    ${parameters ? (parameters.cascade && 'CASCADE') : ''}
+  `;
+  try {
+    yield cps(executeSQL, query, []);
+    yield put(truncateTableAction(selectedTableId));
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(toggleModalAction('ErrorModal', error));
+  }
+}
+
+export function* truncateTableRequest() {
+  yield takeEvery('tables/TRUNCATE_TABLE_REQUEST', truncateTable);
 }

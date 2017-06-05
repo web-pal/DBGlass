@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import { Button } from '../../../../components/shared/styled';
 
 export const ContentWrapper = styled.div`
   width: calc(100% - 210px);
@@ -10,6 +10,10 @@ export const ContentWrapper = styled.div`
   display: flex;
   flex-flow: column nowrap;
   overflow: hidden;
+
+  &>div:first-child {
+    width: 100%!important;
+  }
 `;
 
 export const TableHeader = styled.div`
@@ -36,6 +40,11 @@ export const TableContent = styled.div`
   height: calc(100% - 60px);
   top: 60px;
   position: relative;
+
+  &>div>div:first-child {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.047);
+    border-right: 1px solid rgba(0, 0, 0, 0.047);
+  }
 `;
 
 export const Row = styled.div`
@@ -46,7 +55,6 @@ export const Row = styled.div`
 
 export const Cell = styled.div`
   width: auto;
-  min-width: 100px;
   font-size: 13px;
   font-weight: 300;
   color: #939393;
@@ -56,16 +64,21 @@ export const Cell = styled.div`
 
 export const CellText = styled.span`
   display: inline-block;
-  line-height: 16px;
-  min-height: 16px;
+  min-height: 10px;
+  font: 400 13px / 35px Harmonia Sans;
+  line-height: inherit;
+  color: #515151;
 `;
 
 export const CellContainer = styled.div`
   padding: 14px 10px;
   border: 1px solid rgba(0, 0, 0, 0.047);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &:hover {
-    box-shadow: inset 0 0 6px 1px #dedede;
+    box-shadow: inset 0 0 6px 1px #f0f0f0;
   }
 `;
 
@@ -73,4 +86,29 @@ export const GridWrapper = styled.div`
   &>div {
     overflow: hidden!important;
   }
+`;
+
+export const EmptyBlock = styled.div`
+  text-align: center;
+  color: #f1f1f1;
+  font-size: 3em;
+  position: fixed;
+  top: 100px;
+  z-index: 1;
+  min-width: calc(100% - 230px);
+`;
+
+export const EmptyBlockTitle = styled.span`
+  display: block;
+`;
+
+export const InsertButton = styled(Button)`
+  margin: 10px auto;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+  color: #000;
+`;
+
+export const Icon = styled.i`
+  margin-right: 9px;
 `;
