@@ -85,6 +85,37 @@ class MainContent extends Component {
     return false;
   }
 
+
+  infiniteLoaderChildFunction = ({ onRowsRendered, registerChild }) => {
+    console.log(onRowsRendered, registerChild);
+    this.onRowsRendered = onRowsRendered;
+    const { dataForMeasure, fields, rows } = this.props;
+    return (
+      <Grid
+        onSectionRendered={this.onSectionRendered}
+        ref={registerChild}
+        columnWidth={({ index }) => dataForMeasure[fields[index]].width}
+        columnCount={fields.length}
+        height={height - 109}
+        cellRenderer={this.cellRenderer}
+        rowHeight={45}
+        rowCount={rows.length}
+        onScroll={onScroll}
+        width={width}
+      />
+    );
+  }
+
+  onSectionRendered = ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }) => {
+    const startIndex = (rowStartIndex * 100) + columnStartIndex;
+    const stopIndex = (rowStopIndex * 100) + columnStopIndex;
+
+    this.onRowsRendered({
+      startIndex,
+      stopIndex,
+    });
+  }
+
   render() {
     const {
       fields,
@@ -119,22 +150,9 @@ class MainContent extends Component {
                       rows.length ?
                         <InfiniteLoader
                           isRowLoaded={this.isRowLoaded}
-                          loadMoreRows={this.loadMoreRows}
-                          rowCount={1000}
+                          loadMoreRows={() => fetchTableData(table)}
                         >
-                        {({ onRowsRendered, registerChild }) => (
-                          <Grid
-                            columnWidth={({ index }) => dataForMeasure[fields[index]].width}
-                            columnCount={fields.length}
-                            onRowsRendered={onRowsRendered}
-                            height={height - 109}
-                            cellRenderer={this.cellRenderer}
-                            rowHeight={45}
-                            rowCount={rows.length}
-                            onScroll={onScroll}
-                            width={width}
-                          />
-                        )}
+                          {() => this.infiniteLoaderChildFunction()}
                         </InfiniteLoader>
                         :
                         <EmptyBlock>
