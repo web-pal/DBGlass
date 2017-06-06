@@ -86,49 +86,6 @@ class MainContent extends Component {
     </ColumnName>
   );
 
-  loadMoreRows = ({ startIndex, stopIndex }) => {
-    const promise = new Promise(resolve => {
-      console.log(resolve);
-      this.props.fetchTableData1({ table: this.props.table, resolve });
-    });
-
-    return promise;
-  }
-
-  isRowLoaded = ({ index }) => {
-    return false;
-  }
-
-
-  infiniteLoaderChildFunction = ({ onRowsRendered, registerChild }) => {
-    console.log(onRowsRendered, registerChild);
-    this.onRowsRendered = onRowsRendered;
-    const { dataForMeasure, fields, rows } = this.props;
-    return (
-      <Grid
-        onSectionRendered={this.onSectionRendered}
-        ref={registerChild}
-        columnWidth={({ index }) => dataForMeasure[fields[index]].width}
-        columnCount={fields.length}
-        height={height - 109}
-        cellRenderer={this.cellRenderer}
-        rowHeight={45}
-        rowCount={rows.length}
-        onScroll={onScroll}
-        width={width}
-      />
-    );
-  }
-
-  onSectionRendered = ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }) => {
-    const startIndex = (rowStartIndex * 100) + columnStartIndex;
-    const stopIndex = (rowStopIndex * 100) + columnStopIndex;
-
-    this.onRowsRendered({
-      startIndex,
-      stopIndex,
-    });
-  }
 
   render() {
     const {
@@ -137,11 +94,7 @@ class MainContent extends Component {
       dataForMeasure,
       currentTableName,
       table,
-      fetchTableData,
     }: Props = this.props;
-    console.log('------');
-    console.log(rows);
-    console.log('------');
     return (
       <ScrollSync>
         {({ onScroll, scrollLeft }) => (
@@ -164,20 +117,22 @@ class MainContent extends Component {
                   </TableHeader>
                   <TableContent>
                     <InfiniteLoader
-                      loadMoreRows={() => fetchTableData(table)}
+                      rowCount={200}
+                      loadMoreRows={() => {
+                        this.props.fetchTableData(table);
+                      }}
                       isRowLoaded={({ index }) => {
                         console.log('uuuuuuuuu');
-                        console.log(this.props.rows);
                         console.log(index);
                         console.log(this.props.rows[index]);
-                        return true;
+                        return !!rows[index];
                       }}
                     >
                       {({ onRowsRendered, registerChild }) => (
                         <Grid
                           onSectionRendered={({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }) => {
-                            const startIndex = (rowStartIndex * 100) + columnStartIndex;
-                            const stopIndex = (rowStopIndex * 100) + columnStopIndex;
+                            const startIndex = (rowStartIndex * 200) + columnStartIndex;
+                            const stopIndex = (rowStopIndex * 200) + columnStopIndex;
 
                             onRowsRendered({
                               startIndex,

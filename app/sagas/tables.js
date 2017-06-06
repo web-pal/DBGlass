@@ -14,7 +14,7 @@ import {
 import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
 
 import { addFavoriteTablesQuantity } from '../actions/favorites';
-import { 
+import {
   hideModal as hideModalAction,
   toggleModal as toggleModalAction,
 } from '../actions/modal';
@@ -152,34 +152,4 @@ export function* truncateTable({
 
 export function* truncateTableRequest() {
   yield takeEvery('tables/TRUNCATE_TABLE_REQUEST', truncateTable);
-}
-
-
-
-function* fetchTableData1({ payload: { table: { id, tableName, isFetched, rows }, resolve } }) {
-  console.log('test saga');
-  if (!isFetched) {
-    const query = `
-      SELECT *
-      FROM ${tableName}
-      LIMIT 100
-    `;
-    const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
-    console.log(result);
-    console.log('resolve', resolve)
-    yield fork(saveData, result);
-  } else {
-    console.log('isFETCHED');
-    const query = `
-      SELECT *
-      FROM ${tableName}
-      LIMIT ${rows.length}, 100
-    `;
-    const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
-    yield fork(saveData, result);
-  }
-}
-
-export function* fetchTableDataWatch1() {
-  yield takeEvery('tables/FETCH_TABLE_DATA_REQUEST1', fetchTableData1);
 }
