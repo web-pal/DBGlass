@@ -33,6 +33,12 @@ export const fetchTableData = (payload: Table): Action =>
     payload,
   });
 
+export const fetchTableData1 = (payload: { table: Table, resolve: ?Function }): Action =>
+({
+  type: 'tables/FETCH_TABLE_DATA_REQUEST1',
+  payload,
+});
+
 export const selectTable = (payload: string): Action =>
   ({
     type: 'tables/SELECT_TABLE',

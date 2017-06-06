@@ -1,13 +1,21 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
+import { bindActionCreators } from 'redux';
+import { Grid, AutoSizer, ScrollSync, InfiniteLoader } from 'react-virtualized';
 
 import type { Connector } from 'react-redux';
-import type { State } from '../../../types';
+import type { State, Table } from '../../../types';
 import { getTableValue } from '../../../utils/helpers';
+import * as tablesActions from '../../../actions/tables';
 
-import { getTableFields, getTableRows, getDataForMeasure, getCurrentTableName } from '../../../selectors/tables';
+import {
+  getTableFields,
+  getTableRows,
+  getDataForMeasure,
+  getCurrentTableName,
+  getCurrentTable,
+} from '../../../selectors/tables';
 
 import {
   ContentWrapper,
@@ -29,7 +37,9 @@ type Props = {
   fields: Array<string>,
   rows: Array<Array<any>>,
   dataForMeasure: Object,
-  currentTableName: string
+  currentTableName: string,
+  table: any,
+  fetchTableData: (Table) => void
 };
 
 
@@ -62,8 +72,28 @@ class MainContent extends Component {
     </ColumnName>
   );
 
+  loadMoreRows = ({ startIndex, stopIndex }) => {
+    const promise = new Promise(resolve => {
+      console.log(resolve);
+      this.props.fetchTableData1({ table: this.props.table, resolve });
+    });
+
+    return promise;
+  }
+
+  isRowLoaded = ({ index }) => {
+    return false;
+  }
+
   render() {
-    const { fields, rows, dataForMeasure, currentTableName }: Props = this.props;
+    const {
+      fields,
+      rows,
+      dataForMeasure,
+      currentTableName,
+      table,
+      fetchTableData,
+    }: Props = this.props;
     return (
       <ScrollSync>
         {({ onScroll, scrollLeft }) => (
@@ -87,16 +117,25 @@ class MainContent extends Component {
                   <TableContent>
                     {
                       rows.length ?
-                        <Grid
-                          columnWidth={({ index }) => dataForMeasure[fields[index]].width}
-                          columnCount={fields.length}
-                          height={height - 109}
-                          cellRenderer={this.cellRenderer}
-                          rowHeight={45}
-                          rowCount={rows.length}
-                          onScroll={onScroll}
-                          width={width}
-                        />
+                        <InfiniteLoader
+                          isRowLoaded={this.isRowLoaded}
+                          loadMoreRows={this.loadMoreRows}
+                          rowCount={1000}
+                        >
+                        {({ onRowsRendered, registerChild }) => (
+                          <Grid
+                            columnWidth={({ index }) => dataForMeasure[fields[index]].width}
+                            columnCount={fields.length}
+                            onRowsRendered={onRowsRendered}
+                            height={height - 109}
+                            cellRenderer={this.cellRenderer}
+                            rowHeight={45}
+                            rowCount={rows.length}
+                            onScroll={onScroll}
+                            width={width}
+                          />
+                        )}
+                        </InfiniteLoader>
                         :
                         <EmptyBlock>
                           <EmptyBlockTitle>
@@ -120,8 +159,17 @@ class MainContent extends Component {
   }
 }
 
+function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
+  return bindActionCreators(
+    {
+      ...tablesActions,
+    }, dispatch,
+  );
+}
+
 function mapStateToProps(state: State) {
   return {
+    table: getCurrentTable({ tables: state.tables }),
     fields: getTableFields({ tables: state.tables }),
     rows: getTableRows({ tables: state.tables }),
     dataForMeasure: getDataForMeasure({ tables: state.tables }),
@@ -131,7 +179,7 @@ function mapStateToProps(state: State) {
 
 const connector: Connector<{}, Props> = connect(
   mapStateToProps,
-  null,
+  mapDispatchToProps,
 );
 
 export default connector(MainContent);

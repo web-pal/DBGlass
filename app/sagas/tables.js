@@ -26,7 +26,6 @@ import {
 function* saveData({ dataForMeasure, data }) {
   yield put(setDataForMeasureAction({ dataForMeasure, id: data.id }));
   yield delay(100); // This delay needs to measure cells
-
   yield put(setTableDataAction(data));
 }
 
@@ -79,12 +78,23 @@ export function* fetchTables() {
   }
 }
 
-function* fetchTableData({ payload: { id, tableName, isFetched } }) {
+function* fetchTableData({ payload: { id, tableName, isFetched, rows } }) {
+  console.log('test saga');
   if (!isFetched) {
     const query = `
       SELECT *
       FROM ${tableName}
-      LIMIT 1000
+      LIMIT 100
+    `;
+    const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
+    console.log(result);
+    yield fork(saveData, result);
+  } else {
+    console.log('isFETCHED');
+    const query = `
+      SELECT *
+      FROM ${tableName}
+      LIMIT ${rows.length}, 100
     `;
     const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
     yield fork(saveData, result);
@@ -142,4 +152,34 @@ export function* truncateTable({
 
 export function* truncateTableRequest() {
   yield takeEvery('tables/TRUNCATE_TABLE_REQUEST', truncateTable);
+}
+
+
+
+function* fetchTableData1({ payload: { table: { id, tableName, isFetched, rows }, resolve } }) {
+  console.log('test saga');
+  if (!isFetched) {
+    const query = `
+      SELECT *
+      FROM ${tableName}
+      LIMIT 100
+    `;
+    const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
+    console.log(result);
+    console.log('resolve', resolve)
+    yield fork(saveData, result);
+  } else {
+    console.log('isFETCHED');
+    const query = `
+      SELECT *
+      FROM ${tableName}
+      LIMIT ${rows.length}, 100
+    `;
+    const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
+    yield fork(saveData, result);
+  }
+}
+
+export function* fetchTableDataWatch1() {
+  yield takeEvery('tables/FETCH_TABLE_DATA_REQUEST1', fetchTableData1);
 }

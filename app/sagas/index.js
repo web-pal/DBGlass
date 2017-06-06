@@ -10,6 +10,7 @@ import {
   fetchTableDataWatch,
   dropTableRequest,
   truncateTableRequest,
+  fetchTableDataWatch1,
 } from './tables';
 import { startConnect } from './connect';
 
@@ -27,5 +28,6 @@ export default function* root() {
     fork(fetchTableDataWatch),
     fork(dropTableRequest),
     fork(truncateTableRequest),
+    fork(fetchTableDataWatch1),
   ];
 }
