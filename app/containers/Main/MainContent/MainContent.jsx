@@ -46,22 +46,36 @@ type Props = {
 class MainContent extends Component {
   props: Props;
 
-  cellRenderer = ({ columnIndex, key, rowIndex, style }) => (
-    <Cell
-      key={key}
-      style={{
-        ...style,
-        height: 45,
-        whiteSpace: 'nowrap',
-      }}
-    >
-      <CellContainer>
-        <CellText>
-          {getTableValue(this.props.rows[rowIndex][columnIndex])}
-        </CellText>
-      </CellContainer>
-    </Cell>
-  );
+  cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
+    if (!this.props.rows[rowIndex]) {
+      return (
+        <Cell
+          key={key}
+          style={{
+            ...style,
+            height: 45,
+            whiteSpace: 'nowrap',
+          }}
+        />
+      );
+    }
+    return (
+      <Cell
+        key={key}
+        style={{
+          ...style,
+          height: 45,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        <CellContainer>
+          <CellText>
+            {getTableValue(this.props.rows[rowIndex][columnIndex])}
+          </CellText>
+        </CellContainer>
+      </Cell>
+    );
+  }
 
   headerRenderer = ({ columnIndex, key, style }) => (
     <ColumnName
@@ -125,6 +139,9 @@ class MainContent extends Component {
       table,
       fetchTableData,
     }: Props = this.props;
+    console.log('------');
+    console.log(rows);
+    console.log('------');
     return (
       <ScrollSync>
         {({ onScroll, scrollLeft }) => (
@@ -146,25 +163,39 @@ class MainContent extends Component {
                     />
                   </TableHeader>
                   <TableContent>
-                    {
-                      rows.length ?
-                        <InfiniteLoader
-                          isRowLoaded={this.isRowLoaded}
-                          loadMoreRows={() => fetchTableData(table)}
-                        >
-                          {() => this.infiniteLoaderChildFunction()}
-                        </InfiniteLoader>
-                        :
-                        <EmptyBlock>
-                          <EmptyBlockTitle>
-                            Table {currentTableName} is empty
-                          </EmptyBlockTitle>
-                          <InsertButton>
-                            <Icon className="fa fa-plus" />
-                            Insert Row
-                          </InsertButton>
-                        </EmptyBlock>
-                    }
+                    <InfiniteLoader
+                      loadMoreRows={() => fetchTableData(table)}
+                      isRowLoaded={({ index }) => {
+                        console.log('uuuuuuuuu');
+                        console.log(this.props.rows);
+                        console.log(index);
+                        console.log(this.props.rows[index]);
+                        return true;
+                      }}
+                    >
+                      {({ onRowsRendered, registerChild }) => (
+                        <Grid
+                          onSectionRendered={({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }) => {
+                            const startIndex = (rowStartIndex * 100) + columnStartIndex;
+                            const stopIndex = (rowStopIndex * 100) + columnStopIndex;
+
+                            onRowsRendered({
+                              startIndex,
+                              stopIndex,
+                            });
+                          }}
+                          ref={registerChild}
+                          columnWidth={({ index }) => dataForMeasure[fields[index]].width}
+                          columnCount={fields.length}
+                          height={height - 109}
+                          cellRenderer={this.cellRenderer}
+                          rowHeight={45}
+                          rowCount={1000}
+                          onScroll={onScroll}
+                          width={width}
+                        />
+                      )}
+                    </InfiniteLoader>
                   </TableContent>
                 </div>
               }
