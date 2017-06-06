@@ -78,8 +78,8 @@ export function* fetchTables() {
   }
 }
 
-function* fetchTableData({ payload: { id, tableName, isFetched, rows } }) {
-  console.log('test saga');
+function* fetchTableData({ payload: { table: { id, tableName, isFetched, rows }, startIndex, stopIndex } }) {
+  console.log('test saga', startIndex);
   if (!isFetched) {
     const query = `
       SELECT *
@@ -94,7 +94,7 @@ function* fetchTableData({ payload: { id, tableName, isFetched, rows } }) {
     const query = `
       SELECT *
       FROM ${tableName}
-      LIMIT ${rows.length}, 100
+      LIMIT ${startIndex} OFFSET ${stopIndex}
     `;
     const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
     yield fork(saveData, result);

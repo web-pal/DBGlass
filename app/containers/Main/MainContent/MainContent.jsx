@@ -39,7 +39,7 @@ type Props = {
   dataForMeasure: Object,
   currentTableName: string,
   table: any,
-  fetchTableData: (Table) => void
+  fetchTableData: (Table, number, number) => void
 };
 
 
@@ -118,13 +118,13 @@ class MainContent extends Component {
                   <TableContent>
                     <InfiniteLoader
                       rowCount={200}
-                      loadMoreRows={() => {
-                        this.props.fetchTableData(table);
-                      }}
+                      loadMoreRows={({ startIndex, stopIndex }) => new Promise(resolve =>
+                        resolve(this.props.fetchTableData(table, startIndex, stopIndex)),
+                      )}
                       isRowLoaded={({ index }) => {
-                        console.log('uuuuuuuuu');
-                        console.log(index);
-                        console.log(this.props.rows[index]);
+                        // console.log('uuuuuuuuu');
+                        // console.log(index);
+                        // console.log(this.props.rows[index]);
                         return !!rows[index];
                       }}
                     >
@@ -145,7 +145,7 @@ class MainContent extends Component {
                           height={height - 109}
                           cellRenderer={this.cellRenderer}
                           rowHeight={45}
-                          rowCount={1000}
+                          rowCount={200}
                           onScroll={onScroll}
                           width={width}
                         />

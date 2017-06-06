@@ -11,7 +11,7 @@ export type Table = {
   fieldsIds: ?FieldsIds,
   fields: ?FieldsIndexedMap,
   isFetched: ?boolean,
-  dataForMeasure: {} | dataForMeasure
+  dataForMeasure: {} | DataForMeasure
 };
 export type Tables = Array<Table>;
 
@@ -36,6 +36,6 @@ export type MeasureType = {
   width: ?number
 };
 
-export type dataForMeasure = {
+export type DataForMeasure = {
   [number | string]: MeasureType
 };
