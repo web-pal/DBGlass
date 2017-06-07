@@ -113,8 +113,8 @@ class MainContent extends Component {
                           onSectionRendered={({
                             columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex,
                           }) => {
-                            const startIndex = (rowStartIndex * 3) + columnStartIndex;
-                            const stopIndex = (rowStopIndex * 3) + columnStopIndex;
+                            const startIndex = (rowStartIndex * 1) + columnStartIndex;
+                            const stopIndex = (rowStopIndex * 1) + columnStopIndex;
 
                             onRowsRendered({
                               startIndex,

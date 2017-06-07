@@ -81,7 +81,7 @@ export function* fetchTables() {
 }
 
 function* fetchTableData({
-  payload: { table: { id, tableName, isFetched }, startIndex, stopIndex },
+  payload: { table: { id, tableName, isFetched }, startIndex },
 }) {
   let result;
   if (!isFetched) {
@@ -100,7 +100,7 @@ function* fetchTableData({
     const query = `
       SELECT *
       FROM ${tableName}
-      LIMIT ${(stopIndex - startIndex) + 100} OFFSET ${startIndex}
+      LIMIT 100 OFFSET ${startIndex}
     `;
     result = yield cps(executeAndNormalizeSelectSQL, query, { id, startIndex });
   }
