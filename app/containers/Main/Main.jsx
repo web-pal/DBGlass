@@ -81,7 +81,7 @@ class Main extends Component {
 
   fetchTable = (table) => {
     this.props.selectTable(table.id);
-    // this.props.fetchTableData(table);
+    this.props.fetchTableData(table);
   }
 
   render() {

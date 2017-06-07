@@ -25,10 +25,6 @@ import {
   Cell,
   CellText,
   CellContainer,
-  EmptyBlock,
-  EmptyBlockTitle,
-  InsertButton,
-  Icon,
 } from './styled';
 
 import Footer from './Footer/Footer';
@@ -95,7 +91,6 @@ class MainContent extends Component {
       currentTableName,
       table,
     }: Props = this.props;
-    // console.log('table', table)
     return (
       <ScrollSync>
         {({ onScroll, scrollLeft }) => (
@@ -122,16 +117,13 @@ class MainContent extends Component {
                       loadMoreRows={({ startIndex, stopIndex }) => new Promise(resolve =>
                         resolve(this.props.fetchTableData(table, startIndex, stopIndex)),
                       )}
-                      isRowLoaded={({ index }) => {
-                        // console.log('uuuuuuuuu');
-                        // console.log(index);
-                        // console.log(this.props.rows[index]);
-                        return !!rows[index];
-                      }}
+                      isRowLoaded={({ index }) => !!rows[index]}
                     >
                       {({ onRowsRendered, registerChild }) => (
                         <Grid
-                          onSectionRendered={({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }) => {
+                          onSectionRendered={({
+                            columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex,
+                          }) => {
                             const startIndex = (rowStartIndex * 3) + columnStartIndex;
                             const stopIndex = (rowStopIndex * 3) + columnStopIndex;
 

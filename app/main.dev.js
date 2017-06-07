@@ -55,7 +55,7 @@ app.on('before-quit', () => {
   }
 });
 
-ipcMain.on('executeAndNormalizeSelectSQL', (event, { connectParams, eventSign, query, id }) => {
+ipcMain.on('executeAndNormalizeSelectSQL', (event, { connectParams, eventSign, query, id, startIndex }) => {
   const pool = new pg.Pool(connectParams);
   pool.connect(() => {
     pool.query(query, [], (err, result) => {
@@ -79,7 +79,7 @@ ipcMain.on('executeAndNormalizeSelectSQL', (event, { connectParams, eventSign, q
       });
 
       const rowsIds = result.rows.map((row, index) => {
-        const rId = index.toString();
+        const rId = startIndex ? (startIndex + index).toString() : index.toString();
         rows[rId] = {
           ...row,
         };

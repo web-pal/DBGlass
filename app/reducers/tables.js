@@ -31,31 +31,27 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
     case 'tables/CLEAR_TABLES':
       return {};
     case 'tables/SET_TABLE_DATA': {
-      // let rowsIds = state[+action.payload.id].rowsIds ?
-      //   [...state[+action.payload.id].rowsIds.keys()] :
-      //   [];
-      // rowsIds = rowsIds.concat(action.payload.rowsIds);
-      let rowsIds;
-      if (state[+action.payload.id].rowsIds) {
-        rowsIds = [...state[+action.payload.id].rowsIds.keys()];
-        rowsIds = rowsIds.concat(action.payload.rowsIds);
-      }
-      else {
-        rowsIds = action.payload.rowsIds;
-      }
       return {
         ...state,
         [+action.payload.id]: {
           ...state[+action.payload.id],
-          // ...action.payload,
-          rowsIds,
+          isFetched: true,
+          rowsIds: [
+            ...state[+action.payload.id].rowsIds,
+            ...action.payload.rowsIds,
+          ],
           rows: {
             ...state[+action.payload.id].rows,
             ...action.payload.rows,
           },
+          fields: {
+            ...state[+action.payload.id].fields,
+            ...action.payload.fields,
+          },
+          fieldsIds: action.payload.fieldsIds,
         },
       };
-    };
+    }
     case 'tables/SET_DATA_FOR_MEASURE':
       return {
         ...state,

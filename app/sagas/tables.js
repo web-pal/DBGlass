@@ -1,5 +1,5 @@
 import { delay } from 'redux-saga';
-import { take, takeEvery, cps, put, fork } from 'redux-saga/effects';
+import { take, takeEvery, cps, put } from 'redux-saga/effects';
 
 import {
   fillTables as fillTablesAction,
@@ -23,12 +23,6 @@ import {
   toggleIsFetchedTables as toggleIsFetchedTablesAction,
 } from '../actions/ui';
 
-function* saveData({ dataForMeasure, data }) {
-  yield put(setDataForMeasureAction({ dataForMeasure, id: data.id }));
-  yield delay(100); // This delay needs to measure cells
-  yield put(setTableDataAction(data));
-}
-
 export function* fetchTables() {
   while (true) {
     const { payload } = yield take('tables/FETCH_REQUEST');
@@ -50,6 +44,10 @@ export function* fetchTables() {
         tableName: t.table_name,
         isFetched: false,
         dataForMeasure: {},
+        rowsIds: [],
+        rows: {},
+        fieldsIds: [],
+        fields: {},
       };
       return id;
     });
@@ -73,37 +71,40 @@ export function* fetchTables() {
         tableName: tables[tablesIds[0]].tableName,
         isFetched: false,
         dataForMeasure: {},
+        rowsIds: [],
+        rows: {},
+        fieldsIds: [],
+        fields: {},
       }));
     }
   }
 }
 
-function* fetchTableData({ payload: { table: { id, tableName, isFetched, rows }, startIndex, stopIndex } }) {
-  console.log('test saga', startIndex);
+function* fetchTableData({
+  payload: { table: { id, tableName, isFetched }, startIndex, stopIndex },
+}) {
+  let result;
   if (!isFetched) {
     const query = `
       SELECT *
       FROM ${tableName}
       LIMIT 100
     `;
-    const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
-    console.log(result);
-    // yield fork(saveData, result);
-    yield put(setDataForMeasureAction({ dataForMeasure: result.dataForMeasure, id: result.data.id }));
+    result = yield cps(executeAndNormalizeSelectSQL, query, { id, startIndex });
+    yield put(setDataForMeasureAction({
+      dataForMeasure: result.dataForMeasure,
+      id: result.data.id,
+    }));
     yield delay(100); // This delay needs to measure cells
-    yield put(setTableDataAction(result.data));
   } else {
-    console.log('isFETCHED', startIndex, stopIndex);
     const query = `
       SELECT *
       FROM ${tableName}
-      LIMIT ${stopIndex - startIndex + 100} OFFSET ${startIndex}
+      LIMIT ${(stopIndex - startIndex) + 100} OFFSET ${startIndex}
     `;
-    const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
-    console.log(result);
-    // yield fork(saveData, result);
-    yield put(setTableDataAction(result.data));
+    result = yield cps(executeAndNormalizeSelectSQL, query, { id, startIndex });
   }
+  yield put(setTableDataAction(result.data));
 }
 
 export function* fetchTableDataWatch() {
