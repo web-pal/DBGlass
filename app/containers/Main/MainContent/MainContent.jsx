@@ -25,6 +25,7 @@ import {
   Cell,
   CellText,
   CellContainer,
+  PlaceHolder,
 } from './styled';
 
 import Footer from './Footer/Footer';
@@ -33,7 +34,6 @@ type Props = {
   fields: Array<string>,
   rows: Array<Array<any>>,
   dataForMeasure: Object,
-  currentTableName: string,
   table: any,
   fetchTableData: (Table, number, number) => void
 };
@@ -42,36 +42,26 @@ type Props = {
 class MainContent extends Component {
   props: Props;
 
-  cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
-    if (!this.props.rows[rowIndex]) {
-      return (
-        <Cell
-          key={key}
-          style={{
-            ...style,
-            height: 45,
-            whiteSpace: 'nowrap',
-          }}
-        />
-      );
-    }
-    return (
-      <Cell
-        key={key}
-        style={{
-          ...style,
-          height: 45,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        <CellContainer>
-          <CellText>
+  cellRenderer = ({ columnIndex, key, rowIndex, style }) => (
+    <Cell
+      key={key}
+      style={{
+        ...style,
+        height: 45,
+        whiteSpace: 'nowrap',
+      }}
+    >
+      <CellContainer>
+        {
+          this.props.rows[rowIndex]
+          ? <CellText>
             {getTableValue(this.props.rows[rowIndex][columnIndex])}
           </CellText>
-        </CellContainer>
-      </Cell>
-    );
-  }
+          : <PlaceHolder />
+        }
+      </CellContainer>
+    </Cell>
+  );
 
   headerRenderer = ({ columnIndex, key, style }) => (
     <ColumnName
@@ -88,7 +78,6 @@ class MainContent extends Component {
       fields,
       rows,
       dataForMeasure,
-      currentTableName,
       table,
     }: Props = this.props;
     return (
