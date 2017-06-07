@@ -2,7 +2,7 @@
 import type {
   Action, IdString,
   Table, TableNormalizePayload, TableDataNormalizedPayload,
-  dataForMeasure,
+  DataForMeasure,
 } from '../types';
 
 export const fetchTablesRequest = (payload: ?IdString): Action =>
@@ -28,7 +28,7 @@ export const setTableNameSearchKey = (payload: ?IdString): Action =>
   });
 
 export const fetchTableData = (
-  table: any, startIndex: ?number, stopIndex: ?number, resolve: any,
+  table: Table, startIndex: ?number, stopIndex: ?number, resolve: ?Function,
 ): Action =>
   ({
     type: 'tables/FETCH_TABLE_DATA_REQUEST',
@@ -100,7 +100,7 @@ export const truncateTable = (payload: IdString): Action =>
   });
 
 export const setDataForMeasure = (payload: {
-  dataForMeasure: dataForMeasure, id: IdString
+  dataForMeasure: DataForMeasure, id: IdString
 }): Action =>
   ({
     type: 'tables/SET_DATA_FOR_MEASURE',

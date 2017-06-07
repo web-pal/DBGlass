@@ -42,28 +42,25 @@ type Props = {
 class MainContent extends Component {
   props: Props;
 
-  cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
-    return (
-      <Cell
-        key={key}
-        style={{
-          ...style,
-          height: 45,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        <CellContainer>
-          {
-            this.props.rows[rowIndex]
-            ? <CellText>
-              {getTableValue(this.props.rows[rowIndex][this.props.fields[columnIndex]])}
-            </CellText>
-            : <PlaceHolder />
-          }
-        </CellContainer>
-      </Cell>
-    );
-  };
+  cellRenderer = ({ columnIndex, key, rowIndex, style }) =>
+    <Cell
+      key={key}
+      style={{
+        ...style,
+        height: 45,
+        whiteSpace: 'nowrap',
+      }}
+    >
+      <CellContainer>
+        {
+          this.props.rows[rowIndex]
+          ? <CellText>
+            {getTableValue(this.props.rows[rowIndex][this.props.fields[columnIndex]])}
+          </CellText>
+          : <PlaceHolder />
+        }
+      </CellContainer>
+    </Cell>;
 
   headerRenderer = ({ columnIndex, key, style }) => (
     <ColumnName
@@ -104,7 +101,7 @@ class MainContent extends Component {
                   </TableHeader>
                   <TableContent>
                     <InfiniteLoader
-                      rowCount={3000}
+                      rowCount={1000 * fields.length}
                       loadMoreRows={({ startIndex, stopIndex }) => new Promise(resolve => {
                         const start = Math.ceil(startIndex / fields.length);
                         const stop = Math.ceil(stopIndex / fields.length);
