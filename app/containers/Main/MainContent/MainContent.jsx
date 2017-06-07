@@ -21,6 +21,7 @@ import {
   EmptyBlockTitle,
   InsertButton,
   Icon,
+  PlaceHolder,
 } from './styled';
 
 import Footer from './Footer/Footer';
@@ -46,9 +47,13 @@ class MainContent extends Component {
       }}
     >
       <CellContainer>
-        <CellText>
-          {getTableValue(this.props.rows[rowIndex][columnIndex])}
-        </CellText>
+        {
+          this.props.rows[rowIndex]
+          ? <CellText>
+            {getTableValue(this.props.rows[rowIndex][columnIndex])}
+          </CellText>
+          : <PlaceHolder />
+        }
       </CellContainer>
     </Cell>
   );

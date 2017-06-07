@@ -71,6 +71,13 @@ export const CellText = styled.span`
   color: #515151;
 `;
 
+export const PlaceHolder = styled.div`
+  height: 10px;
+  width: 80%;
+  background: #989898;
+  margin: 0 auto;
+`;
+
 export const CellContainer = styled.div`
   padding: 14px 10px;
   border: 1px solid rgba(0, 0, 0, 0.047);
