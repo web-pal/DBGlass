@@ -60,7 +60,6 @@ ipcMain.on('executeAndNormalizeSelectSQL', (event, { connectParams, eventSign, q
   pool.connect(() => {
     pool.query(query, [], (err, result) => {
       pg.end();
-      console.log(err);
       if (!err) {
         const fields = {};
         const rows = {};

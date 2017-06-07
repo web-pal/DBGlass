@@ -35,7 +35,7 @@ type Props = {
   rows: { [number]: any },
   dataForMeasure: Object,
   table: any,
-  fetchTableData: (Table, number, number) => void
+  fetchTableData: (Table, number, number, Function) => void
 };
 
 
@@ -104,13 +104,13 @@ class MainContent extends Component {
                   </TableHeader>
                   <TableContent>
                     <InfiniteLoader
-                      rowCount={1000}
+                      rowCount={3000}
                       loadMoreRows={({ startIndex, stopIndex }) => new Promise(resolve => {
-                        this.props.fetchTableData(table, startIndex, stopIndex, resolve);
+                        const start = Math.ceil(startIndex / fields.length);
+                        const stop = Math.ceil(stopIndex / fields.length);
+                        this.props.fetchTableData(table, start, stop, resolve);
                       })}
-                      isRowLoaded={({ index }) => {
-                        return !!rows[index];
-                      }}
+                      isRowLoaded={({ index }) => !!rows[index]}
                       threshold={1}
                     >
                       {({ onRowsRendered, registerChild }) => (
