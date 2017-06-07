@@ -27,13 +27,16 @@ export const setTableNameSearchKey = (payload: ?IdString): Action =>
     payload,
   });
 
-export const fetchTableData = (table: any, startIndex: ?number, stopIndex: ?number): Action =>
+export const fetchTableData = (
+  table: any, startIndex: ?number, stopIndex: ?number, resolve: any,
+): Action =>
   ({
     type: 'tables/FETCH_TABLE_DATA_REQUEST',
     payload: {
       table,
       startIndex,
       stopIndex,
+      resolve,
     },
   });
 

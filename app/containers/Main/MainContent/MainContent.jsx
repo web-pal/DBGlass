@@ -11,7 +11,7 @@ import * as tablesActions from '../../../actions/tables';
 
 import {
   getTableFields,
-  getTableRows,
+  getCurrentTableRows,
   getDataForMeasure,
   getCurrentTableName,
   getCurrentTable,
@@ -32,7 +32,7 @@ import Footer from './Footer/Footer';
 
 type Props = {
   fields: Array<string>,
-  rows: Array<Array<any>>,
+  rows: { [number]: any },
   dataForMeasure: Object,
   table: any,
   fetchTableData: (Table, number, number) => void
@@ -42,26 +42,28 @@ type Props = {
 class MainContent extends Component {
   props: Props;
 
-  cellRenderer = ({ columnIndex, key, rowIndex, style }) => (
-    <Cell
-      key={key}
-      style={{
-        ...style,
-        height: 45,
-        whiteSpace: 'nowrap',
-      }}
-    >
-      <CellContainer>
-        {
-          this.props.rows[rowIndex]
-          ? <CellText>
-            {getTableValue(this.props.rows[rowIndex][columnIndex])}
-          </CellText>
-          : <PlaceHolder />
-        }
-      </CellContainer>
-    </Cell>
-  );
+  cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
+    return (
+      <Cell
+        key={key}
+        style={{
+          ...style,
+          height: 45,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        <CellContainer>
+          {
+            this.props.rows[rowIndex]
+            ? <CellText>
+              {getTableValue(this.props.rows[rowIndex][this.props.fields[columnIndex]])}
+            </CellText>
+            : <PlaceHolder />
+          }
+        </CellContainer>
+      </Cell>
+    );
+  };
 
   headerRenderer = ({ columnIndex, key, style }) => (
     <ColumnName
@@ -103,19 +105,21 @@ class MainContent extends Component {
                   <TableContent>
                     <InfiniteLoader
                       rowCount={1000}
-                      loadMoreRows={({ startIndex, stopIndex }) => new Promise(resolve =>
-                        resolve(this.props.fetchTableData(table, startIndex, stopIndex)),
-                      )}
-                      isRowLoaded={({ index }) => !!rows[index]}
+                      loadMoreRows={({ startIndex, stopIndex }) => new Promise(resolve => {
+                        this.props.fetchTableData(table, startIndex, stopIndex, resolve);
+                      })}
+                      isRowLoaded={({ index }) => {
+                        return !!rows[index];
+                      }}
+                      threshold={1}
                     >
                       {({ onRowsRendered, registerChild }) => (
                         <Grid
                           onSectionRendered={({
                             columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex,
                           }) => {
-                            const startIndex = (rowStartIndex * fields.length) + columnStartIndex;
-                            const stopIndex = (rowStopIndex * fields.length) + columnStopIndex;
-
+                            const startIndex = rowStartIndex * fields.length;
+                            const stopIndex = rowStopIndex * fields.length;
                             onRowsRendered({
                               startIndex,
                               stopIndex,
@@ -157,7 +161,7 @@ function mapStateToProps(state: State) {
   return {
     table: getCurrentTable({ tables: state.tables }),
     fields: getTableFields({ tables: state.tables }),
-    rows: getTableRows({ tables: state.tables }),
+    rows: getCurrentTableRows({ tables: state.tables }),
     dataForMeasure: getDataForMeasure({ tables: state.tables }),
     currentTableName: getCurrentTableName({ tables: state.tables }),
   };

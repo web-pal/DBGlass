@@ -60,49 +60,52 @@ ipcMain.on('executeAndNormalizeSelectSQL', (event, { connectParams, eventSign, q
   pool.connect(() => {
     pool.query(query, [], (err, result) => {
       pg.end();
-      const fields = {};
-      const rows = {};
-      const dataForMeasure = {};
-      const fieldsIds = result.fields.map((field, index) => {
-        const fId = index.toString();
-        fields[fId] = {
-          fieldName: field.name,
-        };
-        dataForMeasure[field.name] = {
-          value: field.name.toString(),
-          name: field.name.toString(),
-          isMeasured: false,
-          width: null,
-        };
-        return fId;
-      });
-      const rowsIds = result.rows.map((row, index) => {
-        const rId = startIndex ? (startIndex + index).toString() : index.toString();
-        rows[rId] = {
-          ...row,
-        };
-        Object.keys(row).forEach(key => {
-          const value = row[key] ? row[key].toString() : '';
-          if (dataForMeasure[key].value.length < value.length) {
-            dataForMeasure[key].value = row[key].toString();
-            dataForMeasure[key].isMeasured = false;
-          }
+      console.log(err);
+      if (!err) {
+        const fields = {};
+        const rows = {};
+        const dataForMeasure = {};
+        const fieldsIds = result.fields.map((field, index) => {
+          const fId = index.toString();
+          fields[fId] = {
+            fieldName: field.name,
+          };
+          dataForMeasure[field.name] = {
+            value: field.name.toString(),
+            name: field.name.toString(),
+            isMeasured: false,
+            width: null,
+          };
+          return fId;
         });
-        return rId;
-      });
+        const rowsIds = result.rows.map((row, index) => {
+          const rId = startIndex ? (startIndex + index).toString() : index.toString();
+          rows[rId] = {
+            ...row,
+          };
+          Object.keys(row).forEach(key => {
+            const value = row[key] ? row[key].toString() : '';
+            if (dataForMeasure[key].value.length < value.length) {
+              dataForMeasure[key].value = row[key].toString();
+              dataForMeasure[key].isMeasured = false;
+            }
+          });
+          return rId;
+        });
 
-      if (mainWindow) {
-        mainWindow.webContents.send(`executeAndNormalizeSelectSQLResponse-${eventSign}`, {
-          dataForMeasure,
-          data: {
-            id,
-            rowsIds,
-            rows,
-            fieldsIds,
-            fields,
-            isFetched: true,
-          },
-        });
+        if (mainWindow) {
+          mainWindow.webContents.send(`executeAndNormalizeSelectSQLResponse-${eventSign}`, {
+            dataForMeasure,
+            data: {
+              id,
+              rowsIds,
+              rows,
+              fieldsIds,
+              fields,
+              isFetched: true,
+            },
+          });
+        }
       }
     });
   });
