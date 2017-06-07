@@ -30,14 +30,32 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
       };
     case 'tables/CLEAR_TABLES':
       return {};
-    case 'tables/SET_TABLE_DATA':
+    case 'tables/SET_TABLE_DATA': {
+      // let rowsIds = state[+action.payload.id].rowsIds ?
+      //   [...state[+action.payload.id].rowsIds.keys()] :
+      //   [];
+      // rowsIds = rowsIds.concat(action.payload.rowsIds);
+      let rowsIds;
+      if (state[+action.payload.id].rowsIds) {
+        rowsIds = [...state[+action.payload.id].rowsIds.keys()];
+        rowsIds = rowsIds.concat(action.payload.rowsIds);
+      }
+      else {
+        rowsIds = action.payload.rowsIds;
+      }
       return {
         ...state,
         [+action.payload.id]: {
           ...state[+action.payload.id],
-          ...action.payload,
+          // ...action.payload,
+          rowsIds,
+          rows: {
+            ...state[+action.payload.id].rows,
+            ...action.payload.rows,
+          },
         },
       };
+    };
     case 'tables/SET_DATA_FOR_MEASURE':
       return {
         ...state,

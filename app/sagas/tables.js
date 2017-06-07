@@ -88,16 +88,21 @@ function* fetchTableData({ payload: { table: { id, tableName, isFetched, rows },
     `;
     const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
     console.log(result);
-    yield fork(saveData, result);
+    // yield fork(saveData, result);
+    yield put(setDataForMeasureAction({ dataForMeasure: result.dataForMeasure, id: result.data.id }));
+    yield delay(100); // This delay needs to measure cells
+    yield put(setTableDataAction(result.data));
   } else {
-    console.log('isFETCHED');
+    console.log('isFETCHED', startIndex, stopIndex);
     const query = `
       SELECT *
       FROM ${tableName}
-      LIMIT ${startIndex} OFFSET ${stopIndex}
+      LIMIT ${stopIndex - startIndex + 100} OFFSET ${startIndex}
     `;
     const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
-    yield fork(saveData, result);
+    console.log(result);
+    // yield fork(saveData, result);
+    yield put(setTableDataAction(result.data));
   }
 }
 

@@ -95,6 +95,7 @@ class MainContent extends Component {
       currentTableName,
       table,
     }: Props = this.props;
+    // console.log('table', table)
     return (
       <ScrollSync>
         {({ onScroll, scrollLeft }) => (
@@ -117,7 +118,7 @@ class MainContent extends Component {
                   </TableHeader>
                   <TableContent>
                     <InfiniteLoader
-                      rowCount={200}
+                      rowCount={1000}
                       loadMoreRows={({ startIndex, stopIndex }) => new Promise(resolve =>
                         resolve(this.props.fetchTableData(table, startIndex, stopIndex)),
                       )}
@@ -131,8 +132,8 @@ class MainContent extends Component {
                       {({ onRowsRendered, registerChild }) => (
                         <Grid
                           onSectionRendered={({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }) => {
-                            const startIndex = (rowStartIndex * 200) + columnStartIndex;
-                            const stopIndex = (rowStopIndex * 200) + columnStopIndex;
+                            const startIndex = (rowStartIndex * 3) + columnStartIndex;
+                            const stopIndex = (rowStopIndex * 3) + columnStopIndex;
 
                             onRowsRendered({
                               startIndex,
@@ -145,7 +146,7 @@ class MainContent extends Component {
                           height={height - 109}
                           cellRenderer={this.cellRenderer}
                           rowHeight={45}
-                          rowCount={200}
+                          rowCount={1000}
                           onScroll={onScroll}
                           width={width}
                         />

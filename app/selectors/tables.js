@@ -95,5 +95,5 @@ export const getCurrentTableName = createSelector(
 
 export const getCurrentTable = createSelector(
   [getTablesByIds, getTablesMap, getTableId],
-  (ids, map, currentId) => ids.map(id => map[id]).filter(item => item.id === currentId),
+  (ids, map, currentId) => ids.map(id => map[id]).filter(item => item.id === currentId)[0],
 );
