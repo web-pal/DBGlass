@@ -63,7 +63,6 @@ ipcMain.on('executeAndNormalizeSelectSQL', (event, { connectParams, eventSign, q
       const fields = {};
       const rows = {};
       const dataForMeasure = {};
-
       const fieldsIds = result.fields.map((field, index) => {
         const fId = index.toString();
         fields[fId] = {
@@ -77,7 +76,6 @@ ipcMain.on('executeAndNormalizeSelectSQL', (event, { connectParams, eventSign, q
         };
         return fId;
       });
-
       const rowsIds = result.rows.map((row, index) => {
         const rId = startIndex ? (startIndex + index).toString() : index.toString();
         rows[rId] = {
