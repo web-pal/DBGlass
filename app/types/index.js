@@ -8,7 +8,7 @@ import type {
 import type { ContextMenuState } from './contextMenu';
 import type { ModalState } from './modal';
 
-import type { TableNormalizePayload, TablesIndexedMap, TablesIds, TablesMetaState, Table, dataForMeasure } from './tables';
+import type { TableNormalizePayload, TablesIndexedMap, TablesIds, TablesMetaState, Table, DataForMeasure } from './tables';
 import type { TableDataNormalizedPayload } from './currentTable';
 import type { uiState } from './ui';
 
@@ -35,7 +35,7 @@ export type Action =
 | { type: 'tables/FILL', +payload: TableNormalizePayload }
 | { type: 'tables/CLEAR_TABLES' }
 | { type: 'tables/SET_TABLENAME_SEARCH_KEY', +payload: ?IdString }
-| { type: 'tables/FETCH_TABLE_DATA_REQUEST', +payload: Table }
+| { type: 'tables/FETCH_TABLE_DATA_REQUEST', +table: Table, +startIndex: ?number, +stopIndex: ?number, +resolve: ?Function }
 | { type: 'tables/SELECT_TABLE', +payload: string }
 | { type: 'tables/SET_TABLE_DATA', +payload: TableDataNormalizedPayload }
 | { type: 'tables/RESET_SELECT_TABLE' }
@@ -43,7 +43,7 @@ export type Action =
 | { type: 'tables/DROP_TABLE', +payload: IdString }
 | { type: 'tables/TRUNCATE_TABLE_REQUEST', +payload: Object }
 | { type: 'tables/TRUNCATE_TABLE', +payload: IdString }
-| { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: dataForMeasure, id: IdString } }
+| { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: DataForMeasure, id: IdString } }
 | { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableId: IdString, width: number, key: string } }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }

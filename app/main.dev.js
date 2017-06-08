@@ -7,6 +7,7 @@ import MenuBuilder from './menu';
 
 let mainWindow;
 let tray;
+let pool;
 let shouldQuit = process.platform !== 'darwin';
 const pg = require('pg');
 
@@ -53,17 +54,16 @@ app.on('before-quit', () => {
   if (process.platform === 'darwin') {
     shouldQuit = true;
   }
+  pg.end();
+  pool = null;
 });
 
-ipcMain.on('executeAndNormalizeSelectSQL', (event, { connectParams, eventSign, query, id }) => {
-  const pool = new pg.Pool(connectParams);
-  pool.connect(() => {
+function executeAndNormalizeSelectSQL({ query, startIndex, id, eventSign }) {
+  if (pool) {
     pool.query(query, [], (err, result) => {
-      pg.end();
       const fields = {};
       const rows = {};
       const dataForMeasure = {};
-
       const fieldsIds = result.fields.map((field, index) => {
         const fId = index.toString();
         fields[fId] = {
@@ -77,9 +77,8 @@ ipcMain.on('executeAndNormalizeSelectSQL', (event, { connectParams, eventSign, q
         };
         return fId;
       });
-
       const rowsIds = result.rows.map((row, index) => {
-        const rId = index.toString();
+        const rId = startIndex ? (startIndex + index).toString() : index.toString();
         rows[rId] = {
           ...row,
         };
@@ -107,7 +106,19 @@ ipcMain.on('executeAndNormalizeSelectSQL', (event, { connectParams, eventSign, q
         });
       }
     });
-  });
+  }
+}
+
+
+ipcMain.on('executeAndNormalizeSelectSQL', (event, { connectParams, eventSign, query, id, startIndex }) => {
+  if (!pool) {
+    pool = new pg.Pool(connectParams);
+    pool.connect(() => {
+      executeAndNormalizeSelectSQL({ query, startIndex, id, eventSign });
+    });
+  } else {
+    executeAndNormalizeSelectSQL({ query, startIndex, id, eventSign });
+  }
 });
 
 function createWindow(callback) {

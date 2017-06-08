@@ -33,7 +33,7 @@ export const getFiltredTables = createSelector(
   },
 );
 
-export const getCurrentTableId = ({ tables }) => tables.meta.currentTableId;
+export const getTableId = ({ tables }) => tables.meta.currentTableId;
 export const getCurrentTableFieldsIds = ({ tables }) =>
   tables.byId[tables.meta.currentTableId].fieldsIds;
 export const getCurrentTableFields = ({ tables }) =>
@@ -49,21 +49,8 @@ export const getCurrentTableRowsIds = ({ tables }) =>
 export const getCurrentTableRows = ({ tables }) =>
   tables.byId[tables.meta.currentTableId].rows;
 
-export const getTableRows = createSelector(
-  [getCurrentTableRowsIds, getCurrentTableRows, getCurrentTableFields],
-  (ids, map, fields) => {
-    if (!ids) {
-      return [];
-    }
-    return ids.map(id => {
-      const currentRow = map[id];
-      return Object.values(fields).map(field => currentRow[field.fieldName]);
-    });
-  },
-);
-
 export const getDataForMeasure = createSelector(
-  [getCurrentTableId, getTablesMap],
+  [getTableId, getTablesMap],
   (id, map) => {
     if (id) {
       const data = Object.values(map).filter(item => item.id === id)[0].dataForMeasure;
@@ -88,12 +75,12 @@ export const getDataForMeasureCells = createSelector(
   },
 );
 
-export const getCurrentTable = createSelector(
-  ({ tables }) => tables.meta.currentTableId,
-  (currentTableId) => currentTableId || '1',
+export const getCurrentTableName = createSelector(
+  [getTableId, getTablesMap],
+  (id, map) => Object.values(map).filter(item => item.id === id)[0].tableName,
 );
 
-export const getCurrentTableName = createSelector(
-  [getCurrentTableId, getTablesMap],
-  (id, map) => Object.values(map).filter(item => item.id === id)[0].tableName,
+export const getCurrentTable = createSelector(
+  [getTablesByIds, getTablesMap, getTableId],
+  (ids, map, currentId) => ids.map(id => map[id]).filter(item => item.id === currentId)[0],
 );
