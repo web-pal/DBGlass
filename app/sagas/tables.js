@@ -81,10 +81,10 @@ export function* fetchTables() {
 }
 
 function* fetchTableData({
-  payload: { table: { id, tableName, isFetched }, startIndex, stopIndex, resolve },
+  payload: { table: { id, tableName }, startIndex, resolve },
 }) {
   let result;
-  if (!isFetched) {
+  if (!startIndex) {
     const query = `
       SELECT *
       FROM ${tableName}
@@ -100,14 +100,14 @@ function* fetchTableData({
     const query = `
       SELECT *
       FROM ${tableName}
-      LIMIT ${stopIndex - startIndex} OFFSET ${startIndex}
+      LIMIT 100 OFFSET ${startIndex}
     `;
     result = yield cps(executeAndNormalizeSelectSQL, query, { id, startIndex });
   }
+  yield put(setTableDataAction(result.data));
   if (resolve) {
     resolve();
   }
-  yield put(setTableDataAction(result.data));
 }
 
 export function* fetchTableDataWatch() {

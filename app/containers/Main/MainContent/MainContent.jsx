@@ -42,6 +42,12 @@ type Props = {
 class MainContent extends Component {
   props: Props;
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.currentTableName !== nextProps.currentTableName) {
+      this.grid.scrollToCell({ columnIndex: 0, rowIndex: 0 });
+    }
+  }
+
   cellRenderer = ({ columnIndex, key, rowIndex, style }) =>
     <Cell
       key={key}
@@ -102,10 +108,9 @@ class MainContent extends Component {
                   <TableContent>
                     <InfiniteLoader
                       rowCount={1000 * fields.length}
-                      loadMoreRows={({ startIndex, stopIndex }) => new Promise(resolve => {
+                      loadMoreRows={({ startIndex }) => new Promise(resolve => {
                         const start = Math.ceil(startIndex / fields.length);
-                        const stop = Math.ceil(stopIndex / fields.length);
-                        this.props.fetchTableData(table, start, stop, resolve);
+                        this.props.fetchTableData(table, start, resolve);
                       })}
                       isRowLoaded={({ index }) => !!rows[Math.ceil(index / fields.length)]}
                       threshold={1}
@@ -113,7 +118,7 @@ class MainContent extends Component {
                       {({ onRowsRendered, registerChild }) => (
                         <Grid
                           onSectionRendered={({
-                            columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex,
+                            rowStartIndex, rowStopIndex,
                           }) => {
                             const startIndex = rowStartIndex * fields.length;
                             const stopIndex = rowStopIndex * fields.length;
@@ -122,7 +127,10 @@ class MainContent extends Component {
                               stopIndex,
                             });
                           }}
-                          ref={registerChild}
+                          ref={(grid) => {
+                            this.grid = grid;
+                            registerChild(grid);
+                          }}
                           columnWidth={({ index }) => dataForMeasure[fields[index]].width}
                           columnCount={fields.length}
                           height={height - 109}
@@ -130,6 +138,7 @@ class MainContent extends Component {
                           rowHeight={45}
                           rowCount={1000}
                           onScroll={onScroll}
+                          scrollToAlignment="start"
                           width={width}
                         />
                       )}
