@@ -45,6 +45,8 @@ export type Action =
 | { type: 'tables/TRUNCATE_TABLE', +payload: IdString }
 | { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: DataForMeasure, id: IdString } }
 | { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableId: IdString, width: number, key: string } }
+| { type: 'tables/GET_TABLE_SCHEMA', +payload: Table }
+| { type: 'tables/SET_TABLE_SCHEMA', +payload: {id: IdString, structureTable: {} } }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }

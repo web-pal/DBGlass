@@ -8,7 +8,7 @@ import * as uiActions from '../../actions/ui';
 import * as tablesActions from '../../actions/tables';
 import * as favoritesActions from '../../actions/favorites';
 import * as contextMenuActions from '../../actions/contextMenu';
-import type { Dispatch, Tables, State, IdString } from '../../types';
+import type { Dispatch, Tables, State, IdString, Table } from '../../types';
 import { getFiltredTables, getTablesQuantity } from '../../selectors/tables';
 
 import { getCurrentDBName } from '../../selectors/tableName';
@@ -23,7 +23,7 @@ import {
   TablesSidebar,
   TablesContent,
   TablesContainer,
-  Table,
+  TableContent,
   TableIcon,
   MenuSwitcher,
   Pin,
@@ -49,6 +49,7 @@ type Props = {
   toggleMenu: (boolean) => void,
   fetchTableData: (Table) => void,
   selectTable: (?string) => void,
+  getTableSchema: (Table) => void,
   tables: Tables,
   currentDBName: string,
   isMenuOpen: boolean,
@@ -82,6 +83,7 @@ class Main extends Component {
   fetchTable = (table) => {
     this.props.selectTable(table.id);
     if (!table.isFetched) {
+      this.props.getTableSchema(table);
       this.props.fetchTableData(table);
     }
   }
@@ -119,7 +121,7 @@ class Main extends Component {
             </LoaderContainer>
             <TablesContainer display={isTablesFetched}>
               {tables.map(table =>
-                <Table
+                <TableContent
                   key={table.id}
                   onContextMenu={() => this.handleRightClick(table.id, table.tableName)}
                   active={currentTable === table.id}
@@ -129,7 +131,7 @@ class Main extends Component {
                   <span title={table.tableName}>
                     {table.tableName}
                   </span>
-                </Table>,
+                </TableContent>,
               )}
             </TablesContainer>
           </TablesContent>
