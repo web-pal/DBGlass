@@ -34,13 +34,15 @@ type Props = {
   fields: Array<string>,
   rows: { [number]: any },
   dataForMeasure: Object,
-  table: any,
-  fetchTableData: (Table, number, number, Function) => void
+  table: Table,
+  fetchTableData: (Table, number, Function) => void,
+  currentTableName: string
 };
 
 
 class MainContent extends Component {
   props: Props;
+  grid: { scrollToCell: Function };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.currentTableName !== nextProps.currentTableName) {
