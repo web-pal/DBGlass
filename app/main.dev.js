@@ -58,7 +58,7 @@ app.on('before-quit', () => {
   pool = null;
 });
 
-function executeAndNormalizeSelectSQL({ query, startIndex, id, eventSign }) {
+function executeAndNormalizeSelectSQL({ query, startIndex, eventSign }) {
   if (pool) {
     pool.query(query, [], (err, result) => {
       const fields = {};
@@ -96,7 +96,6 @@ function executeAndNormalizeSelectSQL({ query, startIndex, id, eventSign }) {
         mainWindow.webContents.send(`executeAndNormalizeSelectSQLResponse-${eventSign}`, {
           dataForMeasure,
           data: {
-            id,
             rowsIds,
             rows,
             fieldsIds,

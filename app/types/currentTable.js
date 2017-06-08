@@ -13,7 +13,6 @@ export type FieldsIndexedMap = {
 };
 
 export type TableDataNormalizedPayload = {
-  id: IdString,
   rowsIds: RowsIds,
   rows: RowsIndexedMap,
   fieldsIds: FieldsIds,

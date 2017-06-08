@@ -9,10 +9,10 @@ import * as contextMenuActions from '../../actions/contextMenu';
 import * as modalActions from '../../actions/modal';
 import { getValuesForModal } from './utils';
 
-import type { Dispatch, State, ContextMenuMetaState } from '../../types';
+import type { Dispatch, State, ContextMenuState } from '../../types';
 
 type Props = {
-  contextMenu: ContextMenuMetaState,
+  contextMenu: ContextMenuState,
   toggleModal: () => void
 };
 
@@ -26,7 +26,7 @@ class ContextMenu extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.contextMenu.elementId) {
+    if (nextProps.contextMenu.elementName) {
       this.popup(nextProps.contextMenu.elementType);
     }
   }

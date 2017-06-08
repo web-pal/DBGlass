@@ -32,8 +32,8 @@ type Props = {
   truncateTableRequest: (string, ?Object, string) => void,
   modal: Object,
   currentValues: ?Object,
-  selectedTableId: ?string,
-  currentTableId: ?string
+  selectedTableName: ?string,
+  currentTableName: ?string
 };
 
 class ConfirmationModal extends Component {
@@ -43,8 +43,8 @@ class ConfirmationModal extends Component {
     const {
       dropTableRequest,
       currentValues,
-      selectedTableId,
-      currentTableId,
+      selectedTableName,
+      currentTableName,
       truncateTableRequest,
       modal: {
         values: {
@@ -54,9 +54,9 @@ class ConfirmationModal extends Component {
       },
     } = this.props;
     if (actionType === 'drop') {
-      dropTableRequest(elementName, currentValues, selectedTableId, currentTableId);
+      dropTableRequest(elementName, currentValues, selectedTableName, currentTableName);
     } else {
-      truncateTableRequest(elementName, currentValues, selectedTableId);
+      truncateTableRequest(elementName, currentValues, selectedTableName);
     }
   }
   render() {
@@ -151,8 +151,8 @@ function mapStateToProps(state: State) {
   return {
     currentValues: getFormValues('ConfirmationModal')(state),
     modal: state.modal,
-    selectedTableId: state.contextMenu.elementId,
-    currentTableId: state.tables.meta.currentTableId,
+    selectedTableName: state.contextMenu.elementName,
+    currentTableName: state.tables.meta.currentTableName,
   };
 }
 

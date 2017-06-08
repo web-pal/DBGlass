@@ -13,7 +13,6 @@ import {
   getTableFields,
   getCurrentTableRows,
   getDataForMeasure,
-  getCurrentTableName,
   getCurrentTable,
 } from '../../../selectors/tables';
 
@@ -171,7 +170,7 @@ function mapStateToProps(state: State) {
     fields: getTableFields({ tables: state.tables }),
     rows: getCurrentTableRows({ tables: state.tables }),
     dataForMeasure: getDataForMeasure({ tables: state.tables }),
-    currentTableName: getCurrentTableName({ tables: state.tables }),
+    currentTableName: state.tables.meta.currentTableName,
   };
 }
 

@@ -37,13 +37,11 @@ export function* fetchTables() {
     `;
 
     const result = yield cps(executeSQL, query, []);
-    const tablesIds = [];
+    const tablesNames = [];
     const tables = {};
-    result.rows.map((t, i) => {
-      const id = (i + 1).toString();
-      tablesIds.push(id);
-      tables[id] = {
-        id,
+    result.rows.forEach(t => {
+      tablesNames.push(t.table_name);
+      tables[t.table_name] = {
         tableName: t.table_name,
         isFetched: false,
         dataForMeasure: {},
@@ -52,10 +50,9 @@ export function* fetchTables() {
         fieldsIds: [],
         fields: {},
       };
-      return id;
     });
     yield put(fillTablesAction({
-      ids: tablesIds,
+      tablesNames,
       map: tables,
     }));
 
@@ -63,14 +60,13 @@ export function* fetchTables() {
 
     if (payload) {
       yield put(addFavoriteTablesQuantity({
-        currentFavoriteId: payload, quantity: tablesIds.length,
+        currentFavoriteId: payload, quantity: tablesNames.length,
       }));
     }
 
-    if (tablesIds.length) {
+    if (tablesNames.length) {
       const tableData = {
-        id: tables[tablesIds[0]].id,
-        tableName: tables[tablesIds[0]].tableName,
+        tableName: tablesNames[0],
         isFetched: false,
         dataForMeasure: {},
         rowsIds: [],
@@ -79,7 +75,7 @@ export function* fetchTables() {
         fields: {},
         structureTable: {},
       };
-      yield put(selectTableAction(tables[tablesIds[0]].id));
+      yield put(selectTableAction(tablesNames[0]));
       yield put(fetchTableDataAction(tableData));
 
       yield put(getTableSchemaAction(tableData));
@@ -89,7 +85,7 @@ export function* fetchTables() {
 }
 
 function* fetchTableData({
-  payload: { table: { id, tableName }, startIndex, resolve },
+  payload: { table: { tableName }, startIndex, resolve },
 }) {
   let result;
   if (!startIndex) {
@@ -98,11 +94,13 @@ function* fetchTableData({
       FROM ${tableName}
       LIMIT 100
     `;
-    result = yield cps(executeAndNormalizeSelectSQL, query, { id, startIndex });
+    result = yield cps(executeAndNormalizeSelectSQL, query, {});
+    console.log('result', result.dataForMeasure)
     yield put(setDataForMeasureAction({
       dataForMeasure: result.dataForMeasure,
-      id: result.data.id,
+      tableName,
     }));
+    console.log(333)
     yield delay(100); // This delay needs to measure cells
   } else {
     const query = `
@@ -110,8 +108,9 @@ function* fetchTableData({
       FROM ${tableName}
       LIMIT 100 OFFSET ${startIndex}
     `;
-    result = yield cps(executeAndNormalizeSelectSQL, query, { id, startIndex });
+    result = yield cps(executeAndNormalizeSelectSQL, query, { startIndex });
   }
+  console.log('result333', result)
   yield put(setTableDataAction(result.data));
   if (resolve) {
     resolve();
@@ -127,13 +126,13 @@ export function* dropTable({
     tableName,
     selectedTableId,
     parameters,
-    currentTableId,
+    currentTableName,
   },
 }) {
   const query = `DROP TABLE IF EXISTS "public"."${tableName}" ${parameters ? (parameters.cascade && 'CASCADE') : ''}`;
   try {
     yield cps(executeSQL, query, []);
-    if (currentTableId === selectedTableId) yield put(resetSelectTableAction());
+    if (currentTableName === selectedTableId) yield put(resetSelectTableAction());
     yield put(dropTableAction(selectedTableId));
     yield put(hideModalAction());
   } catch (error) {

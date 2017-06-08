@@ -11,7 +11,7 @@ export const fetchTablesRequest = (payload: ?IdString): Action =>
     payload,
   });
 
-export const fillTables = (payload: TableNormalizePayload): Action =>
+export const fillTables = (payload: any): Action =>
   ({
     type: 'tables/FILL',
     payload,
@@ -60,7 +60,7 @@ export const dropTableRequest = (
   tableName: IdString,
   parameters: ?Object,
   selectedTableId: IdString,
-  currentTableId: ?IdString,
+  currentTableName: ?IdString,
   ): Action =>
   ({
     type: 'tables/DROP_TABLE_REQUEST',
@@ -68,7 +68,7 @@ export const dropTableRequest = (
       tableName,
       parameters,
       selectedTableId,
-      currentTableId,
+      currentTableName,
     },
   });
 
@@ -99,7 +99,7 @@ export const truncateTable = (payload: IdString): Action =>
   });
 
 export const setDataForMeasure = (payload: {
-  dataForMeasure: DataForMeasure, id: IdString
+  dataForMeasure: DataForMeasure, tableName: IdString
 }): Action =>
   ({
     type: 'tables/SET_DATA_FOR_MEASURE',
@@ -107,7 +107,7 @@ export const setDataForMeasure = (payload: {
   });
 
 export const setMeasureWidth = (payload: {
-  tableId: IdString, width: number, key: string
+  tableName: IdString, width: number, key: string
 }): Action =>
   ({
     type: 'tables/SET_MEASURE_WIDTH',
@@ -120,7 +120,7 @@ export const getTableSchema = (payload: Table): Action =>
     payload,
   });
 
-export const setTableSchema = (payload: {id: IdString, structureTable: {}}): Action =>
+export const setTableSchema = (payload: {tableName: IdString, structureTable: {}}): Action =>
   ({
     type: 'tables/SET_TABLE_SCHEMA',
     payload,

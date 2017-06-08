@@ -1,15 +1,11 @@
 // @flow
-import type { Action, IdString } from '../types';
+import type { Action } from '../types';
 
-export const toggleContextMenu = (
-  elementType: string,
-  elementId: ?IdString,
-  elementName: string): Action =>
+export const toggleContextMenu = (elementType: string, elementName: string): Action =>
   ({
     type: 'contextMenu/TOGGLE_CONTEXT_MENU',
     payload: {
       elementType,
-      elementId,
       elementName,
     },
   });

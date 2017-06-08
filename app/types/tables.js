@@ -1,10 +1,9 @@
 // @flow
 import type { IdString, RowsIds, RowsIndexedMap, FieldsIds, FieldsIndexedMap } from './';
 
-export type TablesIds = Array<IdString>;
+export type TablesNames = Array<IdString>;
 
 export type Table = {
-  id: ?IdString,
   tableName: string,
   rowsIds: [] | RowsIds,
   rows: {} | RowsIndexedMap,
@@ -17,17 +16,17 @@ export type Table = {
 export type Tables = Array<Table>;
 
 export type TablesIndexedMap = {
-  [number]: Table
+  [string]: Table
 };
 
 export type TableNormalizePayload = {
-  ids: TablesIds,
+  tablesNames: TablesNames,
   map: TablesIndexedMap
 };
 
 export type TablesMetaState = {
   tableNameSearchKey: ?string,
-  currentTableId: ?string
+  currentTableName: ?string
 };
 
 export type MeasureType = {
