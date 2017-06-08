@@ -30,14 +30,28 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
       };
     case 'tables/CLEAR_TABLES':
       return {};
-    case 'tables/SET_TABLE_DATA':
+    case 'tables/SET_TABLE_DATA': {
       return {
         ...state,
         [+action.payload.id]: {
           ...state[+action.payload.id],
-          ...action.payload,
+          isFetched: true,
+          rowsIds: [
+            ...state[+action.payload.id].rowsIds,
+            ...action.payload.rowsIds,
+          ],
+          rows: {
+            ...state[+action.payload.id].rows,
+            ...action.payload.rows,
+          },
+          fields: {
+            ...state[+action.payload.id].fields,
+            ...action.payload.fields,
+          },
+          fieldsIds: action.payload.fieldsIds,
         },
       };
+    }
     case 'tables/SET_DATA_FOR_MEASURE':
       return {
         ...state,

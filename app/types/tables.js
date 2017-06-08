@@ -6,13 +6,13 @@ export type TablesIds = Array<IdString>;
 export type Table = {
   id: ?IdString,
   tableName: string,
-  rowsIds: ?RowsIds,
-  rows: ?RowsIndexedMap,
-  fieldsIds: ?FieldsIds,
-  fields: ?FieldsIndexedMap,
+  rowsIds: [] | RowsIds,
+  rows: {} | RowsIndexedMap,
+  fieldsIds: [] | FieldsIds,
+  fields: {} | FieldsIndexedMap,
   isFetched: ?boolean,
-  dataForMeasure: {} | dataForMeasure,
-  structureTable: ?{}
+  structureTable: ?{},
+  dataForMeasure: {} | DataForMeasure
 };
 export type Tables = Array<Table>;
 
@@ -37,6 +37,6 @@ export type MeasureType = {
   width: ?number
 };
 
-export type dataForMeasure = {
+export type DataForMeasure = {
   [number | string]: MeasureType
 };

@@ -1,5 +1,5 @@
 import { delay } from 'redux-saga';
-import { take, takeEvery, cps, put, fork } from 'redux-saga/effects';
+import { take, takeEvery, cps, put } from 'redux-saga/effects';
 
 import {
   fillTables as fillTablesAction,
@@ -26,13 +26,6 @@ import {
   toggleIsFetchedTables as toggleIsFetchedTablesAction,
 } from '../actions/ui';
 
-function* saveData({ dataForMeasure, data }) {
-  yield put(setDataForMeasureAction({ dataForMeasure, id: data.id }));
-  yield delay(100); // This delay needs to measure cells
-
-  yield put(setTableDataAction(data));
-}
-
 export function* fetchTables() {
   while (true) {
     const { payload } = yield take('tables/FETCH_REQUEST');
@@ -54,6 +47,10 @@ export function* fetchTables() {
         tableName: t.table_name,
         isFetched: false,
         dataForMeasure: {},
+        rowsIds: [],
+        rows: {},
+        fieldsIds: [],
+        fields: {},
       };
       return id;
     });
@@ -76,6 +73,10 @@ export function* fetchTables() {
         tableName: tables[tablesIds[0]].tableName,
         isFetched: false,
         dataForMeasure: {},
+        rowsIds: [],
+        rows: {},
+        fieldsIds: [],
+        fields: {},
         structureTable: {},
       };
       yield put(selectTableAction(tables[tablesIds[0]].id));
@@ -87,15 +88,33 @@ export function* fetchTables() {
   }
 }
 
-function* fetchTableData({ payload: { id, tableName, isFetched } }) {
-  if (!isFetched) {
+function* fetchTableData({
+  payload: { table: { id, tableName }, startIndex, resolve },
+}) {
+  let result;
+  if (!startIndex) {
     const query = `
       SELECT *
       FROM ${tableName}
-      LIMIT 1000
+      LIMIT 100
     `;
-    const result = yield cps(executeAndNormalizeSelectSQL, query, { id });
-    yield fork(saveData, result);
+    result = yield cps(executeAndNormalizeSelectSQL, query, { id, startIndex });
+    yield put(setDataForMeasureAction({
+      dataForMeasure: result.dataForMeasure,
+      id: result.data.id,
+    }));
+    yield delay(100); // This delay needs to measure cells
+  } else {
+    const query = `
+      SELECT *
+      FROM ${tableName}
+      LIMIT 100 OFFSET ${startIndex}
+    `;
+    result = yield cps(executeAndNormalizeSelectSQL, query, { id, startIndex });
+  }
+  yield put(setTableDataAction(result.data));
+  if (resolve) {
+    resolve();
   }
 }
 

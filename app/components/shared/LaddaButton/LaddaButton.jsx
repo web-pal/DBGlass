@@ -5,14 +5,15 @@ import spinner from '../../../assets/images/spinner.svg';
 import {
   LButton,
   Spinner,
+  Title,
 } from './styled';
 
 
-const LaddaButton = ({ isLoading }) => ( // eslint-disable-line
+const LaddaButton = ({ isLoading }: { isLoading: boolean }) => (
   <LButton>
-    <span>
+    <Title>
       Connect
-    </span>
+    </Title>
     <Spinner src={spinner} alt="alt" isLooading={isLoading} />
   </LButton>
 );

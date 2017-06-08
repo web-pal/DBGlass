@@ -1,12 +1,21 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
+import { bindActionCreators } from 'redux';
+import { Grid, AutoSizer, ScrollSync, InfiniteLoader } from 'react-virtualized';
 
 import type { Connector } from 'react-redux';
-import type { State } from '../../../types';
+import type { State, Table } from '../../../types';
+import { getTableValue } from '../../../utils/helpers';
+import * as tablesActions from '../../../actions/tables';
 
-import { getTableFields, getTableRows, getDataForMeasure, getCurrentTableName } from '../../../selectors/tables';
+import {
+  getTableFields,
+  getCurrentTableRows,
+  getDataForMeasure,
+  getCurrentTableName,
+  getCurrentTable,
+} from '../../../selectors/tables';
 
 import {
   ContentWrapper,
@@ -16,26 +25,32 @@ import {
   Cell,
   CellText,
   CellContainer,
-  EmptyBlock,
-  EmptyBlockTitle,
-  InsertButton,
-  Icon,
+  PlaceHolder,
 } from './styled';
 
 import Footer from './Footer/Footer';
 
 type Props = {
   fields: Array<string>,
-  rows: Array<Array<any>>,
+  rows: { [number]: any },
   dataForMeasure: Object,
+  table: Table,
+  fetchTableData: (Table, number, Function) => void,
   currentTableName: string
 };
 
 
 class MainContent extends Component {
   props: Props;
+  grid: { scrollToCell: Function };
 
-  cellRenderer = ({ columnIndex, key, rowIndex, style }) => (
+  componentWillReceiveProps(nextProps) {
+    if (this.props.currentTableName !== nextProps.currentTableName) {
+      this.grid.scrollToCell({ columnIndex: 0, rowIndex: 0 });
+    }
+  }
+
+  cellRenderer = ({ columnIndex, key, rowIndex, style }) =>
     <Cell
       key={key}
       style={{
@@ -45,12 +60,15 @@ class MainContent extends Component {
       }}
     >
       <CellContainer>
-        <CellText>
-          {this.props.rows[rowIndex][columnIndex]}
-        </CellText>
+        {
+          this.props.rows[rowIndex]
+          ? <CellText>
+            {getTableValue(this.props.rows[rowIndex][this.props.fields[columnIndex]])}
+          </CellText>
+          : <PlaceHolder />
+        }
       </CellContainer>
-    </Cell>
-  );
+    </Cell>;
 
   headerRenderer = ({ columnIndex, key, style }) => (
     <ColumnName
@@ -61,8 +79,14 @@ class MainContent extends Component {
     </ColumnName>
   );
 
+
   render() {
-    const { fields, rows, dataForMeasure, currentTableName }: Props = this.props;
+    const {
+      fields,
+      rows,
+      dataForMeasure,
+      table,
+    }: Props = this.props;
     return (
       <ScrollSync>
         {({ onScroll, scrollLeft }) => (
@@ -84,29 +108,43 @@ class MainContent extends Component {
                     />
                   </TableHeader>
                   <TableContent>
-                    {
-                      rows.length ?
+                    <InfiniteLoader
+                      rowCount={1000 * fields.length}
+                      loadMoreRows={({ startIndex }) => new Promise(resolve => {
+                        const start = Math.ceil(startIndex / fields.length);
+                        this.props.fetchTableData(table, start, resolve);
+                      })}
+                      isRowLoaded={({ index }) => !!rows[Math.ceil(index / fields.length)]}
+                      threshold={1}
+                    >
+                      {({ onRowsRendered, registerChild }) => (
                         <Grid
+                          onSectionRendered={({
+                            rowStartIndex, rowStopIndex,
+                          }) => {
+                            const startIndex = rowStartIndex * fields.length;
+                            const stopIndex = rowStopIndex * fields.length;
+                            onRowsRendered({
+                              startIndex,
+                              stopIndex,
+                            });
+                          }}
+                          ref={(grid) => {
+                            this.grid = grid;
+                            registerChild(grid);
+                          }}
                           columnWidth={({ index }) => dataForMeasure[fields[index]].width}
                           columnCount={fields.length}
-                          height={height}
+                          height={height - 109}
                           cellRenderer={this.cellRenderer}
                           rowHeight={45}
-                          rowCount={rows.length}
+                          rowCount={1000}
                           onScroll={onScroll}
+                          scrollToAlignment="start"
                           width={width}
                         />
-                        :
-                        <EmptyBlock>
-                          <EmptyBlockTitle>
-                            Table {currentTableName} is empty
-                          </EmptyBlockTitle>
-                          <InsertButton>
-                            <Icon className="fa fa-plus" />
-                            Insert Row
-                          </InsertButton>
-                        </EmptyBlock>
-                    }
+                      )}
+                    </InfiniteLoader>
                   </TableContent>
                 </div>
               }
@@ -119,10 +157,19 @@ class MainContent extends Component {
   }
 }
 
+function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
+  return bindActionCreators(
+    {
+      ...tablesActions,
+    }, dispatch,
+  );
+}
+
 function mapStateToProps(state: State) {
   return {
+    table: getCurrentTable({ tables: state.tables }),
     fields: getTableFields({ tables: state.tables }),
-    rows: getTableRows({ tables: state.tables }),
+    rows: getCurrentTableRows({ tables: state.tables }),
     dataForMeasure: getDataForMeasure({ tables: state.tables }),
     currentTableName: getCurrentTableName({ tables: state.tables }),
   };
@@ -130,7 +177,7 @@ function mapStateToProps(state: State) {
 
 const connector: Connector<{}, Props> = connect(
   mapStateToProps,
-  null,
+  mapDispatchToProps,
 );
 
 export default connector(MainContent);
