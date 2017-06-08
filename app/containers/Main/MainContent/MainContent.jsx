@@ -107,7 +107,7 @@ class MainContent extends Component {
                         const stop = Math.ceil(stopIndex / fields.length);
                         this.props.fetchTableData(table, start, stop, resolve);
                       })}
-                      isRowLoaded={({ index }) => !!rows[index]}
+                      isRowLoaded={({ index }) => !!rows[Math.ceil(index / fields.length)]}
                       threshold={1}
                     >
                       {({ onRowsRendered, registerChild }) => (
