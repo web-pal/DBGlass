@@ -20,7 +20,8 @@ type Props = {
     name: string,
     value: string,
     isMeasured: boolean,
-    width: ?number
+    width: ?number,
+    tableName: string
   }>
 };
 
@@ -29,7 +30,6 @@ class MeasureCells extends Component {
 
   render() {
     const { forMeasure, setMeasureWidth }: Props = this.props;
-    console.log('forMeasure', forMeasure)
     return (
       <div>
         {forMeasure.map((item) =>

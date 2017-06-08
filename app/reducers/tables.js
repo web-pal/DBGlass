@@ -66,8 +66,6 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
       };
     }
     case 'tables/SET_MEASURE_WIDTH': {
-      console.log('payload', action.payload)
-      console.log('state', state)
       return {
         ...state,
         [action.payload.tableName]: {

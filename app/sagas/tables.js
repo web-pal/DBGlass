@@ -95,12 +95,10 @@ function* fetchTableData({
       LIMIT 100
     `;
     result = yield cps(executeAndNormalizeSelectSQL, query, {});
-    console.log('result', result.dataForMeasure)
     yield put(setDataForMeasureAction({
       dataForMeasure: result.dataForMeasure,
       tableName,
     }));
-    console.log(333)
     yield delay(100); // This delay needs to measure cells
   } else {
     const query = `
@@ -110,7 +108,7 @@ function* fetchTableData({
     `;
     result = yield cps(executeAndNormalizeSelectSQL, query, { startIndex });
   }
-  console.log('result333', result)
+  console.log('result333', result.data)
   yield put(setTableDataAction(result.data));
   if (resolve) {
     resolve();

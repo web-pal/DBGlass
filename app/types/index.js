@@ -43,7 +43,7 @@ export type Action =
 | { type: 'tables/DROP_TABLE', +payload: IdString }
 | { type: 'tables/TRUNCATE_TABLE_REQUEST', +payload: Object }
 | { type: 'tables/TRUNCATE_TABLE', +payload: IdString }
-| { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: DataForMeasure, name: IdString } }
+| { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: DataForMeasure, tableName: string } }
 | { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableName: IdString, width: number, key: string } }
 | { type: 'tables/GET_TABLE_SCHEMA', +payload: Table }
 | { type: 'tables/SET_TABLE_SCHEMA', +payload: {id: IdString, structureTable: {} } }
