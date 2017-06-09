@@ -35,9 +35,9 @@ export type Action =
 | { type: 'tables/FILL', +payload: TableNormalizePayload }
 | { type: 'tables/CLEAR_TABLES' }
 | { type: 'tables/SET_TABLENAME_SEARCH_KEY', +payload: ?IdString }
-| { type: 'tables/FETCH_TABLE_DATA_REQUEST', +table: Table, +startIndex: ?number, +resolve: ?Function }
+| { type: 'tables/FETCH_TABLE_DATA_REQUEST', +payload: { table: Table, startIndex: ?IdString, resolve: ?Function } }
 | { type: 'tables/SELECT_TABLE', +payload: string }
-| { type: 'tables/SET_TABLE_DATA', +data: TableDataNormalizedPayload, +tableName: IdString }
+| { type: 'tables/SET_TABLE_DATA', +payload: { data: TableDataNormalizedPayload, tableName: IdString } }
 | { type: 'tables/RESET_SELECT_TABLE' }
 | { type: 'tables/DROP_TABLE_REQUEST', +payload: { tableName: IdString, parameters: ?Object, currentTableName: ?IdString } }
 | { type: 'tables/DROP_TABLE', +payload: IdString }

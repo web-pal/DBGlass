@@ -11,7 +11,7 @@ export const fetchTablesRequest = (payload: ?IdString): Action =>
     payload,
   });
 
-export const fillTables = (payload: any): Action =>
+export const fillTables = (payload: TableNormalizePayload): Action =>
   ({
     type: 'tables/FILL',
     payload,
@@ -27,16 +27,14 @@ export const setTableNameSearchKey = (payload: ?IdString): Action =>
     payload,
   });
 
-export const fetchTableData = (
-  table: Table, startIndex: ?number, resolve: ?Function,
-): Action =>
+export const fetchTableData = (payload: {
+  table: Table,
+  startIndex: ?IdString,
+  resolve: ?Function
+}): Action =>
   ({
     type: 'tables/FETCH_TABLE_DATA_REQUEST',
-    payload: {
-      table,
-      startIndex,
-      resolve,
-    },
+    payload,
   });
 
 export const selectTable = (payload: IdString): Action =>
@@ -45,13 +43,13 @@ export const selectTable = (payload: IdString): Action =>
     payload,
   });
 
-export const setTableData = (data: TableDataNormalizedPayload, tableName: IdString): Action =>
+export const setTableData = (payload: {
+  data: TableDataNormalizedPayload,
+  tableName: IdString
+}): Action =>
   ({
     type: 'tables/SET_TABLE_DATA',
-    payload: {
-      data,
-      tableName,
-    },
+    payload,
   });
 
 export const resetSelectTable = (): Action =>

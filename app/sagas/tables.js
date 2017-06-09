@@ -98,7 +98,7 @@ function* fetchTableData({
     `;
     result = yield cps(executeAndNormalizeSelectSQL, query, { startIndex });
   }
-  yield put(setTableDataAction(result.data, tableName));
+  yield put(setTableDataAction({ data: result.data, tableName }));
   if (resolve) {
     resolve();
   }

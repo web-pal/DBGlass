@@ -120,7 +120,7 @@ class Main extends Component {
               )}
             </LoaderContainer>
             <TablesContainer display={isTablesFetched}>
-              {tables.map((table, index) =>
+              {tables.map((table) =>
                 <TableContent
                   key={table.tableName}
                   onContextMenu={() => this.handleRightClick(table.tableName)}
