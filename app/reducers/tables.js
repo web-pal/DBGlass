@@ -140,6 +140,7 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
 const initialMeta: TablesMetaState = {
   tableNameSearchKey: null,
   currentTableName: null,
+  isContent: true,
 };
 
 function meta(state: TablesMetaState = initialMeta, action: Action) {
@@ -158,6 +159,11 @@ function meta(state: TablesMetaState = initialMeta, action: Action) {
       return {
         ...state,
         currentTableName: null,
+      };
+    case 'tables/CHANGE_VIEW_MODE':
+      return {
+        ...state,
+        isContent: action.payload,
       };
     case 'CLEAR_ALL_REDUCERS':
       return initialMeta;

@@ -133,3 +133,9 @@ export const clearCurrentTable = (payload: IdString): Action =>
     type: 'tables/CLEAR_CURRENT_TABLE',
     payload,
   });
+
+export const changeViewMode = (payload: boolean): Action =>
+  ({
+    type: 'tables/CHANGE_VIEW_MODE',
+    payload,
+  });

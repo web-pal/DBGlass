@@ -19,9 +19,14 @@ export const SettingButtonsGroup = styled.div`
 
 export const ContentButton = styled(Button)`
   justify-content: center;
-  background: #6386e2;
   margin: 0;
   max-width: 100px;
+  background: ${props => props.active ? '#6386e2' : 'transparent'};
+  color: ${props => props.active ? '#fff' : '#333333'};
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  &:hover {
+    color: ${props => props.active ? '#fff' : '#333'};
+  }
 `;
 
 export const SettingButton = styled(Button)`
@@ -29,6 +34,11 @@ export const SettingButton = styled(Button)`
   color: #000;
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  background: ${props => props.active ? '#6386e2' : 'transparent'};
+  color: ${props => props.active ? '#fff' : '#333333'};
+  &:hover {
+    color: ${props => props.active ? '#fff' : '#333'};
+  }
 `;
 
 export const TableInfoContainer = styled.div`
