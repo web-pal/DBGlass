@@ -65,20 +65,10 @@ export function* fetchTables() {
     }
 
     if (tablesNames.length) {
-      const tableData = {
-        tableName: tablesNames[0],
-        isFetched: false,
-        dataForMeasure: {},
-        rowsIds: [],
-        rows: {},
-        fieldsIds: [],
-        fields: {},
-        structureTable: {},
-      };
       yield put(selectTableAction(tablesNames[0]));
-      yield put(fetchTableDataAction(tableData));
+      yield put(fetchTableDataAction(tables[tablesNames[0]]));
 
-      yield put(getTableSchemaAction(tableData));
+      yield put(getTableSchemaAction(tables[tablesNames[0]]));
       yield* getTablesConstraints(tables);
     }
   }
@@ -167,7 +157,7 @@ export function* truncateTableRequest() {
   yield takeEvery('tables/TRUNCATE_TABLE_REQUEST', truncateTable);
 }
 
-export function* getTableSchema({ payload: { id, tableName, isFetched } }) {
+export function* getTableSchema({ payload: { tableName, isFetched } }) {
   if (!isFetched) {
     const query = `select *
       from information_schema.columns where table_name = '${tableName}'`;
@@ -181,7 +171,7 @@ export function* getTableSchema({ payload: { id, tableName, isFetched } }) {
       };
       return index;
     });
-    yield put(setTableSchemaAction({ id, structureTable }));
+    yield put(setTableSchemaAction({ tableName, structureTable }));
   }
 }
 

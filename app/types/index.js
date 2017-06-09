@@ -46,7 +46,7 @@ export type Action =
 | { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: DataForMeasure, tableName: string } }
 | { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableName: IdString, width: number, key: string } }
 | { type: 'tables/GET_TABLE_SCHEMA', +payload: Table }
-| { type: 'tables/SET_TABLE_SCHEMA', +payload: {id: IdString, structureTable: {} } }
+| { type: 'tables/SET_TABLE_SCHEMA', +payload: { tableName: IdString, structureTable: Object } }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }

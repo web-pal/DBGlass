@@ -71,8 +71,8 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
     case 'tables/SET_TABLE_SCHEMA':
       return {
         ...state,
-        [+action.payload.name]: {
-          ...state[+action.payload.name],
+        [action.payload.tableName]: {
+          ...state[action.payload.tableName],
           structureTable: {
             ...action.payload.structureTable,
           },

@@ -122,7 +122,7 @@ class Main extends Component {
             <TablesContainer display={isTablesFetched}>
               {tables.map((table, index) =>
                 <TableContent
-                  key={index}
+                  key={table.tableName}
                   onContextMenu={() => this.handleRightClick(table.tableName)}
                   active={currentTable === table.tableName}
                   onClick={() => this.fetchTable(table)}

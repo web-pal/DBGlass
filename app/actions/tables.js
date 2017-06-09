@@ -123,7 +123,7 @@ export const getTableSchema = (payload: Table): Action =>
     payload,
   });
 
-export const setTableSchema = (payload: {tableName: IdString, structureTable: {}}): Action =>
+export const setTableSchema = (payload: { tableName: IdString, structureTable: Object }): Action =>
   ({
     type: 'tables/SET_TABLE_SCHEMA',
     payload,
