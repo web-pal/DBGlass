@@ -36,20 +36,7 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
         ...state,
         [action.payload.tableName]: {
           ...state[action.payload.tableName],
-          isFetched: true,
-          rowsIds: [
-            ...state[action.payload.tableName].rowsIds,
-            ...action.payload.rowsIds,
-          ],
-          rows: {
-            ...state[action.payload.tableName].rows,
-            ...action.payload.rows,
-          },
-          fields: {
-            ...state[action.payload.tableName].fields,
-            ...action.payload.fields,
-          },
-          fieldsIds: action.payload.fieldsIds,
+          ...action.payload.data,
         },
       };
     }

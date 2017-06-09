@@ -39,16 +39,19 @@ export const fetchTableData = (
     },
   });
 
-export const selectTable = (payload: string): Action =>
+export const selectTable = (payload: IdString): Action =>
   ({
     type: 'tables/SELECT_TABLE',
     payload,
   });
 
-export const setTableData = (payload: TableDataNormalizedPayload): Action =>
+export const setTableData = (data: TableDataNormalizedPayload, tableName: IdString): Action =>
   ({
     type: 'tables/SET_TABLE_DATA',
-    payload,
+    payload: {
+      data,
+      tableName,
+    },
   });
 
 export const resetSelectTable = (): Action =>

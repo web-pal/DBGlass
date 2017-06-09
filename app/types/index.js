@@ -37,7 +37,7 @@ export type Action =
 | { type: 'tables/SET_TABLENAME_SEARCH_KEY', +payload: ?IdString }
 | { type: 'tables/FETCH_TABLE_DATA_REQUEST', +table: Table, +startIndex: ?number, +resolve: ?Function }
 | { type: 'tables/SELECT_TABLE', +payload: string }
-| { type: 'tables/SET_TABLE_DATA', +payload: TableDataNormalizedPayload }
+| { type: 'tables/SET_TABLE_DATA', +data: TableDataNormalizedPayload, +tableName: IdString }
 | { type: 'tables/RESET_SELECT_TABLE' }
 | { type: 'tables/DROP_TABLE_REQUEST', +payload: Object }
 | { type: 'tables/DROP_TABLE', +payload: IdString }

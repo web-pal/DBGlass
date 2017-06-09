@@ -99,7 +99,7 @@ function* fetchTableData({
       dataForMeasure: result.dataForMeasure,
       tableName,
     }));
-    yield delay(100); // This delay needs to measure cells
+    // yield delay(100); // This delay needs to measure cells
   } else {
     const query = `
       SELECT *
@@ -108,8 +108,7 @@ function* fetchTableData({
     `;
     result = yield cps(executeAndNormalizeSelectSQL, query, { startIndex });
   }
-  console.log('result333', result.data)
-  yield put(setTableDataAction(result.data));
+  yield put(setTableDataAction(result.data, tableName));
   if (resolve) {
     resolve();
   }
