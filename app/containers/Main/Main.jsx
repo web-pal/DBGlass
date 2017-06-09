@@ -47,7 +47,7 @@ type Props = {
   fetchTablesRequest: (?IdString) => void,
   setTableNameSearchKey: (?IdString) => void,
   toggleMenu: (boolean) => void,
-  fetchTableData: (Table) => void,
+  fetchTableData: ({ table: Table }) => void,
   selectTable: (?string) => void,
   getTableSchema: (Table) => void,
   tables: Tables,
