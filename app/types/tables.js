@@ -27,7 +27,8 @@ export type TableNormalizePayload = {
 
 export type TablesMetaState = {
   tableNameSearchKey: ?string,
-  currentTableId: ?string
+  currentTableId: ?string,
+  isContent: boolean
 };
 
 export type MeasureType = {

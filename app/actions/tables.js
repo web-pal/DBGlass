@@ -131,3 +131,9 @@ export const setTablesConstraints = (payload: any): Action =>
     type: 'tables/SET_TABLES_CONSTRAINTS',
     payload,
   });
+
+export const changeViewMode = (payload: boolean): Action =>
+  ({
+    type: 'tables/CHANGE_VIEW_MODE',
+    payload,
+  });

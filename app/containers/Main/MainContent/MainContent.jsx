@@ -29,6 +29,7 @@ import {
 } from './styled';
 
 import Footer from './Footer/Footer';
+import Structure from '../Structure/Structure';
 
 type Props = {
   fields: Array<string>,
@@ -36,7 +37,8 @@ type Props = {
   dataForMeasure: Object,
   table: Table,
   fetchTableData: (Table, number, Function) => void,
-  currentTableName: string
+  currentTableName: string,
+  isContent: boolean
 };
 
 
@@ -45,7 +47,7 @@ class MainContent extends Component {
   grid: { scrollToCell: Function };
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.currentTableName !== nextProps.currentTableName) {
+    if (this.props.currentTableName !== nextProps.currentTableName && this.grid) {
       this.grid.scrollToCell({ columnIndex: 0, rowIndex: 0 });
     }
   }
@@ -86,69 +88,75 @@ class MainContent extends Component {
       rows,
       dataForMeasure,
       table,
+      isContent,
     }: Props = this.props;
     return (
       <ScrollSync>
         {({ onScroll, scrollLeft }) => (
           <ContentWrapper>
-            <AutoSizer>
-              {({ height, width }) =>
-                <div>
-                  <TableHeader>
-                    <Grid
-                      columnWidth={({ index }) => dataForMeasure[fields[index]].width}
-                      columnCount={fields.length}
-                      height={height}
-                      overscanColumnCount={100}
-                      cellRenderer={this.headerRenderer}
-                      rowHeight={60}
-                      rowCount={1}
-                      scrollLeft={scrollLeft}
-                      width={width}
-                    />
-                  </TableHeader>
-                  <TableContent>
-                    <InfiniteLoader
-                      rowCount={1000 * fields.length}
-                      loadMoreRows={({ startIndex }) => new Promise(resolve => {
-                        const start = Math.ceil(startIndex / fields.length);
-                        this.props.fetchTableData(table, start, resolve);
-                      })}
-                      isRowLoaded={({ index }) => !!rows[Math.ceil(index / fields.length)]}
-                      threshold={1}
-                    >
-                      {({ onRowsRendered, registerChild }) => (
+            {
+              isContent ?
+                <AutoSizer>
+                  {({ height, width }) =>
+                    <div>
+                      <TableHeader>
                         <Grid
-                          onSectionRendered={({
-                            rowStartIndex, rowStopIndex,
-                          }) => {
-                            const startIndex = rowStartIndex * fields.length;
-                            const stopIndex = rowStopIndex * fields.length;
-                            onRowsRendered({
-                              startIndex,
-                              stopIndex,
-                            });
-                          }}
-                          ref={(grid) => {
-                            this.grid = grid;
-                            registerChild(grid);
-                          }}
                           columnWidth={({ index }) => dataForMeasure[fields[index]].width}
                           columnCount={fields.length}
-                          height={height - 109}
-                          cellRenderer={this.cellRenderer}
-                          rowHeight={45}
-                          rowCount={1000}
-                          onScroll={onScroll}
-                          scrollToAlignment="start"
+                          height={height}
+                          overscanColumnCount={100}
+                          cellRenderer={this.headerRenderer}
+                          rowHeight={60}
+                          rowCount={1}
+                          scrollLeft={scrollLeft}
                           width={width}
                         />
-                      )}
-                    </InfiniteLoader>
-                  </TableContent>
-                </div>
-              }
-            </AutoSizer>
+                      </TableHeader>
+                      <TableContent>
+                        <InfiniteLoader
+                          rowCount={1000 * fields.length}
+                          loadMoreRows={({ startIndex }) => new Promise(resolve => {
+                            const start = Math.ceil(startIndex / fields.length);
+                            this.props.fetchTableData(table, start, resolve);
+                          })}
+                          isRowLoaded={({ index }) => !!rows[Math.ceil(index / fields.length)]}
+                          threshold={1}
+                        >
+                          {({ onRowsRendered, registerChild }) => (
+                            <Grid
+                              onSectionRendered={({
+                                rowStartIndex, rowStopIndex,
+                              }) => {
+                                const startIndex = rowStartIndex * fields.length;
+                                const stopIndex = rowStopIndex * fields.length;
+                                onRowsRendered({
+                                  startIndex,
+                                  stopIndex,
+                                });
+                              }}
+                              ref={(grid) => {
+                                this.grid = grid;
+                                registerChild(grid);
+                              }}
+                              columnWidth={({ index }) => dataForMeasure[fields[index]].width}
+                              columnCount={fields.length}
+                              height={height - 109}
+                              cellRenderer={this.cellRenderer}
+                              rowHeight={45}
+                              rowCount={1000}
+                              onScroll={onScroll}
+                              scrollToAlignment="start"
+                              width={width}
+                            />
+                          )}
+                        </InfiniteLoader>
+                      </TableContent>
+                    </div>
+                  }
+                </AutoSizer>
+                :
+                <Structure />
+            }
             <Footer />
           </ContentWrapper>
         )}
@@ -172,6 +180,7 @@ function mapStateToProps(state: State) {
     rows: getCurrentTableRows({ tables: state.tables }),
     dataForMeasure: getDataForMeasure({ tables: state.tables }),
     currentTableName: getCurrentTableName({ tables: state.tables }),
+    isContent: state.tables.meta.isContent,
   };
 }
 

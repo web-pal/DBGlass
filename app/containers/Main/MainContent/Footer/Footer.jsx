@@ -1,5 +1,12 @@
 // @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import type { Connector } from 'react-redux';
+import type { State } from '../../../../types';
+
+import * as tablesActions from '../../../../actions/tables';
 
 import { Icon } from '../../../../components/shared/styled';
 
@@ -16,16 +23,24 @@ import {
   IconArrow,
 } from './styled';
 
+type Props = {
+  changeViewMode: (boolean) => void,
+  isContent: boolean
+};
+
 class Footer extends Component {
+  props: Props;
+
   render() {
+    const { isContent, changeViewMode }: Props = this.props;
     return (
       <ContentWrapper>
         <SettingButtonsGroup>
-          <ContentButton>
+          <ContentButton active={isContent} onClick={() => changeViewMode(true)}>
             <Icon className="fa fa-list" />
             <Label>Content</Label>
           </ContentButton>
-          <SettingButton>
+          <SettingButton active={!isContent} onClick={() => changeViewMode(false)}>
             <Icon className="fa fa-list-alt" />
             <Label>Structure</Label>
           </SettingButton>
@@ -57,4 +72,24 @@ class Footer extends Component {
   }
 }
 
-export default Footer;
+function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
+  return bindActionCreators(
+    {
+      ...tablesActions,
+    },
+    dispatch,
+  );
+}
+
+function mapStateToProps(state: State) {
+  return {
+    isContent: state.tables.meta.isContent,
+  };
+}
+
+const connector: Connector<{}, Props> = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+
+export default connector(Footer);
