@@ -39,7 +39,7 @@ export type Action =
 | { type: 'tables/SELECT_TABLE', +payload: string }
 | { type: 'tables/SET_TABLE_DATA', +data: TableDataNormalizedPayload, +tableName: IdString }
 | { type: 'tables/RESET_SELECT_TABLE' }
-| { type: 'tables/DROP_TABLE_REQUEST', +payload: Object }
+| { type: 'tables/DROP_TABLE_REQUEST', +payload: { tableName: IdString, parameters: ?Object, currentTableName: ?IdString } }
 | { type: 'tables/DROP_TABLE', +payload: IdString }
 | { type: 'tables/TRUNCATE_TABLE_REQUEST', +payload: Object }
 | { type: 'tables/TRUNCATE_TABLE', +payload: IdString }
@@ -47,6 +47,7 @@ export type Action =
 | { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableName: IdString, width: number, key: string } }
 | { type: 'tables/GET_TABLE_SCHEMA', +payload: Table }
 | { type: 'tables/SET_TABLE_SCHEMA', +payload: { tableName: IdString, structureTable: Object } }
+| { type: 'tables/SET_TABLES_CONSTRAINTS', +payload: any }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }

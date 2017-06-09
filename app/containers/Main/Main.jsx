@@ -8,7 +8,7 @@ import * as uiActions from '../../actions/ui';
 import * as tablesActions from '../../actions/tables';
 import * as favoritesActions from '../../actions/favorites';
 import * as contextMenuActions from '../../actions/contextMenu';
-import type { Dispatch, Tables, State, IdString, Table } from '../../types';
+import type { Dispatch, Tables, State, IdString, Table, ContextMenuState } from '../../types';
 import { getFiltredTables, getTablesQuantity } from '../../selectors/tables';
 
 import { getCurrentDBName } from '../../selectors/tableName';
@@ -43,7 +43,7 @@ import {
 } from './styled';
 
 type Props = {
-  toggleContextMenu: (string, string) => void,
+  toggleContextMenu: (ContextMenuState) => void,
   fetchTablesRequest: (?IdString) => void,
   setTableNameSearchKey: (?IdString) => void,
   toggleMenu: (boolean) => void,
@@ -77,7 +77,7 @@ class Main extends Component {
     }
   }
   handleRightClick = (tableName) => {
-    this.props.toggleContextMenu('table', tableName);
+    this.props.toggleContextMenu({ selectedElementType: 'table', selectedElementName: tableName });
   }
 
   fetchTable = (table) => {

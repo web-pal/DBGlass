@@ -13,10 +13,8 @@ function allItems(state: TablesNames = [], action: Action) {
       return [];
     case 'CLEAR_ALL_REDUCERS':
       return [];
-    case 'tables/DROP_TABLE': {
-      const { payload } = action;
-      return state.filter(id => id !== payload);
-    }
+    case 'tables/DROP_TABLE':
+      return state.filter(tableName => tableName !== action.payload);
     default:
       return state;
   }
@@ -31,7 +29,7 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
       };
     case 'tables/CLEAR_TABLES':
       return {};
-    case 'tables/SET_TABLE_DATA': {
+    case 'tables/SET_TABLE_DATA':
       return {
         ...state,
         [action.payload.tableName]: {
@@ -39,7 +37,6 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
           ...action.payload.data,
         },
       };
-    }
     case 'tables/SET_DATA_FOR_MEASURE': {
       return {
         ...state,
@@ -97,7 +94,7 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
       return {
         ...state,
         [action.payload]: {
-          ...state[+action.payload],
+          ...state[action.payload],
           rows: {},
           rowsIds: [],
         },

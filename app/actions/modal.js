@@ -1,14 +1,10 @@
 // @flow
-import type { Action } from '../types';
+import type { Action, ModalState } from '../types';
 
-export const toggleModal = (component: string, values: ?Object, error: ?Object): Action =>
+export const toggleModal = (payload: ModalState): Action =>
   ({
     type: 'modal/TOGGLE_MODAL',
-    payload: {
-      component,
-      values,
-      error,
-    },
+    payload,
   });
 
 export const hideModal = (): Action =>

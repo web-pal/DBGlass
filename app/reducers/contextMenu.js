@@ -2,8 +2,8 @@
 import type { ContextMenuState, Action } from '../types';
 
 const initialState: ContextMenuState = {
-  elementType: null,
-  elementName: null,
+  selectedElementType: null,
+  selectedElementName: null,
 };
 
 export default function contextMenu(state: ContextMenuState = initialState, action: Action) {

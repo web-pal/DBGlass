@@ -1,5 +1,5 @@
 // @flow
 export type ContextMenuState = {
-  elementType: ?string,
-  elementName: ?string
+  selectedElementType: ?string,
+  selectedElementName: ?string
 };

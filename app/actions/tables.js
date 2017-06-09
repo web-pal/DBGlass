@@ -59,20 +59,14 @@ export const resetSelectTable = (): Action =>
     type: 'tables/RESET_SELECT_TABLE',
   });
 
-export const dropTableRequest = (
-  tableName: IdString,
-  parameters: ?Object,
-  selectedTableId: IdString,
-  currentTableName: ?IdString,
-  ): Action =>
+export const dropTableRequest = (payload: {
+  selectedElementName: IdString,
+  currentValues: ?Object,
+  currentTableName: ?IdString
+}): Action =>
   ({
     type: 'tables/DROP_TABLE_REQUEST',
-    payload: {
-      tableName,
-      parameters,
-      selectedTableId,
-      currentTableName,
-    },
+    payload,
   });
 
 export const dropTable = (payload: IdString): Action =>
@@ -81,18 +75,13 @@ export const dropTable = (payload: IdString): Action =>
     payload,
   });
 
-export const truncateTableRequest = (
-  tableName: IdString,
-  parameters: ?Object,
-  selectedTableId: IdString,
-  ): Action =>
+export const truncateTableRequest = (payload: {
+  selectedElementName: IdString,
+  currentValues: ?Object
+  }): Action =>
   ({
     type: 'tables/TRUNCATE_TABLE_REQUEST',
-    payload: {
-      tableName,
-      parameters,
-      selectedTableId,
-    },
+    payload,
   });
 
 export const truncateTable = (payload: IdString): Action =>

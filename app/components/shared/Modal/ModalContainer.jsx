@@ -6,7 +6,7 @@ import * as Modal from './index';
 type Props = {
   show: boolean,
   component: ?string,
-  payload: object
+  payload: Object
 };
 
 class ModalContainer extends Component {

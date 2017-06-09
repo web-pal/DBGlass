@@ -69,7 +69,7 @@ export function* fetchTables() {
       yield put(fetchTableDataAction(tables[tablesNames[0]]));
 
       yield put(getTableSchemaAction(tables[tablesNames[0]]));
-      yield* getTablesConstraints(tables);
+      yield* getTablesConstraints();
     }
   }
 }
@@ -89,7 +89,7 @@ function* fetchTableData({
       dataForMeasure: result.dataForMeasure,
       tableName,
     }));
-    // yield delay(100); // This delay needs to measure cells
+    yield delay(100); // This delay needs to measure cells
   } else {
     const query = `
       SELECT *
@@ -110,20 +110,19 @@ export function* fetchTableDataWatch() {
 
 export function* dropTable({
   payload: {
-    tableName,
-    selectedTableId,
-    parameters,
+    selectedElementName,
+    currentValues,
     currentTableName,
   },
 }) {
-  const query = `DROP TABLE IF EXISTS "public"."${tableName}" ${parameters ? (parameters.cascade && 'CASCADE') : ''}`;
+  const query = `DROP TABLE IF EXISTS "public"."${selectedElementName}" ${currentValues ? (currentValues.cascade && 'CASCADE') : ''}`;
   try {
     yield cps(executeSQL, query, []);
-    if (currentTableName === selectedTableId) yield put(resetSelectTableAction());
-    yield put(dropTableAction(selectedTableId));
+    if (currentTableName === selectedElementName) yield put(resetSelectTableAction());
+    yield put(dropTableAction(selectedElementName));
     yield put(hideModalAction());
   } catch (error) {
-    yield put(toggleModalAction('ErrorModal', error));
+    yield put(toggleModalAction({ component: 'ErrorModal', error }));
   }
 }
 
@@ -133,23 +132,30 @@ export function* dropTableRequest() {
 
 export function* truncateTable({
   payload: {
-    tableName,
-    selectedTableId,
-    parameters,
+    selectedElementName,
+    currentValues,
   },
 }) {
-  const query = `
-    TRUNCATE "public".
-    "${tableName}"
-    ${parameters ? (parameters.restartIdentity && 'RESTART IDENTITY') : ''}
-    ${parameters ? (parameters.cascade && 'CASCADE') : ''}
-  `;
+  let query;
+  if (currentValues) {
+    query = `
+      TRUNCATE "public".
+      "${selectedElementName}"
+      ${currentValues.restartIdentity ? 'RESTART IDENTITY' : ''}
+      ${currentValues.cascade ? 'CASCADE' : ''}
+    `;
+  } else {
+    query = `
+      TRUNCATE "public".
+      "${selectedElementName}"
+    `;
+  }
   try {
     yield cps(executeSQL, query, []);
-    yield put(truncateTableAction(selectedTableId));
+    yield put(truncateTableAction(selectedElementName));
     yield put(hideModalAction());
   } catch (error) {
-    yield put(toggleModalAction('ErrorModal', error));
+    yield put(toggleModalAction({ component: 'ErrorModal', error }));
   }
 }
 
@@ -179,7 +185,7 @@ export function* getTableSchemaWatch() {
   yield takeEvery('tables/GET_TABLE_SCHEMA', getTableSchema);
 }
 
-export function* getTablesConstraints(tables) {
+export function* getTablesConstraints() {
   const query = `SELECT tc.constraint_name,
     tc.constraint_type,
     tc.table_name,
@@ -207,20 +213,20 @@ export function* getTablesConstraints(tables) {
     WHERE lower(tc.constraint_type) in ('foreign key')`;
   const result = yield cps(executeSQL, query, []);
   const constraints = {};
-  const constraintsIds = [];
+  const constraintsNames = [];
   result.rows.map((row, index) => {
-    const tableId = Object.values(tables).filter(table => table.tableName === row.table_name)[0].id;
-    constraintsIds.push(tableId);
+    const tableName = row.table_name;
+    constraintsNames.push(tableName);
 
-    constraints[tableId] = {
+    constraints[row.table_name] = {
       ...row,
-      tableId,
+      tableName,
     };
 
     return index;
   });
 
-  for (let i = 0; i < constraintsIds.length; i++) { // eslint-disable-line
-    yield put(setTablesConstraintsAction(constraints[constraintsIds[i]]));
+  for (let i = 0; i < constraintsNames.length; i++) { // eslint-disable-line
+    yield put(setTablesConstraintsAction(constraints[constraintsNames[i]]));
   }
 }
