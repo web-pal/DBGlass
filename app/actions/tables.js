@@ -29,7 +29,7 @@ export const setTableNameSearchKey = (payload: ?IdString): Action =>
 
 export const fetchTableData = (payload: {
   table: Table,
-  startIndex: ?IdString,
+  startIndex: ?number,
   resolve: ?Function
 }): Action =>
   ({

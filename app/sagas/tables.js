@@ -66,7 +66,7 @@ export function* fetchTables() {
 
     if (tablesNames.length) {
       yield put(selectTableAction(tablesNames[0]));
-      yield put(fetchTableDataAction(tables[tablesNames[0]]));
+      yield put(fetchTableDataAction({ table: tables[tablesNames[0]] }));
 
       yield put(getTableSchemaAction(tables[tablesNames[0]]));
       yield* getTablesConstraints();
