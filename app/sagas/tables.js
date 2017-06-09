@@ -24,6 +24,7 @@ import {
 
 import {
   toggleIsFetchedTables as toggleIsFetchedTablesAction,
+  toggleIsFetchedTablesData as toggleIsFetchedTablesDataAction,
 } from '../actions/ui';
 
 export function* fetchTables() {
@@ -77,6 +78,7 @@ export function* fetchTables() {
 function* fetchTableData({
   payload: { table: { tableName }, startIndex, resolve },
 }) {
+  yield put(toggleIsFetchedTablesDataAction(true));
   let result;
   if (!startIndex) {
     const query = `
@@ -99,6 +101,7 @@ function* fetchTableData({
     result = yield cps(executeAndNormalizeSelectSQL, query, { startIndex });
   }
   yield put(setTableDataAction({ data: result.data, tableName }));
+  yield put(toggleIsFetchedTablesDataAction(false));
   if (resolve) {
     resolve();
   }

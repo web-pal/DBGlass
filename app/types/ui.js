@@ -4,5 +4,6 @@ export type uiState = {
   isMenuOpen: boolean,
   isLoading: boolean,
   connectionError: string,
-  isTablesFetched: boolean
+  isTablesFetched: boolean,
+  isTablesDataFetched: boolean
 };

@@ -30,3 +30,9 @@ export const toggleIsFetchedTables = (payload: boolean): Action =>
     type: 'ui/TOGGLE_IS_FETCH_TABLES',
     payload,
   });
+
+export const toggleIsFetchedTablesData = (payload: boolean): Action =>
+  ({
+    type: 'ui/TOGGLE_IS_FETCH_TABLES_DATA',
+    payload,
+  });

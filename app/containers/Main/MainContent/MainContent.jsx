@@ -34,6 +34,7 @@ type Props = {
   rows: { [number]: any },
   dataForMeasure: Object,
   table: Table,
+  isTablesDataFetched: boolean,
   fetchTableData: ({
     table: Table,
     startIndex: number,
@@ -68,7 +69,7 @@ class MainContent extends Component {
           ? <CellText>
             {getTableValue(this.props.rows[rowIndex][this.props.fields[columnIndex]])}
           </CellText>
-          : <PlaceHolder />
+          : this.props.isTablesDataFetched && <PlaceHolder />
         }
       </CellContainer>
     </Cell>;
@@ -175,6 +176,7 @@ function mapStateToProps(state: State) {
     rows: getCurrentTableRows({ tables: state.tables }),
     dataForMeasure: getDataForMeasure({ tables: state.tables }),
     currentTableName: state.tables.meta.currentTableName,
+    isTablesDataFetched: state.ui.isTablesDataFetched,
   };
 }
 
