@@ -48,6 +48,8 @@ export const getCurrentTableRowsIds = ({ tables }) =>
   tables.byName[tables.meta.currentTableName].rowsIds;
 export const getCurrentTableRows = ({ tables }) =>
   tables.byName[tables.meta.currentTableName].rows;
+export const getCurrentTableRowsCount = ({ tables }) =>
+  tables.byName[tables.meta.currentTableName].rowsCount;
 
 export const getDataForMeasure = createSelector(
   [getTableName, getTablesMap],

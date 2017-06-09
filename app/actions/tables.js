@@ -121,3 +121,9 @@ export const setTablesConstraints = (payload: any): Action =>
     type: 'tables/SET_TABLES_CONSTRAINTS',
     payload,
   });
+
+export const setRowsCount = (payload: { relname: string, reltuples: number }): Action =>
+  ({
+    type: 'tables/SET_ROWS_COUNT',
+    payload,
+  });

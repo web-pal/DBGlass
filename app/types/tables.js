@@ -11,8 +11,10 @@ export type Table = {
   fields: {} | FieldsIndexedMap,
   isFetched: ?boolean,
   structureTable: ?{},
-  dataForMeasure: {} | DataForMeasure
+  dataForMeasure: {} | DataForMeasure,
+  rowsCount: ?number
 };
+
 export type Tables = Array<Table>;
 
 export type TablesIndexedMap = {

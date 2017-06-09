@@ -13,6 +13,7 @@ import {
   getTableSchema as getTableSchemaAction,
   setTableSchema as setTableSchemaAction,
   setTablesConstraints as setTablesConstraintsAction,
+  setRowsCount as setRowsCountAction,
 } from '../actions/tables';
 import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
 
@@ -56,9 +57,8 @@ export function* fetchTables() {
       tablesNames,
       map: tables,
     }));
-
+    yield* getRowsCount();
     yield put(toggleIsFetchedTablesAction(true));
-
     if (payload) {
       yield put(addFavoriteTablesQuantity({
         currentFavoriteId: payload, quantity: tablesNames.length,
@@ -231,5 +231,22 @@ export function* getTablesConstraints() {
 
   for (let i = 0; i < constraintsNames.length; i++) { // eslint-disable-line
     yield put(setTablesConstraintsAction(constraints[constraintsNames[i]]));
+  }
+}
+
+function* getRowsCount() {
+  const query = `
+    SELECT 
+    nspname AS schemaname,relname,reltuples 
+    FROM pg_class C 
+    LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace) 
+    WHERE 
+    nspname NOT IN ('pg_catalog', 'information_schema') AND 
+    relkind='r' 
+    ORDER BY reltuples DESC
+  `;
+  const { rows } = yield cps(executeSQL, query, []);
+  for (let i = 0; i < rows.length; i++) { // eslint-disable-line
+    yield put(setRowsCountAction(rows[i]));
   }
 }

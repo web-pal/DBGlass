@@ -99,6 +99,14 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
           rowsIds: [],
         },
       };
+    case 'tables/SET_ROWS_COUNT':
+      return {
+        ...state,
+        [action.payload.relname]: {
+          ...state[action.payload.relname],
+          rowsCount: action.payload.reltuples,
+        },
+      };
     default:
       return state;
   }

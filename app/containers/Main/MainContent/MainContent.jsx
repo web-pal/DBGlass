@@ -14,6 +14,7 @@ import {
   getCurrentTableRows,
   getDataForMeasure,
   getCurrentTable,
+  getCurrentTableRowsCount,
 } from '../../../selectors/tables';
 
 import {
@@ -34,7 +35,7 @@ type Props = {
   rows: { [number]: any },
   dataForMeasure: Object,
   table: Table,
-  isTablesDataFetched: boolean,
+  rowsCount: number,
   fetchTableData: ({
     table: Table,
     startIndex: number,
@@ -69,7 +70,7 @@ class MainContent extends Component {
           ? <CellText>
             {getTableValue(this.props.rows[rowIndex][this.props.fields[columnIndex]])}
           </CellText>
-          : this.props.isTablesDataFetched && <PlaceHolder />
+          : <PlaceHolder />
         }
       </CellContainer>
     </Cell>;
@@ -90,6 +91,7 @@ class MainContent extends Component {
       rows,
       dataForMeasure,
       table,
+      rowsCount,
     }: Props = this.props;
     return (
       <ScrollSync>
@@ -113,7 +115,7 @@ class MainContent extends Component {
                   </TableHeader>
                   <TableContent>
                     <InfiniteLoader
-                      rowCount={1000 * fields.length}
+                      rowCount={rowsCount * fields.length}
                       loadMoreRows={({ startIndex }) => new Promise(resolve => {
                         const start = Math.ceil(startIndex / fields.length);
                         this.props.fetchTableData({ table, startIndex: start, resolve });
@@ -142,7 +144,7 @@ class MainContent extends Component {
                           height={height - 109}
                           cellRenderer={this.cellRenderer}
                           rowHeight={45}
-                          rowCount={1000}
+                          rowCount={rowsCount}
                           onScroll={onScroll}
                           scrollToAlignment="start"
                           width={width}
@@ -176,7 +178,7 @@ function mapStateToProps(state: State) {
     rows: getCurrentTableRows({ tables: state.tables }),
     dataForMeasure: getDataForMeasure({ tables: state.tables }),
     currentTableName: state.tables.meta.currentTableName,
-    isTablesDataFetched: state.ui.isTablesDataFetched,
+    rowsCount: getCurrentTableRowsCount({ tables: state.tables }),
   };
 }
 
