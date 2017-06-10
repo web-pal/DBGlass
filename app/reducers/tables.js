@@ -107,6 +107,21 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
           rowsCount: action.payload.reltuples,
         },
       };
+    case 'tables/CLEAR_CURRENT_TABLE':
+      return {
+        ...state,
+        [action.payload]: {
+          ...state[action.payload],
+          rowsIds: [],
+          rows: {},
+          fieldsIds: [],
+          fields: {},
+          isFetched: false,
+          structureTable: {},
+          dataForMeasure: {},
+          rowsCount: 0,
+        },
+      };
     default:
       return state;
   }

@@ -66,3 +66,8 @@ export const Label = styled.span`
 export const IconArrow = styled.i`
   margin: 0;
 `;
+
+export const RefreshButton = styled(Button)`
+  background: rgb(17, 179, 230);
+  margin: 0 10px 0 0; 
+`;

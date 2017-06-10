@@ -41,7 +41,9 @@ type Props = {
     startIndex: number,
     resolve: Function
   }) => void,
-  currentTableName: string
+  currentTableName: string,
+  clearCurrentTable: (string) => void,
+  getTableSchema: (Table) => void
 };
 
 
@@ -54,7 +56,6 @@ class MainContent extends Component {
       this.grid.scrollToCell({ columnIndex: 0, rowIndex: 0 });
     }
   }
-
   cellRenderer = ({ columnIndex, key, rowIndex, style }) =>
     <Cell
       key={key}
@@ -92,6 +93,10 @@ class MainContent extends Component {
       dataForMeasure,
       table,
       rowsCount,
+      currentTableName,
+      clearCurrentTable,
+      getTableSchema,
+      fetchTableData,
     }: Props = this.props;
     return (
       <ScrollSync>
@@ -118,7 +123,7 @@ class MainContent extends Component {
                       rowCount={rowsCount * fields.length}
                       loadMoreRows={({ startIndex }) => new Promise(resolve => {
                         const start = Math.ceil(startIndex / fields.length);
-                        this.props.fetchTableData({ table, startIndex: start, resolve });
+                        fetchTableData({ table, startIndex: start, resolve });
                       })}
                       isRowLoaded={({ index }) => !!rows[Math.ceil(index / fields.length)]}
                       threshold={1}
@@ -155,7 +160,13 @@ class MainContent extends Component {
                 </div>
               }
             </AutoSizer>
-            <Footer />
+            <Footer
+              currentTableName={currentTableName}
+              clearCurrentTable={clearCurrentTable}
+              getTableSchema={getTableSchema}
+              table={table}
+              fetchTableData={fetchTableData}
+            />
           </ContentWrapper>
         )}
       </ScrollSync>
@@ -178,7 +189,7 @@ function mapStateToProps(state: State) {
     rows: getCurrentTableRows({ tables: state.tables }),
     dataForMeasure: getDataForMeasure({ tables: state.tables }),
     currentTableName: state.tables.meta.currentTableName,
-    rowsCount: getCurrentTableRowsCount({ tables: state.tables }),
+    rowsCount: getCurrentTableRowsCount({ tables: state.tables }) || 0,
   };
 }
 

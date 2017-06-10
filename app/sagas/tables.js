@@ -57,7 +57,6 @@ export function* fetchTables() {
       tablesNames,
       map: tables,
     }));
-    yield* getRowsCount();
     yield put(toggleIsFetchedTablesAction(true));
     if (payload) {
       yield put(addFavoriteTablesQuantity({
@@ -91,6 +90,7 @@ function* fetchTableData({
       dataForMeasure: result.dataForMeasure,
       tableName,
     }));
+    yield* getRowsCount();
     yield delay(100); // This delay needs to measure cells
   } else {
     const query = `

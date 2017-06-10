@@ -127,3 +127,9 @@ export const setRowsCount = (payload: { relname: string, reltuples: number }): A
     type: 'tables/SET_ROWS_COUNT',
     payload,
   });
+
+export const clearCurrentTable = (payload: IdString): Action =>
+  ({
+    type: 'tables/CLEAR_CURRENT_TABLE',
+    payload,
+  });

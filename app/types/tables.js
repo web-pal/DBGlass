@@ -18,7 +18,7 @@ export type Table = {
 export type Tables = Array<Table>;
 
 export type TablesIndexedMap = {
-  [string]: Table
+  [string]: {} | Table
 };
 
 export type TableNormalizePayload = {
