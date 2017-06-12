@@ -1,3 +1,4 @@
+import storage from 'electron-json-storage';
 import { delay } from 'redux-saga';
 import { take, takeEvery, cps, put } from 'redux-saga/effects';
 
@@ -65,8 +66,22 @@ export function* fetchTables() {
     }
 
     if (tablesNames.length) {
-      yield put(selectTableAction(tablesNames[0]));
-      yield put(fetchTableDataAction({ table: tables[tablesNames[0]] }));
+      const currentFavouriteId = yield cps(storage.get, 'LastSelectedFavorite');
+      const selectTable = yield cps(storage.get, 'LastSelectedTables');
+      const selectedTableIndex = selectTable[currentFavouriteId] ?
+        selectTable[currentFavouriteId] : Object.values(tables)[0].tableName;
+      const tableData = {
+        tableName: tables[selectedTableIndex].tableName,
+        isFetched: false,
+        dataForMeasure: {},
+        rowsIds: [],
+        rows: {},
+        fieldsIds: [],
+        fields: {},
+        structureTable: {},
+      };
+      yield put(selectTableAction(tables[selectedTableIndex].tableName));
+      yield put(fetchTableDataAction({ table: tableData }));
 
       yield put(getTableSchemaAction(tables[tablesNames[0]]));
       yield* getTablesConstraints();
@@ -78,6 +93,13 @@ function* fetchTableData({
   payload: { table: { tableName }, startIndex, resolve },
 }) {
   yield put(toggleIsFetchedTablesDataAction(true));
+  const currentFavouriteId = yield cps(storage.get, 'LastSelectedFavorite');
+  const lastSelectedTables = yield cps(storage.get, 'LastSelectedTables');
+  if (lastSelectedTables[currentFavouriteId] !== tableName) {
+    lastSelectedTables[currentFavouriteId] = tableName;
+    yield cps(storage.set, 'LastSelectedTables', lastSelectedTables);
+  }
+
   let result;
   if (!startIndex) {
     const query = `
@@ -236,13 +258,13 @@ export function* getTablesConstraints() {
 
 function* getRowsCount() {
   const query = `
-    SELECT 
-    nspname AS schemaname,relname,reltuples 
-    FROM pg_class C 
-    LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace) 
-    WHERE 
-    nspname NOT IN ('pg_catalog', 'information_schema') AND 
-    relkind='r' 
+    SELECT
+    nspname AS schemaname,relname,reltuples
+    FROM pg_class C
+    LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace)
+    WHERE
+    nspname NOT IN ('pg_catalog', 'information_schema') AND
+    relkind='r'
     ORDER BY reltuples DESC
   `;
   const { rows } = yield cps(executeSQL, query, []);
