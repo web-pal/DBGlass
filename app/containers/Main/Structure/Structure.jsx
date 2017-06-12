@@ -8,7 +8,6 @@ import type { State } from '../../../types';
 
 import * as tablesActions from '../../../actions/tables';
 import {
-  getCurrentTableName,
   getCurrentTableSchema,
   getCurrentTableStructureRows,
   getTableConstraints,
@@ -186,7 +185,7 @@ function mapDispatchToProps(dispatch: Dispatch): {[key: string]: Function} {
 
 function mapStateToProps(state: State) {
   return {
-    tableName: getCurrentTableName({ tables: state.tables }),
+    tableName: state.tables.meta.currentTableName,
     tableSchema: getCurrentTableSchema({ tables: state.tables }),
     rows: getCurrentTableStructureRows({ tables: state.tables }),
     tableConstraints: getTableConstraints({ tables: state.tables }),
