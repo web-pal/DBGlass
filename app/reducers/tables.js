@@ -34,7 +34,17 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
         ...state,
         [action.payload.tableName]: {
           ...state[action.payload.tableName],
-          ...action.payload.data,
+          isFetched: true,
+          rowsIds: [
+            ...state[action.payload.tableName].rowsIds,
+            ...action.payload.data.rowsIds,
+          ],
+          rows: {
+            ...state[action.payload.tableName].rows,
+            ...action.payload.data.rows,
+          },
+          fields: action.payload.data.fields,
+          fieldsIds: action.payload.data.fieldsIds,
         },
       };
     case 'tables/SET_DATA_FOR_MEASURE': {
