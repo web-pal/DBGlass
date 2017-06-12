@@ -27,25 +27,26 @@ export const setTableNameSearchKey = (payload: ?IdString): Action =>
     payload,
   });
 
-export const fetchTableData = (
-  table: Table, startIndex: ?number, resolve: ?Function,
-): Action =>
+export const fetchTableData = (payload: {
+  table: Table,
+  startIndex: ?number,
+  resolve: ?Function
+}): Action =>
   ({
     type: 'tables/FETCH_TABLE_DATA_REQUEST',
-    payload: {
-      table,
-      startIndex,
-      resolve,
-    },
+    payload,
   });
 
-export const selectTable = (payload: string): Action =>
+export const selectTable = (payload: IdString): Action =>
   ({
     type: 'tables/SELECT_TABLE',
     payload,
   });
 
-export const setTableData = (payload: TableDataNormalizedPayload): Action =>
+export const setTableData = (payload: {
+  data: TableDataNormalizedPayload,
+  tableName: IdString
+}): Action =>
   ({
     type: 'tables/SET_TABLE_DATA',
     payload,
@@ -56,20 +57,14 @@ export const resetSelectTable = (): Action =>
     type: 'tables/RESET_SELECT_TABLE',
   });
 
-export const dropTableRequest = (
-  tableName: IdString,
-  parameters: ?Object,
-  selectedTableId: IdString,
-  currentTableId: ?IdString,
-  ): Action =>
+export const dropTableRequest = (payload: {
+  selectedElementName: IdString,
+  currentValues: ?Object,
+  currentTableName: ?IdString
+}): Action =>
   ({
     type: 'tables/DROP_TABLE_REQUEST',
-    payload: {
-      tableName,
-      parameters,
-      selectedTableId,
-      currentTableId,
-    },
+    payload,
   });
 
 export const dropTable = (payload: IdString): Action =>
@@ -78,18 +73,13 @@ export const dropTable = (payload: IdString): Action =>
     payload,
   });
 
-export const truncateTableRequest = (
-  tableName: IdString,
-  parameters: ?Object,
-  selectedTableId: IdString,
-  ): Action =>
+export const truncateTableRequest = (payload: {
+  selectedElementName: IdString,
+  currentValues: ?Object
+  }): Action =>
   ({
     type: 'tables/TRUNCATE_TABLE_REQUEST',
-    payload: {
-      tableName,
-      parameters,
-      selectedTableId,
-    },
+    payload,
   });
 
 export const truncateTable = (payload: IdString): Action =>
@@ -99,7 +89,7 @@ export const truncateTable = (payload: IdString): Action =>
   });
 
 export const setDataForMeasure = (payload: {
-  dataForMeasure: DataForMeasure, id: IdString
+  dataForMeasure: DataForMeasure, tableName: IdString
 }): Action =>
   ({
     type: 'tables/SET_DATA_FOR_MEASURE',
@@ -107,7 +97,7 @@ export const setDataForMeasure = (payload: {
   });
 
 export const setMeasureWidth = (payload: {
-  tableId: IdString, width: number, key: string
+  tableName: IdString, width: number, key: string
 }): Action =>
   ({
     type: 'tables/SET_MEASURE_WIDTH',
@@ -120,7 +110,7 @@ export const getTableSchema = (payload: Table): Action =>
     payload,
   });
 
-export const setTableSchema = (payload: {id: IdString, structureTable: {}}): Action =>
+export const setTableSchema = (payload: { tableName: IdString, structureTable: Object }): Action =>
   ({
     type: 'tables/SET_TABLE_SCHEMA',
     payload,
@@ -129,5 +119,17 @@ export const setTableSchema = (payload: {id: IdString, structureTable: {}}): Act
 export const setTablesConstraints = (payload: any): Action =>
   ({
     type: 'tables/SET_TABLES_CONSTRAINTS',
+    payload,
+  });
+
+export const setRowsCount = (payload: { relname: string, reltuples: number }): Action =>
+  ({
+    type: 'tables/SET_ROWS_COUNT',
+    payload,
+  });
+
+export const clearCurrentTable = (payload: IdString): Action =>
+  ({
+    type: 'tables/CLEAR_CURRENT_TABLE',
     payload,
   });

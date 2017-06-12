@@ -2,26 +2,25 @@
 import { combineReducers } from 'redux';
 import _ from 'lodash';
 
-import type { TablesIds, TablesIndexedMap, Action, TablesMetaState } from '../types';
+import type { TablesNames, TablesIndexedMap, Action, TablesMetaState } from '../types';
 
-function allItems(state: TablesIds = [], action: Action) {
+function allItems(state: TablesNames = [], action: Action) {
   switch (action.type) {
-    case 'tables/FILL':
-      return _.union(state, action.payload.ids);
+    case 'tables/FILL': {
+      return _.union(state, action.payload.tablesNames);
+    }
     case 'tables/CLEAR_TABLES':
       return [];
     case 'CLEAR_ALL_REDUCERS':
       return [];
-    case 'tables/DROP_TABLE': {
-      const { payload } = action;
-      return state.filter(id => id !== payload);
-    }
+    case 'tables/DROP_TABLE':
+      return state.filter(tableName => tableName !== action.payload);
     default:
       return state;
   }
 }
 
-function itemsById(state: TablesIndexedMap = {}, action: Action) {
+function itemsByName(state: TablesIndexedMap = {}, action: Action) {
   switch (action.type) {
     case 'tables/FILL':
       return {
@@ -30,59 +29,57 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
       };
     case 'tables/CLEAR_TABLES':
       return {};
-    case 'tables/SET_TABLE_DATA': {
+    case 'tables/SET_TABLE_DATA':
       return {
         ...state,
-        [+action.payload.id]: {
-          ...state[+action.payload.id],
+        [action.payload.tableName]: {
+          ...state[action.payload.tableName],
           isFetched: true,
           rowsIds: [
-            ...state[+action.payload.id].rowsIds,
-            ...action.payload.rowsIds,
+            ...state[action.payload.tableName].rowsIds,
+            ...action.payload.data.rowsIds,
           ],
           rows: {
-            ...state[+action.payload.id].rows,
-            ...action.payload.rows,
+            ...state[action.payload.tableName].rows,
+            ...action.payload.data.rows,
           },
-          fields: {
-            ...state[+action.payload.id].fields,
-            ...action.payload.fields,
-          },
-          fieldsIds: action.payload.fieldsIds,
+          fields: action.payload.data.fields,
+          fieldsIds: action.payload.data.fieldsIds,
         },
       };
-    }
-    case 'tables/SET_DATA_FOR_MEASURE':
+    case 'tables/SET_DATA_FOR_MEASURE': {
       return {
         ...state,
-        [action.payload.id]: {
-          ...state[+action.payload.id],
+        [action.payload.tableName]: {
+          ...state[action.payload.tableName],
           dataForMeasure: {
-            ...state[+action.payload.id].dataForMeasure,
+            ...state[action.payload.tableName].dataForMeasure,
             ...action.payload.dataForMeasure,
           },
         },
       };
-    case 'tables/SET_MEASURE_WIDTH':
+    }
+    case 'tables/SET_MEASURE_WIDTH': {
       return {
         ...state,
-        [action.payload.tableId]: {
-          ...state[+action.payload.tableId],
+        [action.payload.tableName]: {
+          ...state[action.payload.tableName],
           dataForMeasure: {
-            ...state[+action.payload.tableId].dataForMeasure,
+            ...state[action.payload.tableName].dataForMeasure,
             [action.payload.key]: {
-              ...state[+action.payload.tableId].dataForMeasure[action.payload.key],
+              ...state[action.payload.tableName].dataForMeasure[action.payload.key],
               width: action.payload.width,
               isMeasured: true,
             },
           },
         },
       };
+    }
     case 'tables/SET_TABLE_SCHEMA':
       return {
         ...state,
-        [+action.payload.id]: {
-          ...state[+action.payload.id],
+        [action.payload.tableName]: {
+          ...state[action.payload.tableName],
           structureTable: {
             ...action.payload.structureTable,
           },
@@ -91,8 +88,8 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
     case 'tables/SET_TABLES_CONSTRAINTS':
       return {
         ...state,
-        [action.payload.tableId]: {
-          ...state[action.payload.tableId],
+        [action.payload.tableName]: {
+          ...state[action.payload.tableName],
           constraints: {
             ...action.payload,
           },
@@ -107,9 +104,32 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
       return {
         ...state,
         [action.payload]: {
-          ...state[+action.payload],
+          ...state[action.payload],
           rows: {},
           rowsIds: [],
+        },
+      };
+    case 'tables/SET_ROWS_COUNT':
+      return {
+        ...state,
+        [action.payload.relname]: {
+          ...state[action.payload.relname],
+          rowsCount: action.payload.reltuples,
+        },
+      };
+    case 'tables/CLEAR_CURRENT_TABLE':
+      return {
+        ...state,
+        [action.payload]: {
+          ...state[action.payload],
+          rowsIds: [],
+          rows: {},
+          fieldsIds: [],
+          fields: {},
+          isFetched: false,
+          structureTable: {},
+          dataForMeasure: {},
+          rowsCount: 0,
         },
       };
     default:
@@ -119,7 +139,7 @@ function itemsById(state: TablesIndexedMap = {}, action: Action) {
 
 const initialMeta: TablesMetaState = {
   tableNameSearchKey: null,
-  currentTableId: null,
+  currentTableName: null,
 };
 
 function meta(state: TablesMetaState = initialMeta, action: Action) {
@@ -132,12 +152,12 @@ function meta(state: TablesMetaState = initialMeta, action: Action) {
     case 'tables/SELECT_TABLE':
       return {
         ...state,
-        currentTableId: action.payload,
+        currentTableName: action.payload,
       };
     case 'tables/RESET_SELECT_TABLE':
       return {
         ...state,
-        currentTableId: null,
+        currentTableName: null,
       };
     case 'CLEAR_ALL_REDUCERS':
       return initialMeta;
@@ -147,7 +167,7 @@ function meta(state: TablesMetaState = initialMeta, action: Action) {
 }
 
 export default combineReducers({
-  byId: itemsById,
-  allIds: allItems,
+  byName: itemsByName,
+  allNames: allItems,
   meta,
 });

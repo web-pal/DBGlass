@@ -1,9 +1,9 @@
 export const getValuesForModal = (contextMenuValues, actionType) => {
-  const { elementType, elementName } = contextMenuValues;
+  const { selectedElementType, selectedElementName } = contextMenuValues;
   const values = {
     actionType,
-    elementType,
-    elementName,
+    selectedElementType,
+    selectedElementName,
   };
   return values;
 };

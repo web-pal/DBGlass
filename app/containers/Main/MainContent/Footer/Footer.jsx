@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 
 import { Icon } from '../../../../components/shared/styled';
+import type { Table } from '../../../../types';
 
 import {
   ContentWrapper,
@@ -14,13 +15,43 @@ import {
   PagesInfo,
   Label,
   IconArrow,
+  RefreshButton,
 } from './styled';
 
+type Props = {
+  currentTableName: string,
+  clearCurrentTable: (string) => void,
+  getTableSchema: (Table) => void,
+  table: Table,
+  fetchTableData: ({ table: Table }) => void
+};
+
 class Footer extends Component {
+  props: Props;
+
+  refreshCurrentTable = () => {
+    const {
+      currentTableName,
+      table,
+      getTableSchema,
+      clearCurrentTable,
+      fetchTableData,
+    }: Props = this.props;
+    if (currentTableName) {
+      clearCurrentTable(currentTableName);
+      getTableSchema(table);
+      fetchTableData({ table });
+    }
+  }
   render() {
+    const { table: { rowsCount, rowsIds } } = this.props;
     return (
       <ContentWrapper>
         <SettingButtonsGroup>
+          <RefreshButton onClick={this.refreshCurrentTable}>
+            <Icon className="fa fa-refresh" />
+            <Label>Refresh</Label>
+          </RefreshButton>
           <ContentButton>
             <Icon className="fa fa-list" />
             <Label>Content</Label>
@@ -39,7 +70,7 @@ class Footer extends Component {
           </SettingButton>
         </SettingButtonsGroup>
         <TableInfoContainer>
-          1 - 6 of 6
+          {+rowsIds[0] + 1} - {+rowsIds[rowsIds.length - 1] + 1} of {rowsCount}
         </TableInfoContainer>
         <SelectPagesContainer>
           <ArrowButton>

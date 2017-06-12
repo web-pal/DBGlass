@@ -8,7 +8,7 @@ import * as uiActions from '../../actions/ui';
 import * as tablesActions from '../../actions/tables';
 import * as favoritesActions from '../../actions/favorites';
 import * as contextMenuActions from '../../actions/contextMenu';
-import type { Dispatch, Tables, State, IdString, Table } from '../../types';
+import type { Dispatch, Tables, State, IdString, Table, ContextMenuState } from '../../types';
 import { getFiltredTables, getTablesQuantity } from '../../selectors/tables';
 
 import { getCurrentDBName } from '../../selectors/tableName';
@@ -43,11 +43,11 @@ import {
 } from './styled';
 
 type Props = {
-  toggleContextMenu: (string, ?string, string) => void,
+  toggleContextMenu: (ContextMenuState) => void,
   fetchTablesRequest: (?IdString) => void,
   setTableNameSearchKey: (?IdString) => void,
   toggleMenu: (boolean) => void,
-  fetchTableData: (Table) => void,
+  fetchTableData: ({ table: Table }) => void,
   selectTable: (?string) => void,
   getTableSchema: (Table) => void,
   tables: Tables,
@@ -76,15 +76,15 @@ class Main extends Component {
       this.props.toggleMenu(false);
     }
   }
-  handleRightClick = (tableId, tableName) => {
-    this.props.toggleContextMenu('table', tableId, tableName);
+  handleRightClick = (tableName) => {
+    this.props.toggleContextMenu({ selectedElementType: 'table', selectedElementName: tableName });
   }
 
   fetchTable = (table) => {
-    this.props.selectTable(table.id);
+    this.props.selectTable(table.tableName);
     if (!table.isFetched) {
       this.props.getTableSchema(table);
-      this.props.fetchTableData(table);
+      this.props.fetchTableData({ table });
     }
   }
 
@@ -120,11 +120,11 @@ class Main extends Component {
               )}
             </LoaderContainer>
             <TablesContainer display={isTablesFetched}>
-              {tables.map(table =>
+              {tables.map((table) =>
                 <TableContent
-                  key={table.id}
-                  onContextMenu={() => this.handleRightClick(table.id, table.tableName)}
-                  active={currentTable === table.id}
+                  key={table.tableName}
+                  onContextMenu={() => this.handleRightClick(table.tableName)}
+                  active={currentTable === table.tableName}
                   onClick={() => this.fetchTable(table)}
                 >
                   <TableIcon className="fa fa-table" />
@@ -181,7 +181,7 @@ function mapStateToProps(state: State) {
     isMenuOpen: state.ui.isMenuOpen,
     currentFavoriteId: state.favorites.meta.currentFavoriteId,
     tablesQuantity: getTablesQuantity({ favorites: state.favorites }),
-    currentTable: state.tables.meta.currentTableId,
+    currentTable: state.tables.meta.currentTableName,
     isTablesFetched: state.ui.isTablesFetched,
   };
 }

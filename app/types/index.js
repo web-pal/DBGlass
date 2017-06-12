@@ -8,7 +8,7 @@ import type {
 import type { ContextMenuState } from './contextMenu';
 import type { ModalState } from './modal';
 
-import type { TableNormalizePayload, TablesIndexedMap, TablesIds, TablesMetaState, Table, DataForMeasure } from './tables';
+import type { TableNormalizePayload, TablesIndexedMap, TablesNames, TablesMetaState, Table, DataForMeasure } from './tables';
 import type { TableDataNormalizedPayload } from './currentTable';
 import type { uiState } from './ui';
 
@@ -35,20 +35,24 @@ export type Action =
 | { type: 'tables/FILL', +payload: TableNormalizePayload }
 | { type: 'tables/CLEAR_TABLES' }
 | { type: 'tables/SET_TABLENAME_SEARCH_KEY', +payload: ?IdString }
-| { type: 'tables/FETCH_TABLE_DATA_REQUEST', +table: Table, +startIndex: ?number, +stopIndex: ?number, +resolve: ?Function }
+| { type: 'tables/FETCH_TABLE_DATA_REQUEST', +payload: { table: Table, startIndex: ?number, resolve: ?Function } }
 | { type: 'tables/SELECT_TABLE', +payload: string }
-| { type: 'tables/SET_TABLE_DATA', +payload: TableDataNormalizedPayload }
+| { type: 'tables/SET_TABLE_DATA', +payload: { data: TableDataNormalizedPayload, tableName: IdString } }
 | { type: 'tables/RESET_SELECT_TABLE' }
-| { type: 'tables/DROP_TABLE_REQUEST', +payload: Object }
+| { type: 'tables/DROP_TABLE_REQUEST', +payload: { tableName: IdString, parameters: ?Object, currentTableName: ?IdString } }
 | { type: 'tables/DROP_TABLE', +payload: IdString }
 | { type: 'tables/TRUNCATE_TABLE_REQUEST', +payload: Object }
 | { type: 'tables/TRUNCATE_TABLE', +payload: IdString }
-| { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: DataForMeasure, id: IdString } }
-| { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableId: IdString, width: number, key: string } }
+| { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: DataForMeasure, tableName: string } }
+| { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableName: IdString, width: number, key: string } }
 | { type: 'tables/GET_TABLE_SCHEMA', +payload: Table }
-| { type: 'tables/SET_TABLE_SCHEMA', +payload: {id: IdString, structureTable: {} } }
+| { type: 'tables/SET_TABLE_SCHEMA', +payload: { tableName: IdString, structureTable: Object } }
+| { type: 'tables/SET_TABLES_CONSTRAINTS', +payload: any }
+| { type: 'tables/SET_ROWS_COUNT', +payload: { relname: string, reltuples: number } }
+| { type: 'tables/CLEAR_CURRENT_TABLE', +payload: string }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
+| { type: 'ui/TOGGLE_IS_FETCH_TABLES_DATA', +payload: string }
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }
 | { type: 'ui/TOGGLE_CONNECTING_LADDA', +payload: boolean }
 | { type: 'ui/TOGGLE_IS_FETCH_TABLES', +payload: boolean }
@@ -68,8 +72,8 @@ export type State = {
     +meta: FavoritesMetaState
   },
   +tables: {
-    +byId: TablesIndexedMap,
-    +allIds: TablesIds,
+    +byName: TablesIndexedMap,
+    +allNames: TablesNames,
     +meta: TablesMetaState
   }
 };

@@ -13,6 +13,7 @@ import {
   getTableSchema as getTableSchemaAction,
   setTableSchema as setTableSchemaAction,
   setTablesConstraints as setTablesConstraintsAction,
+  setRowsCount as setRowsCountAction,
 } from '../actions/tables';
 import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
 
@@ -24,6 +25,7 @@ import {
 
 import {
   toggleIsFetchedTables as toggleIsFetchedTablesAction,
+  toggleIsFetchedTablesData as toggleIsFetchedTablesDataAction,
 } from '../actions/ui';
 
 export function* fetchTables() {
@@ -37,13 +39,11 @@ export function* fetchTables() {
     `;
 
     const result = yield cps(executeSQL, query, []);
-    const tablesIds = [];
+    const tablesNames = [];
     const tables = {};
-    result.rows.map((t, i) => {
-      const id = (i + 1).toString();
-      tablesIds.push(id);
-      tables[id] = {
-        id,
+    result.rows.forEach(t => {
+      tablesNames.push(t.table_name);
+      tables[t.table_name] = {
         tableName: t.table_name,
         isFetched: false,
         dataForMeasure: {},
@@ -52,45 +52,32 @@ export function* fetchTables() {
         fieldsIds: [],
         fields: {},
       };
-      return id;
     });
     yield put(fillTablesAction({
-      ids: tablesIds,
+      tablesNames,
       map: tables,
     }));
-
     yield put(toggleIsFetchedTablesAction(true));
-
     if (payload) {
       yield put(addFavoriteTablesQuantity({
-        currentFavoriteId: payload, quantity: tablesIds.length,
+        currentFavoriteId: payload, quantity: tablesNames.length,
       }));
     }
 
-    if (tablesIds.length) {
-      const tableData = {
-        id: tables[tablesIds[0]].id,
-        tableName: tables[tablesIds[0]].tableName,
-        isFetched: false,
-        dataForMeasure: {},
-        rowsIds: [],
-        rows: {},
-        fieldsIds: [],
-        fields: {},
-        structureTable: {},
-      };
-      yield put(selectTableAction(tables[tablesIds[0]].id));
-      yield put(fetchTableDataAction(tableData));
+    if (tablesNames.length) {
+      yield put(selectTableAction(tablesNames[0]));
+      yield put(fetchTableDataAction({ table: tables[tablesNames[0]] }));
 
-      yield put(getTableSchemaAction(tableData));
-      yield* getTablesConstraints(tables);
+      yield put(getTableSchemaAction(tables[tablesNames[0]]));
+      yield* getTablesConstraints();
     }
   }
 }
 
 function* fetchTableData({
-  payload: { table: { id, tableName }, startIndex, resolve },
+  payload: { table: { tableName }, startIndex, resolve },
 }) {
+  yield put(toggleIsFetchedTablesDataAction(true));
   let result;
   if (!startIndex) {
     const query = `
@@ -98,11 +85,12 @@ function* fetchTableData({
       FROM ${tableName}
       LIMIT 100
     `;
-    result = yield cps(executeAndNormalizeSelectSQL, query, { id, startIndex });
+    result = yield cps(executeAndNormalizeSelectSQL, query, {});
     yield put(setDataForMeasureAction({
       dataForMeasure: result.dataForMeasure,
-      id: result.data.id,
+      tableName,
     }));
+    yield* getRowsCount();
     yield delay(100); // This delay needs to measure cells
   } else {
     const query = `
@@ -110,9 +98,10 @@ function* fetchTableData({
       FROM ${tableName}
       LIMIT 100 OFFSET ${startIndex}
     `;
-    result = yield cps(executeAndNormalizeSelectSQL, query, { id, startIndex });
+    result = yield cps(executeAndNormalizeSelectSQL, query, { startIndex });
   }
-  yield put(setTableDataAction(result.data));
+  yield put(setTableDataAction({ data: result.data, tableName }));
+  yield put(toggleIsFetchedTablesDataAction(false));
   if (resolve) {
     resolve();
   }
@@ -124,20 +113,19 @@ export function* fetchTableDataWatch() {
 
 export function* dropTable({
   payload: {
-    tableName,
-    selectedTableId,
-    parameters,
-    currentTableId,
+    selectedElementName,
+    currentValues,
+    currentTableName,
   },
 }) {
-  const query = `DROP TABLE IF EXISTS "public"."${tableName}" ${parameters ? (parameters.cascade && 'CASCADE') : ''}`;
+  const query = `DROP TABLE IF EXISTS "public"."${selectedElementName}" ${currentValues ? (currentValues.cascade && 'CASCADE') : ''}`;
   try {
     yield cps(executeSQL, query, []);
-    if (currentTableId === selectedTableId) yield put(resetSelectTableAction());
-    yield put(dropTableAction(selectedTableId));
+    if (currentTableName === selectedElementName) yield put(resetSelectTableAction());
+    yield put(dropTableAction(selectedElementName));
     yield put(hideModalAction());
   } catch (error) {
-    yield put(toggleModalAction('ErrorModal', error));
+    yield put(toggleModalAction({ component: 'ErrorModal', error }));
   }
 }
 
@@ -147,23 +135,30 @@ export function* dropTableRequest() {
 
 export function* truncateTable({
   payload: {
-    tableName,
-    selectedTableId,
-    parameters,
+    selectedElementName,
+    currentValues,
   },
 }) {
-  const query = `
-    TRUNCATE "public".
-    "${tableName}"
-    ${parameters ? (parameters.restartIdentity && 'RESTART IDENTITY') : ''}
-    ${parameters ? (parameters.cascade && 'CASCADE') : ''}
-  `;
+  let query;
+  if (currentValues) {
+    query = `
+      TRUNCATE "public".
+      "${selectedElementName}"
+      ${currentValues.restartIdentity ? 'RESTART IDENTITY' : ''}
+      ${currentValues.cascade ? 'CASCADE' : ''}
+    `;
+  } else {
+    query = `
+      TRUNCATE "public".
+      "${selectedElementName}"
+    `;
+  }
   try {
     yield cps(executeSQL, query, []);
-    yield put(truncateTableAction(selectedTableId));
+    yield put(truncateTableAction(selectedElementName));
     yield put(hideModalAction());
   } catch (error) {
-    yield put(toggleModalAction('ErrorModal', error));
+    yield put(toggleModalAction({ component: 'ErrorModal', error }));
   }
 }
 
@@ -171,7 +166,7 @@ export function* truncateTableRequest() {
   yield takeEvery('tables/TRUNCATE_TABLE_REQUEST', truncateTable);
 }
 
-export function* getTableSchema({ payload: { id, tableName, isFetched } }) {
+export function* getTableSchema({ payload: { tableName, isFetched } }) {
   if (!isFetched) {
     const query = `select *
       from information_schema.columns where table_name = '${tableName}'`;
@@ -185,7 +180,7 @@ export function* getTableSchema({ payload: { id, tableName, isFetched } }) {
       };
       return index;
     });
-    yield put(setTableSchemaAction({ id, structureTable }));
+    yield put(setTableSchemaAction({ tableName, structureTable }));
   }
 }
 
@@ -193,7 +188,7 @@ export function* getTableSchemaWatch() {
   yield takeEvery('tables/GET_TABLE_SCHEMA', getTableSchema);
 }
 
-export function* getTablesConstraints(tables) {
+export function* getTablesConstraints() {
   const query = `SELECT tc.constraint_name,
     tc.constraint_type,
     tc.table_name,
@@ -221,20 +216,37 @@ export function* getTablesConstraints(tables) {
     WHERE lower(tc.constraint_type) in ('foreign key')`;
   const result = yield cps(executeSQL, query, []);
   const constraints = {};
-  const constraintsIds = [];
+  const constraintsNames = [];
   result.rows.map((row, index) => {
-    const tableId = Object.values(tables).filter(table => table.tableName === row.table_name)[0].id;
-    constraintsIds.push(tableId);
+    const tableName = row.table_name;
+    constraintsNames.push(tableName);
 
-    constraints[tableId] = {
+    constraints[row.table_name] = {
       ...row,
-      tableId,
+      tableName,
     };
 
     return index;
   });
 
-  for (let i = 0; i < constraintsIds.length; i++) { // eslint-disable-line
-    yield put(setTablesConstraintsAction(constraints[constraintsIds[i]]));
+  for (let i = 0; i < constraintsNames.length; i++) { // eslint-disable-line
+    yield put(setTablesConstraintsAction(constraints[constraintsNames[i]]));
+  }
+}
+
+function* getRowsCount() {
+  const query = `
+    SELECT 
+    nspname AS schemaname,relname,reltuples 
+    FROM pg_class C 
+    LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace) 
+    WHERE 
+    nspname NOT IN ('pg_catalog', 'information_schema') AND 
+    relkind='r' 
+    ORDER BY reltuples DESC
+  `;
+  const { rows } = yield cps(executeSQL, query, []);
+  for (let i = 0; i < rows.length; i++) { // eslint-disable-line
+    yield put(setRowsCountAction(rows[i]));
   }
 }

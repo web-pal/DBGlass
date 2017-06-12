@@ -16,7 +16,7 @@ import {
 
 type Props = {
   hideModal: () => void,
-  values: Object
+  error: Object
 };
 
 class ErrorModal extends Component {
@@ -25,7 +25,7 @@ class ErrorModal extends Component {
   render() {
     const {
       hideModal,
-      values,
+      error,
     } = this.props;
     return (
       <Base onHide={hideModal}>
@@ -34,7 +34,7 @@ class ErrorModal extends Component {
             Error!
           </Header>
           <Content>
-            {values.message}
+            {error.message}
           </Content>
           <ButtonsGroup>
             <CloseButton

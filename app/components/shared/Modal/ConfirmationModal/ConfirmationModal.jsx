@@ -28,12 +28,18 @@ import {
 
 type Props = {
   hideModal: () => void,
-  dropTableRequest: (string, ?Object, string, ?string) => void,
-  truncateTableRequest: (string, ?Object, string) => void,
+  dropTableRequest: ({
+    selectedElementName: string,
+    currentValues: ?Object,
+    currentTableName: ?string
+  }) => void,
+  truncateTableRequest: ({
+    selectedElementName: string,
+    currentValues: ?Object
+  }) => void,
   modal: Object,
   currentValues: ?Object,
-  selectedTableId: ?string,
-  currentTableId: ?string
+  currentTableName: ?string
 };
 
 class ConfirmationModal extends Component {
@@ -43,20 +49,19 @@ class ConfirmationModal extends Component {
     const {
       dropTableRequest,
       currentValues,
-      selectedTableId,
-      currentTableId,
+      currentTableName,
       truncateTableRequest,
       modal: {
         values: {
           actionType,
-          elementName,
+          selectedElementName,
         },
       },
     } = this.props;
     if (actionType === 'drop') {
-      dropTableRequest(elementName, currentValues, selectedTableId, currentTableId);
+      dropTableRequest({ selectedElementName, currentValues, currentTableName });
     } else {
-      truncateTableRequest(elementName, currentValues, selectedTableId);
+      truncateTableRequest({ selectedElementName, currentValues });
     }
   }
   render() {
@@ -65,8 +70,8 @@ class ConfirmationModal extends Component {
       modal: {
         values: {
           actionType,
-          elementType,
-          elementName,
+          selectedElementType,
+          selectedElementName,
         },
       },
     } = this.props;
@@ -74,7 +79,7 @@ class ConfirmationModal extends Component {
       <Base onHide={hideModal}>
         <MainContainer>
           <Header>
-            Do you want to {actionType} {elementName}?
+            Do you want to {actionType} {selectedElementName}?
             {
               actionType === 'truncate'
               ? <ActionDescription>
@@ -88,7 +93,7 @@ class ConfirmationModal extends Component {
           </Header>
           <Content>
             {
-              elementType === 'table' &&
+              selectedElementType === 'table' &&
               <ModalTools>
                 {
                   actionType === 'truncate' &&
@@ -151,8 +156,7 @@ function mapStateToProps(state: State) {
   return {
     currentValues: getFormValues('ConfirmationModal')(state),
     modal: state.modal,
-    selectedTableId: state.contextMenu.elementId,
-    currentTableId: state.tables.meta.currentTableId,
+    currentTableName: state.tables.meta.currentTableName,
   };
 }
 

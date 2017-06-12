@@ -21,7 +21,7 @@ type Props = {
     value: string,
     isMeasured: boolean,
     width: ?number,
-    tableId: string
+    tableName: string
   }>
 };
 
@@ -36,7 +36,9 @@ class MeasureCells extends Component {
           <Measure
             key={item.name}
             onResize={({ entry }) => setMeasureWidth({
-              tableId: item.tableId, width: entry.width > 350 ? 350 : entry.width, key: item.name,
+              tableName: item.tableName,
+              width: entry.width > 350 ? 350 : entry.width,
+              key: item.name,
             })}
           >
             {({ measureRef }) =>

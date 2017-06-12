@@ -2,13 +2,13 @@ import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { getFavoritesMap } from './favorites';
 
-export const getTablesMap = ({ tables }) => tables.byId;
-export const getTablesByIds = ({ tables }) => tables.allIds;
+export const getTablesMap = ({ tables }) => tables.byName;
+export const getTablesbyNames = ({ tables }) => tables.allNames;
 export const getTableNameSearchKey = ({ tables }) => tables.meta.tableNameSearchKey;
 
 export const getTables = createSelector(
-  [getTablesByIds, getTablesMap],
-  (ids, map) => ids.map(id => map[id]),
+  [getTablesbyNames, getTablesMap],
+  (names, map) => names.map(name => map[name]),
 );
 
 export const getCurrentFavoriteId = ({ favorites }) => favorites.meta.currentFavoriteId;
@@ -23,9 +23,9 @@ export const getTablesQuantity = createSelector(
 );
 
 export const getFiltredTables = createSelector(
-  [getTablesByIds, getTablesMap, getTableNameSearchKey],
-  (ids, map, searchKey) => {
-    const tablesList = ids.map(id => map[id]);
+  [getTablesbyNames, getTablesMap, getTableNameSearchKey],
+  (names, map, searchKey) => {
+    const tablesList = names.map(name => map[name]);
     const filtredTables = tablesList.filter(item => item.tableName.includes(searchKey));
     return searchKey
       ? filtredTables
@@ -33,11 +33,11 @@ export const getFiltredTables = createSelector(
   },
 );
 
-export const getTableId = ({ tables }) => tables.meta.currentTableId;
+export const getTableName = ({ tables }) => tables.meta.currentTableName;
 export const getCurrentTableFieldsIds = ({ tables }) =>
-  tables.byId[tables.meta.currentTableId].fieldsIds;
+  tables.byName[tables.meta.currentTableName].fieldsIds;
 export const getCurrentTableFields = ({ tables }) =>
-  tables.byId[tables.meta.currentTableId].fields;
+  tables.byName[tables.meta.currentTableName].fields;
 
 export const getTableFields = createSelector(
   [getCurrentTableFieldsIds, getCurrentTableFields],
@@ -45,15 +45,17 @@ export const getTableFields = createSelector(
 );
 
 export const getCurrentTableRowsIds = ({ tables }) =>
-  tables.byId[tables.meta.currentTableId].rowsIds;
+  tables.byName[tables.meta.currentTableName].rowsIds;
 export const getCurrentTableRows = ({ tables }) =>
-  tables.byId[tables.meta.currentTableId].rows;
+  tables.byName[tables.meta.currentTableName].rows;
+export const getCurrentTableRowsCount = ({ tables }) =>
+  tables.byName[tables.meta.currentTableName].rowsCount;
 
 export const getDataForMeasure = createSelector(
-  [getTableId, getTablesMap],
-  (id, map) => {
-    if (id) {
-      const data = Object.values(map).filter(item => item.id === id)[0].dataForMeasure;
+  [getTableName, getTablesMap],
+  (name, map) => {
+    if (name) {
+      const data = map[name].dataForMeasure;
       return data;
     }
     return {};
@@ -61,13 +63,13 @@ export const getDataForMeasure = createSelector(
 );
 
 export const getDataForMeasureCells = createSelector(
-  [getTablesByIds, getTablesMap],
-  (ids, map) => {
+  [getTablesbyNames, getTablesMap],
+  (names, map) => {
     const arr = [];
-    ids.forEach(id => {
-      if (Object.keys(map[id].dataForMeasure).length) {
-        const data = Object.values(map[id].dataForMeasure).filter(item => !item.isMeasured);
-        data.forEach(item => _.assign(item, { tableId: id }));
+    names.forEach(name => {
+      if (Object.keys(map[name].dataForMeasure).length) {
+        const data = Object.values(map[name].dataForMeasure).filter(item => !item.isMeasured);
+        data.forEach(item => _.assign(item, { tableName: name }));
         arr.push(...data);
       }
     });
@@ -75,12 +77,8 @@ export const getDataForMeasureCells = createSelector(
   },
 );
 
-export const getCurrentTableName = createSelector(
-  [getTableId, getTablesMap],
-  (id, map) => Object.values(map).filter(item => item.id === id)[0].tableName,
-);
-
 export const getCurrentTable = createSelector(
-  [getTablesByIds, getTablesMap, getTableId],
-  (ids, map, currentId) => ids.map(id => map[id]).filter(item => item.id === currentId)[0],
+  [getTablesbyNames, getTablesMap, getTableName],
+  (names, map, currentName) =>
+  names.map(name => map[name]).filter(item => item.tableName === currentName)[0],
 );
