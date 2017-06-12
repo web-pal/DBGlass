@@ -107,3 +107,28 @@ export const getTableConstraints = createSelector(
     return constraints;
   },
 );
+
+export const getCurrentTableSchema = createSelector(
+  [getTableId, getTablesMap],
+  (id, map) => {
+    const tableStructure = Object.values(map).filter(item => item.id === id)[0].structureTable;
+    return tableStructure ? tableStructure['0'].table_schema : '';
+  },
+);
+
+export const getCurrentTableStructureRows = createSelector(
+  [getTableId, getTablesMap],
+  (id, map) => {
+    const structure = Object.values(map).filter(item => item.id === id)[0].structureTable;
+    return structure ? Object.values(structure) : [];
+  },
+);
+
+
+export const getTableConstraints = createSelector(
+  [getTableId, getTablesMap],
+  (id, map) => {
+    const constraints = Object.values(map).filter(item => item.id === id)[0].constraints;
+    return constraints;
+  },
+);
