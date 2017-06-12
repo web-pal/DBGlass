@@ -69,9 +69,8 @@ export function* fetchTables() {
       const currentFavouriteId = yield cps(storage.get, 'LastSelectedFavorite');
       const selectTable = yield cps(storage.get, 'LastSelectedTables');
       const selectedTableIndex = selectTable[currentFavouriteId] ?
-        selectTable[currentFavouriteId] : 1;
+        selectTable[currentFavouriteId] : Object.values(tables)[0].tableName;
       const tableData = {
-        id: tables[selectedTableIndex].id,
         tableName: tables[selectedTableIndex].tableName,
         isFetched: false,
         dataForMeasure: {},
@@ -81,8 +80,8 @@ export function* fetchTables() {
         fields: {},
         structureTable: {},
       };
-      yield put(selectTableAction(tables[selectedTableIndex].id));
-      yield put(fetchTableDataAction(tableData));
+      yield put(selectTableAction(tables[selectedTableIndex].tableName));
+      yield put(fetchTableDataAction({ table: tableData }));
 
       yield put(getTableSchemaAction(tables[tablesNames[0]]));
       yield* getTablesConstraints();
@@ -91,13 +90,13 @@ export function* fetchTables() {
 }
 
 function* fetchTableData({
-  payload: { table: { id, tableName }, startIndex, resolve },
+  payload: { table: { tableName }, startIndex, resolve },
 }) {
   yield put(toggleIsFetchedTablesDataAction(true));
   const currentFavouriteId = yield cps(storage.get, 'LastSelectedFavorite');
   const lastSelectedTables = yield cps(storage.get, 'LastSelectedTables');
-  if (lastSelectedTables[currentFavouriteId] !== id) {
-    lastSelectedTables[currentFavouriteId] = id;
+  if (lastSelectedTables[currentFavouriteId] !== tableName) {
+    lastSelectedTables[currentFavouriteId] = tableName;
     yield cps(storage.set, 'LastSelectedTables', lastSelectedTables);
   }
 
