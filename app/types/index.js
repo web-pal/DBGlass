@@ -50,6 +50,7 @@ export type Action =
 | { type: 'tables/SET_TABLES_CONSTRAINTS', +payload: any }
 | { type: 'tables/SET_ROWS_COUNT', +payload: { relname: string, reltuples: number } }
 | { type: 'tables/CLEAR_CURRENT_TABLE', +payload: string }
+| { type: 'tables/CHANGE_VIEW_MODE', +payload: boolean }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
 | { type: 'ui/SET_CONNECTION_ERROR', +payload: string }
 | { type: 'ui/TOGGLE_IS_FETCH_TABLES_DATA', +payload: string }

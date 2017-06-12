@@ -1,8 +1,14 @@
 // @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import type { Connector } from 'react-redux';
+import type { State, Table } from '../../../../types';
+
+import * as tablesActions from '../../../../actions/tables';
 
 import { Icon } from '../../../../components/shared/styled';
-import type { Table } from '../../../../types';
 
 import {
   ContentWrapper,
@@ -23,7 +29,9 @@ type Props = {
   clearCurrentTable: (string) => void,
   getTableSchema: (Table) => void,
   table: Table,
-  fetchTableData: ({ table: Table }) => void
+  fetchTableData: ({ table: Table }) => void,
+  changeViewMode: (boolean) => void,
+  isContent: boolean
 };
 
 class Footer extends Component {
@@ -44,7 +52,7 @@ class Footer extends Component {
     }
   }
   render() {
-    const { table: { rowsCount, rowsIds } } = this.props;
+    const { table: { rowsCount, rowsIds }, isContent, changeViewMode } = this.props;
     return (
       <ContentWrapper>
         <SettingButtonsGroup>
@@ -52,11 +60,11 @@ class Footer extends Component {
             <Icon className="fa fa-refresh" />
             <Label>Refresh</Label>
           </RefreshButton>
-          <ContentButton>
+          <ContentButton active={isContent} onClick={() => changeViewMode(true)}>
             <Icon className="fa fa-list" />
             <Label>Content</Label>
           </ContentButton>
-          <SettingButton>
+          <SettingButton active={!isContent} onClick={() => changeViewMode(false)}>
             <Icon className="fa fa-list-alt" />
             <Label>Structure</Label>
           </SettingButton>
@@ -88,4 +96,24 @@ class Footer extends Component {
   }
 }
 
-export default Footer;
+function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
+  return bindActionCreators(
+    {
+      ...tablesActions,
+    },
+    dispatch,
+  );
+}
+
+function mapStateToProps(state: State) {
+  return {
+    isContent: state.tables.meta.isContent,
+  };
+}
+
+const connector: Connector<{}, Props> = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+
+export default connector(Footer);

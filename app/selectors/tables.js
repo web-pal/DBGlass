@@ -82,3 +82,28 @@ export const getCurrentTable = createSelector(
   (names, map, currentName) =>
   names.map(name => map[name]).filter(item => item.tableName === currentName)[0],
 );
+
+export const getCurrentTableSchema = createSelector(
+  [getTableName, getTablesMap],
+  (name, map) => {
+    const tableStructure = Object.values(map).filter(item => item.tableName === name)[0].structureTable;
+    return tableStructure ? tableStructure['0'].table_schema : '';
+  },
+);
+
+export const getCurrentTableStructureRows = createSelector(
+  [getTableName, getTablesMap],
+  (name, map) => {
+    const structure = Object.values(map).filter(item => item.tableName === name)[0].structureTable;
+    return structure ? Object.values(structure) : [];
+  },
+);
+
+
+export const getTableConstraints = createSelector(
+  [getTableName, getTablesMap],
+  (name, map) => {
+    const constraints = Object.values(map).filter(item => item.tableName === name)[0].constraints;
+    return constraints;
+  },
+);
