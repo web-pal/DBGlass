@@ -31,7 +31,7 @@ export type Action =
 | { type: 'favorites/SELECT', +payload: ?IdString }
 | { type: 'favorites/REMOVE', +payload: IdString }
 | { type: 'favorites/ADD_FAVORITE_TABLES_QUANTITY', +payload: FavoriteTablesQuantity }
-| { type: 'tables/FETCH_REQUEST', +payload: ?IdString }
+| { type: 'tables/FETCH_REQUEST' }
 | { type: 'tables/FILL', +payload: TableNormalizePayload }
 | { type: 'tables/CLEAR_TABLES' }
 | { type: 'tables/SET_TABLENAME_SEARCH_KEY', +payload: ?IdString }
@@ -47,7 +47,7 @@ export type Action =
 | { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableName: IdString, width: number, key: string } }
 | { type: 'tables/GET_TABLE_SCHEMA', +payload: Table }
 | { type: 'tables/SET_TABLE_SCHEMA', +payload: { tableName: IdString, structureTable: Object } }
-| { type: 'tables/SET_TABLES_CONSTRAINTS', +payload: any }
+| { type: 'tables/SET_TABLES_FOREIGN_KEYS', +payload: any }
 | { type: 'tables/SET_ROWS_COUNT', +payload: { relname: string, reltuples: number } }
 | { type: 'tables/CLEAR_CURRENT_TABLE', +payload: string }
 | { type: 'tables/CHANGE_VIEW_MODE', +payload: boolean }

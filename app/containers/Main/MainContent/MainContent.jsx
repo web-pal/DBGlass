@@ -115,7 +115,7 @@ class MainContent extends Component {
                           columnWidth={({ index }) => dataForMeasure[fields[index]].width}
                           columnCount={fields.length}
                           height={height}
-                          overscanColumnCount={100}
+                          overscanColumnCount={20}
                           cellRenderer={this.headerRenderer}
                           rowHeight={60}
                           rowCount={1}
@@ -131,7 +131,7 @@ class MainContent extends Component {
                             fetchTableData({ table, startIndex: start, resolve });
                           })}
                           isRowLoaded={({ index }) => !!rows[Math.ceil(index / fields.length)]}
-                          threshold={1}
+                          threshold={20}
                         >
                           {({ onRowsRendered, registerChild }) => (
                             <Grid
@@ -152,8 +152,9 @@ class MainContent extends Component {
                               columnWidth={({ index }) => dataForMeasure[fields[index]].width}
                               columnCount={fields.length}
                               height={height - 109}
+                              overscanRowCount={10}
                               cellRenderer={this.cellRenderer}
-                              rowHeight={45}
+                              rowHeight={30}
                               rowCount={rowsCount}
                               onScroll={onScroll}
                               scrollToAlignment="start"

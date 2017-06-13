@@ -5,10 +5,9 @@ import type {
   DataForMeasure,
 } from '../types';
 
-export const fetchTablesRequest = (payload: ?IdString): Action =>
+export const fetchTablesRequest = (): Action =>
   ({
     type: 'tables/FETCH_REQUEST',
-    payload,
   });
 
 export const fillTables = (payload: TableNormalizePayload): Action =>
@@ -104,9 +103,9 @@ export const setMeasureWidth = (payload: {
     payload,
   });
 
-export const getTableSchema = (payload: Table): Action =>
+export const getTableSchema = (payload: { tableName: IdString }): Action =>
   ({
-    type: 'tables/GET_TABLE_SCHEMA',
+    type: 'tables/GET_TABLE_SCHEMA_REQUEST',
     payload,
   });
 
@@ -116,9 +115,9 @@ export const setTableSchema = (payload: { tableName: IdString, structureTable: O
     payload,
   });
 
-export const setTablesConstraints = (payload: any): Action =>
+export const setTablesForeignKeys = (payload: any): Action =>
   ({
-    type: 'tables/SET_TABLES_CONSTRAINTS',
+    type: 'tables/SET_TABLES_FOREIGN_KEYS',
     payload,
   });
 

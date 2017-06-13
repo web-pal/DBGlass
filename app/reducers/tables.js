@@ -13,8 +13,10 @@ function allItems(state: TablesNames = [], action: Action) {
       return [];
     case 'CLEAR_ALL_REDUCERS':
       return [];
-    case 'tables/DROP_TABLE':
-      return state.filter(tableName => tableName !== action.payload);
+    case 'tables/DROP_TABLE': {
+      const payload = action.payload;
+      return state.filter(f => f !== payload);
+    }
     default:
       return state;
   }
@@ -85,16 +87,20 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
           },
         },
       };
-    case 'tables/SET_TABLES_CONSTRAINTS':
-      return {
+    case 'tables/SET_TABLES_FOREIGN_KEYS': {
+      const newState = {
         ...state,
-        [action.payload.tableName]: {
-          ...state[action.payload.tableName],
-          constraints: {
-            ...action.payload,
-          },
-        },
       };
+      action.payload.forEach((s) => {
+        const foreignKeys = state[s.table_name].foreignKeys;
+        foreignKeys.push(s);
+        newState[s.table_name] = {
+          ...state[s.table_name],
+          foreignKeys,
+        };
+      });
+      return newState;
+    }
     case 'CLEAR_ALL_REDUCERS':
       return {};
     case 'tables/DROP_TABLE': {

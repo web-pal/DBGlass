@@ -1,6 +1,6 @@
 import storage from 'electron-json-storage';
 import { delay } from 'redux-saga';
-import { take, takeEvery, cps, put } from 'redux-saga/effects';
+import { take, takeEvery, cps, put, select, fork } from 'redux-saga/effects';
 
 import {
   fillTables as fillTablesAction,
@@ -13,7 +13,7 @@ import {
   setDataForMeasure as setDataForMeasureAction,
   getTableSchema as getTableSchemaAction,
   setTableSchema as setTableSchemaAction,
-  setTablesConstraints as setTablesConstraintsAction,
+  setTablesForeignKeys as setTablesForeignKeysAction,
   setRowsCount as setRowsCountAction,
 } from '../actions/tables';
 import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
@@ -29,62 +29,59 @@ import {
   toggleIsFetchedTablesData as toggleIsFetchedTablesDataAction,
 } from '../actions/ui';
 
+
 export function* fetchTables() {
   while (true) {
-    const { payload } = yield take('tables/FETCH_REQUEST');
+    yield take('tables/FETCH_REQUEST');
     const query = `
       SELECT table_name
       FROM information_schema.tables
       WHERE table_schema='public'
       AND table_type='BASE TABLE'
     `;
-
     const result = yield cps(executeSQL, query, []);
-    const tablesNames = [];
+
     const tables = {};
-    result.rows.forEach(t => {
-      tablesNames.push(t.table_name);
+    const tablesNames = result.rows.map(t => {
       tables[t.table_name] = {
         tableName: t.table_name,
         isFetched: false,
+        foreignKeys: [],
         dataForMeasure: {},
         rowsIds: [],
         rows: {},
         fieldsIds: [],
         fields: {},
       };
+      return t.table_name;
     });
     yield put(fillTablesAction({
       tablesNames,
       map: tables,
     }));
     yield put(toggleIsFetchedTablesAction(true));
-    if (payload) {
+
+    const currentFavoriteId = yield select(state => state.favorites.meta.currentFavoriteId);
+    if (currentFavoriteId) {
       yield put(addFavoriteTablesQuantity({
-        currentFavoriteId: payload, quantity: tablesNames.length,
+        currentFavoriteId, quantity: tablesNames.length,
       }));
     }
 
     if (tablesNames.length) {
-      const currentFavouriteId = yield cps(storage.get, 'LastSelectedFavorite');
-      const selectTable = yield cps(storage.get, 'LastSelectedTables');
-      const selectedTableIndex = selectTable[currentFavouriteId] ?
-        selectTable[currentFavouriteId] : Object.values(tables)[0].tableName;
-      const tableData = {
-        tableName: tables[selectedTableIndex].tableName,
-        isFetched: false,
-        dataForMeasure: {},
-        rowsIds: [],
-        rows: {},
-        fieldsIds: [],
-        fields: {},
-        structureTable: {},
-      };
-      yield put(selectTableAction(tables[selectedTableIndex].tableName));
-      yield put(fetchTableDataAction({ table: tableData }));
+      yield fork(getTablesForeignKeys);
 
-      yield put(getTableSchemaAction(tables[tablesNames[0]]));
-      yield* getTablesConstraints();
+      const lastSelectedTables = yield cps(storage.get, 'lastSelectedTables');
+      let selectTableName = (currentFavoriteId && lastSelectedTables[currentFavoriteId]) ?
+        lastSelectedTables[currentFavoriteId] : Object.values(tables)[0].tableName;
+      if (!tables[selectTableName]) {
+        selectTableName = Object.values(tables)[0].tableName;
+      }
+
+      const tableData = tables[selectTableName];
+      yield put(selectTableAction(selectTableName));
+      yield put(fetchTableDataAction({ table: tableData }));
+      yield put(getTableSchemaAction({ tableName: selectTableName }));
     }
   }
 }
@@ -93,11 +90,12 @@ function* fetchTableData({
   payload: { table: { tableName }, startIndex, resolve },
 }) {
   yield put(toggleIsFetchedTablesDataAction(true));
-  const currentFavouriteId = yield cps(storage.get, 'LastSelectedFavorite');
-  const lastSelectedTables = yield cps(storage.get, 'LastSelectedTables');
-  if (lastSelectedTables[currentFavouriteId] !== tableName) {
-    lastSelectedTables[currentFavouriteId] = tableName;
-    yield cps(storage.set, 'LastSelectedTables', lastSelectedTables);
+
+  const currentFavoriteId = yield cps(storage.get, 'lastSelectedFavorite');
+  const lastSelectedTables = yield cps(storage.get, 'lastSelectedTables');
+  if (lastSelectedTables[currentFavoriteId] !== tableName) {
+    lastSelectedTables[currentFavoriteId] = tableName;
+    yield cps(storage.set, 'lastSelectedTables', lastSelectedTables);
   }
 
   let result;
@@ -210,8 +208,10 @@ export function* getTableSchemaWatch() {
   yield takeEvery('tables/GET_TABLE_SCHEMA', getTableSchema);
 }
 
-export function* getTablesConstraints() {
-  const query = `SELECT tc.constraint_name,
+export function* getTablesForeignKeys() {
+  const query = `
+    SELECT
+    tc.constraint_name,
     tc.constraint_type,
     tc.table_name,
     kcu.column_name,
@@ -236,24 +236,9 @@ export function* getTablesConstraints() {
     AND rc.unique_constraint_schema = ccu.constraint_schema
     AND rc.unique_constraint_name = ccu.constraint_name
     WHERE lower(tc.constraint_type) in ('foreign key')`;
+
   const result = yield cps(executeSQL, query, []);
-  const constraints = {};
-  const constraintsNames = [];
-  result.rows.map((row, index) => {
-    const tableName = row.table_name;
-    constraintsNames.push(tableName);
-
-    constraints[row.table_name] = {
-      ...row,
-      tableName,
-    };
-
-    return index;
-  });
-
-  for (let i = 0; i < constraintsNames.length; i++) { // eslint-disable-line
-    yield put(setTablesConstraintsAction(constraints[constraintsNames[i]]));
-  }
+  yield put(setTablesForeignKeysAction(result.rows));
 }
 
 function* getRowsCount() {

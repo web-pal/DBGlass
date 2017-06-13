@@ -38,6 +38,20 @@ type Props = {
 class FavoritesSwitcher extends Component {
   props: Props;
 
+  componentDidMount() {
+    window.addEventListener('mousedown', this.favoritesSwitcherToggler, false);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('mosuedown', this.favoritesSwitcherToggler, false);
+  }
+
+  favoritesSwitcherToggler = (e) => {
+    if (!e.target.matches('#switcherWrapper, #switcherWrapper *, #menuSwitcher, #menuSwitcher *')) {
+      this.props.toggleMenu(false);
+    }
+  }
+
   disconectFromDB = () => {
     this.props.setConnectedState(false);
     this.props.clearTables();

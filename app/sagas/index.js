@@ -11,7 +11,6 @@ import {
   dropTableRequest,
   truncateTableRequest,
   getTableSchemaWatch,
-  getTablesConstraints,
 } from './tables';
 import { startConnect } from './connect';
 
@@ -30,6 +29,5 @@ export default function* root() {
     fork(dropTableRequest),
     fork(truncateTableRequest),
     fork(getTableSchemaWatch),
-    fork(getTablesConstraints),
   ];
 }
