@@ -4,10 +4,11 @@ import { AppContainer } from 'react-hot-loader';
 
 import Raven from 'raven-js';
 import { ipcRenderer as ipc } from 'electron';
-import { useSentry, sentryUrl } from 'config';
+import { useSentry, sentryUrl, sendQuitRequest } from 'config';
 
 import Base from './components/Base/Base';
 import store from './store';
+import { appQuitRequest } from './actions/ui';
 
 import pjson from './package.json';
 import './app.global.css';
@@ -44,3 +45,10 @@ if (module.hot) {
     );
   });
 }
+
+window.onbeforeunload = function closeWindow() {
+  if (sendQuitRequest) { // it needs because of hot-reload
+    store.dispatch(appQuitRequest());
+    return false;
+  }
+};

@@ -1,8 +1,9 @@
 // @flow
-import type { IdString } from './';
 
 export type ModalState = {
-  component: ?IdString,
+  dropTableName: ?string,
+  showDropTableModal: boolean,
+  component: ?string,
   show: ?boolean,
   values: ?Object,
   error: ?Object,

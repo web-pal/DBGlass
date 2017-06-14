@@ -1,10 +1,13 @@
-import { put, take, cps } from 'redux-saga/effects';
+import { ipcRenderer } from 'electron';
+import { put, take, call, cps } from 'redux-saga/effects';
 import { startSubmit, stopSubmit } from 'redux-form';
 
 import sshConnect from '../utils/sshForward';
 import { configureConnect, connectDB } from '../utils/pgDB';
 import { setConnectedState, toggleConnectingLadda, setConnectionError } from '../actions/ui';
+import { saveLastSelectedTable } from './tables';
 
+const remote = require('electron').remote;
 
 export function* startConnect() {
   while (true) {
@@ -46,5 +49,23 @@ export function* startConnect() {
     }
     yield put(setConnectedState(isConnected));
     yield put(toggleConnectingLadda(false));
+  }
+}
+
+export function* appQuit() {
+  while (true) {
+    yield take('ui/APP_QUIT_REQUEST');
+    ipcRenderer.send('set-should-quit');
+    yield call(saveLastSelectedTable);
+    remote.getCurrentWindow().destroy();
+  }
+}
+
+export function* onDisconnect() {
+  while (true) {
+    const { payload } = yield take('ui/SET_CONNECTED_STATE');
+    if (!payload) {
+      yield call(saveLastSelectedTable);
+    }
   }
 }

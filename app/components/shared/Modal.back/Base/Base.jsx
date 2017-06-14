@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 
 import {
@@ -10,7 +11,7 @@ import {
 
 type Props = {
   onHide: () => void,
-  children: React.Element
+  children: React.Element<*>
 };
 
 const Base = ({ children, onHide }: Props) =>

@@ -7,8 +7,8 @@ import type { State } from '../../types';
 
 import FavoritesSwitcher from './FavoritesSwitcher/FavoritesSwitcher';
 import MainContent from './MainContent/MainContent';
-import ModalContainer from '../../components/shared/Modal/ModalContainer';
 import MeasureCells from './MeasureCells/MeasureCells';
+import DropTableModal from './Modals/DropTableModal';
 import Sidebar from './Sidebar/Sidebar';
 
 import { MainContainer } from './styled';
@@ -22,7 +22,7 @@ const Main = ({ currentTable }: Props) =>
     <Sidebar />
     <FavoritesSwitcher />
     <MeasureCells />
-    <ModalContainer />
+    <DropTableModal />
     { currentTable && <MainContent /> }
   </MainContainer>;
 

@@ -7,12 +7,12 @@ import {
 } from './favorites';
 import {
   fetchTables,
-  fetchTableDataWatch,
+  fetchTableDataRequest,
   dropTableRequest,
   truncateTableRequest,
   getTableSchemaWatch,
 } from './tables';
-import { startConnect } from './connect';
+import { startConnect, appQuit, onDisconnect } from './connect';
 
 export default function* root() {
   yield [
@@ -23,9 +23,11 @@ export default function* root() {
     fork(saveFavouriteTablesQuantity),
 
     fork(startConnect),
+    fork(onDisconnect),
+    fork(appQuit),
 
     fork(fetchTables),
-    fork(fetchTableDataWatch),
+    fork(fetchTableDataRequest),
     fork(dropTableRequest),
     fork(truncateTableRequest),
     fork(getTableSchemaWatch),

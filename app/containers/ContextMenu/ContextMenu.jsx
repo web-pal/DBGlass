@@ -1,3 +1,4 @@
+// @flow
 import { Component } from 'react';
 
 import { bindActionCreators } from 'redux';
@@ -13,13 +14,15 @@ import type { Dispatch, State, ContextMenuState, ModalState } from '../../types'
 
 type Props = {
   contextMenu: ContextMenuState,
-  toggleModal: (ModalState) => void
+  toggleModal: (ModalState) => void,
+  showDropTableModal: ({ tableName: string }) => void
 };
 
 const { Menu, MenuItem } = remote;
 
 class ContextMenu extends Component {
   props: Props;
+  tableMenu: null;
 
   componentDidMount() {
     this.createMenu();
@@ -34,13 +37,14 @@ class ContextMenu extends Component {
   createMenu = () => {
     this.tableMenu = new Menu();
     const dropTable = () => {
-      const { contextMenu, toggleModal } = this.props;
+      const { contextMenu, showDropTableModal } = this.props;
       const values = getValuesForModal(contextMenu, 'drop');
-      toggleModal({ component: 'ConfirmationModal', values });
+      showDropTableModal({ tableName: values.selectedElementName });
     };
     const truncateTable = () => {
       const { contextMenu, toggleModal } = this.props;
       const values = getValuesForModal(contextMenu, 'truncate');
+      console.log(values);
       toggleModal({ component: 'ConfirmationModal', values });
     };
     const dropTableItem = new MenuItem({
@@ -66,7 +70,7 @@ class ContextMenu extends Component {
   }
 
   render() {
-    return false;
+    return null;
   }
 }
 

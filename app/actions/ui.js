@@ -36,3 +36,8 @@ export const toggleIsFetchedTablesData = (payload: boolean): Action =>
     type: 'ui/TOGGLE_IS_FETCH_TABLES_DATA',
     payload,
   });
+
+export const appQuitRequest = (): Action =>
+  ({
+    type: 'ui/APP_QUIT_REQUEST',
+  });

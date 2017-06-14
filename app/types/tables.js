@@ -15,6 +15,7 @@ export type ForeignKey = {
   references_table: string,
   table_name: string
 };
+export type RowsCount = Array<{ tableName: string, count: number }>;
 
 export type Table = {
   tableName: string,

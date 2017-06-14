@@ -8,7 +8,12 @@ import type {
 import type { ContextMenuState } from './contextMenu';
 import type { ModalState } from './modal';
 
-import type { TableNormalizePayload, TablesIndexedMap, TablesNames, TablesMetaState, Table, DataForMeasure } from './tables';
+import type {
+  TableNormalizePayload, TablesIndexedMap,
+  TablesNames, TablesMetaState,
+  Table, DataForMeasure,
+  RowsCount, ForeignKey,
+} from './tables';
 import type { TableDataNormalizedPayload } from './currentTable';
 import type { uiState } from './ui';
 
@@ -47,8 +52,8 @@ export type Action =
 | { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableName: IdString, width: number, key: string } }
 | { type: 'tables/GET_TABLE_SCHEMA', +payload: Table }
 | { type: 'tables/SET_TABLE_SCHEMA', +payload: { tableName: IdString, structureTable: Object } }
-| { type: 'tables/SET_TABLES_FOREIGN_KEYS', +payload: any }
-| { type: 'tables/SET_ROWS_COUNT', +payload: { relname: string, reltuples: number } }
+| { type: 'tables/SET_TABLES_FOREIGN_KEYS', +payload: Array<ForeignKey> }
+| { type: 'tables/SET_ROWS_COUNT', +payload: RowsCount }
 | { type: 'tables/CLEAR_CURRENT_TABLE', +payload: string }
 | { type: 'tables/CHANGE_VIEW_MODE', +payload: boolean }
 | { type: 'ui/SET_CONNECTED_STATE', +payload: boolean }
@@ -57,7 +62,10 @@ export type Action =
 | { type: 'ui/TOGGLE_MENU', +payload: boolean }
 | { type: 'ui/TOGGLE_CONNECTING_LADDA', +payload: boolean }
 | { type: 'ui/TOGGLE_IS_FETCH_TABLES', +payload: boolean }
+| { type: 'ui/APP_QUIT_REQUEST' }
 | { type: 'contextMenu/TOGGLE_CONTEXT_MENU', +payload: ContextMenuState}
+| { type: 'modal/SHOW_DROP_TABLE_MODAL', +payload: { tableName: string } }
+| { type: 'modal/HIDE_DROP_TABLE_MODAL' }
 | { type: 'modal/TOGGLE_MODAL', +payload: ModalState }
 | { type: 'modal/HIDE_MODAL' }
 | Object

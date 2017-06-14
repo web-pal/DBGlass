@@ -70,6 +70,7 @@ export function* fetchTables() {
 
     if (tablesNames.length) {
       yield fork(getTablesForeignKeys);
+      yield fork(getRowsCount);
 
       const lastSelectedTables = yield cps(storage.get, 'lastSelectedTables');
       let selectTableName = (currentFavoriteId && lastSelectedTables[currentFavoriteId]) ?
@@ -87,38 +88,21 @@ export function* fetchTables() {
 }
 
 function* fetchTableData({
-  payload: { table: { tableName }, startIndex, resolve },
+  payload: { table: { tableName }, startIndex = 0, resolve },
 }) {
   yield put(toggleIsFetchedTablesDataAction(true));
-
-  const currentFavoriteId = yield cps(storage.get, 'lastSelectedFavorite');
-  const lastSelectedTables = yield cps(storage.get, 'lastSelectedTables');
-  if (lastSelectedTables[currentFavoriteId] !== tableName) {
-    lastSelectedTables[currentFavoriteId] = tableName;
-    yield cps(storage.set, 'lastSelectedTables', lastSelectedTables);
-  }
-
-  let result;
+  const query = `
+    SELECT *
+    FROM ${tableName}
+    LIMIT 100 OFFSET ${startIndex}
+  `;
+  const result = yield cps(executeAndNormalizeSelectSQL, query, { startIndex });
   if (!startIndex) {
-    const query = `
-      SELECT *
-      FROM ${tableName}
-      LIMIT 100
-    `;
-    result = yield cps(executeAndNormalizeSelectSQL, query, {});
     yield put(setDataForMeasureAction({
       dataForMeasure: result.dataForMeasure,
       tableName,
     }));
-    yield* getRowsCount();
     yield delay(100); // This delay needs to measure cells
-  } else {
-    const query = `
-      SELECT *
-      FROM ${tableName}
-      LIMIT 100 OFFSET ${startIndex}
-    `;
-    result = yield cps(executeAndNormalizeSelectSQL, query, { startIndex });
   }
   yield put(setTableDataAction({ data: result.data, tableName }));
   yield put(toggleIsFetchedTablesDataAction(false));
@@ -127,7 +111,7 @@ function* fetchTableData({
   }
 }
 
-export function* fetchTableDataWatch() {
+export function* fetchTableDataRequest() {
   yield takeEvery('tables/FETCH_TABLE_DATA_REQUEST', fetchTableData);
 }
 
@@ -138,7 +122,10 @@ export function* dropTable({
     currentTableName,
   },
 }) {
-  const query = `DROP TABLE IF EXISTS "public"."${selectedElementName}" ${currentValues ? (currentValues.cascade && 'CASCADE') : ''}`;
+  const query = `
+    DROP TABLE IF EXISTS "public"."${selectedElementName}"
+    ${currentValues ? (currentValues.cascade && 'CASCADE') : ''}
+  `;
   try {
     yield cps(executeSQL, query, []);
     if (currentTableName === selectedElementName) yield put(resetSelectTableAction());
@@ -253,7 +240,17 @@ function* getRowsCount() {
     ORDER BY reltuples DESC
   `;
   const { rows } = yield cps(executeSQL, query, []);
-  for (let i = 0; i < rows.length; i++) { // eslint-disable-line
-    yield put(setRowsCountAction(rows[i]));
+  const rowsCounts = rows.map(r => ({ tableName: r.relname, count: r.reltuples }));
+  yield put(setRowsCountAction(rowsCounts));
+}
+
+export function* saveLastSelectedTable() {
+  const currentFavoriteId = yield select(state => state.favorites.meta.currentFavoriteId);
+  const currentTableName = yield select(state => state.tables.meta.currentTableName);
+  const lastSelectedTables = yield cps(storage.get, 'lastSelectedTables');
+
+  if (lastSelectedTables[currentFavoriteId] !== currentTableName) {
+    lastSelectedTables[currentFavoriteId] = currentTableName;
+    yield cps(storage.set, 'lastSelectedTables', lastSelectedTables);
   }
 }

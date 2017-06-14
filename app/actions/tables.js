@@ -2,7 +2,7 @@
 import type {
   Action, IdString,
   Table, TableNormalizePayload, TableDataNormalizedPayload,
-  DataForMeasure,
+  DataForMeasure, ForeignKey, RowsCount,
 } from '../types';
 
 export const fetchTablesRequest = (): Action =>
@@ -115,13 +115,13 @@ export const setTableSchema = (payload: { tableName: IdString, structureTable: O
     payload,
   });
 
-export const setTablesForeignKeys = (payload: any): Action =>
+export const setTablesForeignKeys = (payload: Array<ForeignKey>): Action =>
   ({
     type: 'tables/SET_TABLES_FOREIGN_KEYS',
     payload,
   });
 
-export const setRowsCount = (payload: { relname: string, reltuples: number }): Action =>
+export const setRowsCount = (payload: RowsCount): Action =>
   ({
     type: 'tables/SET_ROWS_COUNT',
     payload,

@@ -60,7 +60,10 @@ class Sidebar extends Component {
   }
 
   handleRightClick = (tableName) => {
-    this.props.toggleContextMenu({ selectedElementType: 'table', selectedElementName: tableName });
+    this.props.toggleContextMenu({
+      selectedElementType: 'table',
+      selectedElementName: tableName,
+    });
   }
 
   fetchTable = (table) => {

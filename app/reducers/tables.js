@@ -115,14 +115,18 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
           rowsIds: [],
         },
       };
-    case 'tables/SET_ROWS_COUNT':
-      return {
+    case 'tables/SET_ROWS_COUNT': {
+      const newState = {
         ...state,
-        [action.payload.relname]: {
-          ...state[action.payload.relname],
-          rowsCount: action.payload.reltuples,
-        },
       };
+      action.payload.forEach((r) => {
+        newState[r.tableName] = {
+          ...state[r.tableName],
+          rowsCount: r.count,
+        };
+      });
+      return newState;
+    }
     case 'tables/CLEAR_CURRENT_TABLE':
       return {
         ...state,

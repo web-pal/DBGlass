@@ -8,11 +8,15 @@ const initialState: ContextMenuState = {
 
 export default function contextMenu(state: ContextMenuState = initialState, action: Action) {
   switch (action.type) {
-    case 'contextMenu/TOGGLE_CONTEXT_MENU':
+
+    case 'contextMenu/TOGGLE_CONTEXT_MENU': {
+      const { selectedElementType, selectedElementName } = action.payload;
       return {
         ...state,
-        ...action.payload,
+        selectedElementType,
+        selectedElementName,
       };
+    }
     default:
       return state;
   }
