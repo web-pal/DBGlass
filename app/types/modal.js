@@ -2,10 +2,11 @@
 
 export type ModalState = {
   dropTableName: ?string,
+  dropTableErrorMessage: ?string,
+  truncateTableName: ?string,
+  truncateTableErrorMessage: ?string,
+  errorMessage: ?string,
   showDropTableModal: boolean,
-  component: ?string,
-  show: ?boolean,
-  values: ?Object,
-  error: ?Object,
-  payload: ?Object
+  showTruncateTableModal: boolean,
+  showErrorModal: boolean
 };

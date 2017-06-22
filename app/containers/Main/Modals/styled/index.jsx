@@ -44,6 +44,11 @@ export const ToolHeader = styled.div`
   margin-bottom: 5px;
 `;
 
+export const ToolErrorMessage = styled.div`
+  color: rgba(245, 80, 29, 0.92);
+  text-align: center;
+`;
+
 export const ToolDescription = styled.div`
 `;
 

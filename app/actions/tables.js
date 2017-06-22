@@ -57,31 +57,31 @@ export const resetSelectTable = (): Action =>
   });
 
 export const dropTableRequest = (payload: {
-  selectedElementName: IdString,
-  currentValues: ?Object,
-  currentTableName: ?IdString
+  tableName: string,
+  isCascade: boolean
 }): Action =>
   ({
     type: 'tables/DROP_TABLE_REQUEST',
     payload,
   });
 
-export const dropTable = (payload: IdString): Action =>
+export const dropTable = (payload: { tableName: string }): Action =>
   ({
     type: 'tables/DROP_TABLE',
     payload,
   });
 
 export const truncateTableRequest = (payload: {
-  selectedElementName: IdString,
-  currentValues: ?Object
-  }): Action =>
+  tableName: string,
+  isCascade: boolean,
+  restartIdentity: boolean
+}): Action =>
   ({
     type: 'tables/TRUNCATE_TABLE_REQUEST',
     payload,
   });
 
-export const truncateTable = (payload: IdString): Action =>
+export const truncateTable = (payload: { tableName: string }): Action =>
   ({
     type: 'tables/TRUNCATE_TABLE',
     payload,

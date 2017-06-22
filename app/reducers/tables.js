@@ -14,8 +14,8 @@ function allItems(state: TablesNames = [], action: Action) {
     case 'CLEAR_ALL_REDUCERS':
       return [];
     case 'tables/DROP_TABLE': {
-      const payload = action.payload;
-      return state.filter(f => f !== payload);
+      const tableName = action.payload.tableName;
+      return state.filter(f => f !== tableName);
     }
     default:
       return state;

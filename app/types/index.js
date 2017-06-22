@@ -44,8 +44,8 @@ export type Action =
 | { type: 'tables/SELECT_TABLE', +payload: string }
 | { type: 'tables/SET_TABLE_DATA', +payload: { data: TableDataNormalizedPayload, tableName: IdString } }
 | { type: 'tables/RESET_SELECT_TABLE' }
-| { type: 'tables/DROP_TABLE_REQUEST', +payload: { tableName: IdString, parameters: ?Object, currentTableName: ?IdString } }
-| { type: 'tables/DROP_TABLE', +payload: IdString }
+| { type: 'tables/DROP_TABLE_REQUEST', +payload: { tableName: string, isCascade: boolean } }
+| { type: 'tables/DROP_TABLE', +payload: { tableName: IdString } }
 | { type: 'tables/TRUNCATE_TABLE_REQUEST', +payload: Object }
 | { type: 'tables/TRUNCATE_TABLE', +payload: IdString }
 | { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: DataForMeasure, tableName: string } }
@@ -66,8 +66,12 @@ export type Action =
 | { type: 'contextMenu/TOGGLE_CONTEXT_MENU', +payload: ContextMenuState}
 | { type: 'modal/SHOW_DROP_TABLE_MODAL', +payload: { tableName: string } }
 | { type: 'modal/HIDE_DROP_TABLE_MODAL' }
-| { type: 'modal/TOGGLE_MODAL', +payload: ModalState }
-| { type: 'modal/HIDE_MODAL' }
+| { type: 'modal/SET_DROP_TABLE_MODAL_ERROR', +payload: { errorMessage: string } }
+| { type: 'modal/SHOW_TRUNCATE_TABLE_MODAL', +payload: { tableName: string } }
+| { type: 'modal/HIDE_TRUNCATE_TABLE_MODAL' }
+| { type: 'modal/SET_TRUNCATE_TABLE_MODAL_ERROR', +payload: { errorMessage: string } }
+| { type: 'modal/SHOW_ERROR_MODAL', +payload: { errorMessage: string } }
+| { type: 'modal/HIDE_ERROR_MODAL' }
 | Object
 ;
 

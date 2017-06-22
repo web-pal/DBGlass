@@ -20,8 +20,10 @@ import { executeSQL, executeAndNormalizeSelectSQL } from '../utils/pgDB';
 
 import { addFavoriteTablesQuantity } from '../actions/favorites';
 import {
-  hideModal as hideModalAction,
-  toggleModal as toggleModalAction,
+  hideDropTableModal as hideDropTableModalAction,
+  hideTruncateTableModal as hideTruncateTableModalAction,
+  setDropTableModalError as setDropTableModalErrorAction,
+  setTruncateTableModalError as setTruncateTableModalErrorAction,
 } from '../actions/modal';
 
 import {
@@ -97,6 +99,7 @@ function* fetchTableData({
     LIMIT 100 OFFSET ${startIndex}
   `;
   const result = yield cps(executeAndNormalizeSelectSQL, query, { startIndex });
+  // TODO: Measure not only first request
   if (!startIndex) {
     yield put(setDataForMeasureAction({
       dataForMeasure: result.dataForMeasure,
@@ -117,22 +120,23 @@ export function* fetchTableDataRequest() {
 
 export function* dropTable({
   payload: {
-    selectedElementName,
-    currentValues,
-    currentTableName,
+    tableName,
+    isCascade,
   },
 }) {
   const query = `
-    DROP TABLE IF EXISTS "public"."${selectedElementName}"
-    ${currentValues ? (currentValues.cascade && 'CASCADE') : ''}
+    DROP TABLE IF EXISTS "public"."${tableName}"
+    ${isCascade ? 'CASCADE' : ''}
   `;
+  const currentTableName = yield select(state => state.tables.meta.currentTableName);
   try {
     yield cps(executeSQL, query, []);
-    if (currentTableName === selectedElementName) yield put(resetSelectTableAction());
-    yield put(dropTableAction(selectedElementName));
-    yield put(hideModalAction());
+    // TODO: Select another table
+    if (currentTableName === tableName) yield put(resetSelectTableAction());
+    yield put(dropTableAction({ tableName }));
+    yield put(hideDropTableModalAction());
   } catch (error) {
-    yield put(toggleModalAction({ component: 'ErrorModal', error }));
+    yield put(setDropTableModalErrorAction({ errorMessage: error.message }));
   }
 }
 
@@ -142,30 +146,22 @@ export function* dropTableRequest() {
 
 export function* truncateTable({
   payload: {
-    selectedElementName,
-    currentValues,
+    tableName,
+    isCascade,
+    restartIdentity,
   },
 }) {
-  let query;
-  if (currentValues) {
-    query = `
-      TRUNCATE "public".
-      "${selectedElementName}"
-      ${currentValues.restartIdentity ? 'RESTART IDENTITY' : ''}
-      ${currentValues.cascade ? 'CASCADE' : ''}
-    `;
-  } else {
-    query = `
-      TRUNCATE "public".
-      "${selectedElementName}"
-    `;
-  }
+  const query = `
+    TRUNCATE "public"."${tableName}"
+    ${restartIdentity ? 'RESTART IDENTITY' : ''}
+    ${isCascade ? 'CASCADE' : ''}
+  `;
   try {
     yield cps(executeSQL, query, []);
-    yield put(truncateTableAction(selectedElementName));
-    yield put(hideModalAction());
+    yield put(truncateTableAction({ tableName }));
+    yield put(hideTruncateTableModalAction());
   } catch (error) {
-    yield put(toggleModalAction({ component: 'ErrorModal', error }));
+    yield put(setTruncateTableModalErrorAction({ errorMessage: error.message }));
   }
 }
 

@@ -10,19 +10,24 @@ import * as contextMenuActions from '../../actions/contextMenu';
 import * as modalActions from '../../actions/modal';
 import { getValuesForModal } from './utils';
 
-import type { Dispatch, State, ContextMenuState, ModalState } from '../../types';
+import type { Dispatch, State, ContextMenuState } from '../../types';
 
 type Props = {
   contextMenu: ContextMenuState,
-  toggleModal: (ModalState) => void,
-  showDropTableModal: ({ tableName: string }) => void
+  showDropTableModal: ({ tableName: string }) => void,
+  showTruncateTableModal: ({ tableName: string }) => void
 };
 
 const { Menu, MenuItem } = remote;
 
 class ContextMenu extends Component {
   props: Props;
-  tableMenu: null;
+  tableMenu: Menu;
+
+  constructor(props) {
+    super(props);
+    this.tableMenu = new Menu();
+  }
 
   componentDidMount() {
     this.createMenu();
@@ -35,17 +40,15 @@ class ContextMenu extends Component {
   }
 
   createMenu = () => {
-    this.tableMenu = new Menu();
     const dropTable = () => {
       const { contextMenu, showDropTableModal } = this.props;
       const values = getValuesForModal(contextMenu, 'drop');
       showDropTableModal({ tableName: values.selectedElementName });
     };
     const truncateTable = () => {
-      const { contextMenu, toggleModal } = this.props;
+      const { contextMenu, showTruncateTableModal } = this.props;
       const values = getValuesForModal(contextMenu, 'truncate');
-      console.log(values);
-      toggleModal({ component: 'ConfirmationModal', values });
+      showTruncateTableModal({ tableName: values.selectedElementName });
     };
     const dropTableItem = new MenuItem({
       label: 'Drop table',

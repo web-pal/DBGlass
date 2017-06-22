@@ -9,6 +9,8 @@ import FavoritesSwitcher from './FavoritesSwitcher/FavoritesSwitcher';
 import MainContent from './MainContent/MainContent';
 import MeasureCells from './MeasureCells/MeasureCells';
 import DropTableModal from './Modals/DropTableModal';
+import TruncateTableModal from './Modals/TruncateTableModal';
+import ErrorDisplayModal from './Modals/ErrorDisplayModal';
 import Sidebar from './Sidebar/Sidebar';
 
 import { MainContainer } from './styled';
@@ -23,6 +25,8 @@ const Main = ({ currentTable }: Props) =>
     <FavoritesSwitcher />
     <MeasureCells />
     <DropTableModal />
+    <TruncateTableModal />
+    <ErrorDisplayModal />
     { currentTable && <MainContent /> }
   </MainContainer>;
 

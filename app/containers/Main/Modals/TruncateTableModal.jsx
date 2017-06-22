@@ -32,34 +32,52 @@ import {
 
 
 type Props = {
-  dropTableName: ?string,
-  dropTableErrorMessage: ?string,
+  truncateTableName: ?string,
+  truncateTableErrorMessage: ?string,
   show: boolean,
   isCascade: boolean,
-  hideDropTableModal: () => void,
-  dropTableRequest: ({ tableName: string, isCascade: boolean }) => void
+  restartIdentity: boolean,
+  hideTruncateTableModal: () => void,
+  truncateTableRequest: ({ tableName: string, isCascade: boolean }) => void
 };
 
-const DropTableModal = ({
-  dropTableName, dropTableErrorMessage,
-  show, isCascade,
-  hideDropTableModal, dropTableRequest,
+const TruncateTableModal = ({
+  truncateTableName, truncateTableErrorMessage,
+  show, isCascade, restartIdentity,
+  hideTruncateTableModal, truncateTableRequest,
 }: Props) => {
   if (!show) {
     return null;
   }
 
   return (
-    <Modal onHide={hideDropTableModal}>
+    <Modal onHide={hideTruncateTableModal}>
       <MainContainer>
         <Header>
-          Do you want to drop {dropTableName}?
+          Do you want to truncate {truncateTableName}?
           <ActionDescription>
-            This can not be undone.
+            Truncation is an efficient method to delete all rows in a table.
           </ActionDescription>
         </Header>
         <Content>
           <ModalTools>
+            <ToolContainer>
+              <ToolHeader>
+                <Field
+                  name="restartIdentity"
+                  component={RenderRadio}
+                  type="checkbox"
+                  normalize={value => value || false}
+                />
+                <ToolName>
+                  Restart Identity
+                </ToolName>
+              </ToolHeader>
+              <ToolDescription>
+                Also reset sequences owned by the truncated tables(s).
+              </ToolDescription>
+            </ToolContainer>
+
             <ToolContainer>
               <ToolHeader>
                 <Field
@@ -77,7 +95,7 @@ const DropTableModal = ({
                 depending on the truncated tables.
               </ToolDescription>
               <ToolErrorMessage>
-                {dropTableErrorMessage}
+                {truncateTableErrorMessage}
               </ToolErrorMessage>
             </ToolContainer>
           </ModalTools>
@@ -85,14 +103,18 @@ const DropTableModal = ({
         <ButtonsGroup>
           <ActionButton
             onClick={() => {
-              if (dropTableName) {
-                dropTableRequest({ tableName: dropTableName, isCascade });
+              if (truncateTableName) {
+                truncateTableRequest({
+                  tableName: truncateTableName,
+                  isCascade,
+                  restartIdentity,
+                });
               }
             }}
           >
-            Drop
+            Truncate
           </ActionButton>
-          <CloseButton onClick={hideDropTableModal}>
+          <CloseButton onClick={hideTruncateTableModal}>
             Close
           </CloseButton>
         </ButtonsGroup>
@@ -105,13 +127,14 @@ function mapDispatchToProps(dispatch: Dispatch): {[key: string]: Function} {
   return bindActionCreators({ ...modalActions, ...tablesActions }, dispatch);
 }
 
-const selector = formValueSelector('DropTableFormModal');
+const selector = formValueSelector('TruncateTableFormModal');
 function mapStateToProps(state: State) {
   return {
     isCascade: selector(state, 'isCascade') || false,
-    show: state.modal.showDropTableModal,
-    dropTableName: state.modal.dropTableName,
-    dropTableErrorMessage: state.modal.dropTableErrorMessage,
+    restartIdentity: selector(state, 'restartIdentity') || false,
+    show: state.modal.showTruncateTableModal,
+    truncateTableName: state.modal.truncateTableName,
+    truncateTableErrorMessage: state.modal.truncateTableErrorMessage,
   };
 }
 
@@ -121,8 +144,9 @@ const connector: Connector<{}, Props> = connect(
 );
 
 export default reduxForm({
-  form: 'DropTableFormModal',
+  form: 'TruncateTableFormModal',
   initialValues: {
     cascade: false,
+    restartIdentity: false,
   },
-})(connector(DropTableModal));
+})(connector(TruncateTableModal));

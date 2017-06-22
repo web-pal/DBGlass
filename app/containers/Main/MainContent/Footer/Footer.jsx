@@ -52,7 +52,7 @@ class Footer extends Component {
     }
   }
   render() {
-    const { table: { rowsCount, rowsIds }, isContent, changeViewMode } = this.props;
+    const { table: { rowsCount }, isContent, changeViewMode } = this.props;
     return (
       <ContentWrapper>
         <SettingButtonsGroup>
@@ -78,7 +78,7 @@ class Footer extends Component {
           </SettingButton>
         </SettingButtonsGroup>
         <TableInfoContainer>
-          {+rowsIds[0] + 1} - {+rowsIds[rowsIds.length - 1] + 1} of {rowsCount}
+          {rowsCount}
         </TableInfoContainer>
         <SelectPagesContainer>
           <ArrowButton>
