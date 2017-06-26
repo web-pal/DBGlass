@@ -13,6 +13,7 @@ import type {
   TablesNames, TablesMetaState,
   Table, DataForMeasure,
   RowsCount, ForeignKey,
+  ColumnsArray,
 } from './tables';
 import type { TableDataNormalizedPayload } from './currentTable';
 import type { uiState } from './ui';
@@ -51,7 +52,7 @@ export type Action =
 | { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: DataForMeasure, tableName: string } }
 | { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableName: IdString, width: number, key: string } }
 | { type: 'tables/GET_TABLE_SCHEMA', +payload: Table }
-| { type: 'tables/SET_TABLE_SCHEMA', +payload: { tableName: IdString, structureTable: Object } }
+| { type: 'tables/SET_TABLE_SCHEMA', +payload: { tableName: IdString, schema: ColumnsArray } }
 | { type: 'tables/SET_TABLES_FOREIGN_KEYS', +payload: Array<ForeignKey> }
 | { type: 'tables/SET_ROWS_COUNT', +payload: RowsCount }
 | { type: 'tables/CLEAR_CURRENT_TABLE', +payload: string }

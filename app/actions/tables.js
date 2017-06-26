@@ -2,7 +2,7 @@
 import type {
   Action, IdString,
   Table, TableNormalizePayload, TableDataNormalizedPayload,
-  DataForMeasure, ForeignKey, RowsCount,
+  DataForMeasure, ForeignKey, RowsCount, ColumnsNamedMap,
 } from '../types';
 
 export const fetchTablesRequest = (): Action =>
@@ -109,7 +109,7 @@ export const getTableSchema = (payload: { tableName: IdString }): Action =>
     payload,
   });
 
-export const setTableSchema = (payload: { tableName: IdString, structureTable: Object }): Action =>
+export const setTableSchema = (payload: { tableName: IdString, schema: ColumnsNamedMap }): Action =>
   ({
     type: 'tables/SET_TABLE_SCHEMA',
     payload,

@@ -6,11 +6,11 @@ import {
   saveFavouriteTablesQuantity,
 } from './favorites';
 import {
-  fetchTables,
+  fetchTablesRequest,
   fetchTableDataRequest,
   dropTableRequest,
   truncateTableRequest,
-  getTableSchemaWatch,
+  getTableSchemaRequest,
 } from './tables';
 import { startConnect, appQuit, onDisconnect } from './connect';
 
@@ -26,10 +26,10 @@ export default function* root() {
     fork(onDisconnect),
     fork(appQuit),
 
-    fork(fetchTables),
+    fork(fetchTablesRequest),
     fork(fetchTableDataRequest),
     fork(dropTableRequest),
     fork(truncateTableRequest),
-    fork(getTableSchemaWatch),
+    fork(getTableSchemaRequest),
   ];
 }

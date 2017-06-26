@@ -32,7 +32,7 @@ import {
 } from '../actions/ui';
 
 
-export function* fetchTables() {
+export function* fetchTablesRequest() {
   while (true) {
     yield take('tables/FETCH_REQUEST');
     const query = `
@@ -169,26 +169,16 @@ export function* truncateTableRequest() {
   yield takeEvery('tables/TRUNCATE_TABLE_REQUEST', truncateTable);
 }
 
-export function* getTableSchema({ payload: { tableName, isFetched } }) {
-  if (!isFetched) {
-    const query = `select *
-      from information_schema.columns where table_name = '${tableName}'`;
+export function* getTableSchema({ payload: { tableName } }) {
+  const query = `select *
+    from information_schema.columns where table_name = '${tableName}'`;
 
-    const result = yield cps(executeSQL, query, []);
-    const structureTable = {};
-
-    result.rows.map((row, index) => {
-      structureTable[index] = {
-        ...row,
-      };
-      return index;
-    });
-    yield put(setTableSchemaAction({ tableName, structureTable }));
-  }
+  const result = yield cps(executeSQL, query, []);
+  yield put(setTableSchemaAction({ tableName, schema: result.rows }));
 }
 
-export function* getTableSchemaWatch() {
-  yield takeEvery('tables/GET_TABLE_SCHEMA', getTableSchema);
+export function* getTableSchemaRequest() {
+  yield takeEvery('tables/GET_TABLE_SCHEMA_REQUEST', getTableSchema);
 }
 
 export function* getTablesForeignKeys() {

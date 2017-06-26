@@ -77,16 +77,19 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
         },
       };
     }
-    case 'tables/SET_TABLE_SCHEMA':
+    case 'tables/SET_TABLE_SCHEMA': {
+      const schema = {};
+      action.payload.schema.forEach((s) => {
+        schema[s.column_name] = s;
+      });
       return {
         ...state,
         [action.payload.tableName]: {
           ...state[action.payload.tableName],
-          structureTable: {
-            ...action.payload.structureTable,
-          },
+          schema,
         },
       };
+    }
     case 'tables/SET_TABLES_FOREIGN_KEYS': {
       const newState = {
         ...state,
