@@ -11,14 +11,15 @@ type Props = {
   isConnected: boolean
 };
 
-const App = ({ isConnected }: Props) =>
+const App = ({ isConnected }: Props) => (
   <div id="wrapper">
     <ContextMenu />
     {isConnected
       ? <Main />
       : <Connect />
     }
-  </div>;
+  </div>
+);
 
 
 const mapStateToProps = ({ ui }: State) => ({

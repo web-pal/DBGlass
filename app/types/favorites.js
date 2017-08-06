@@ -41,3 +41,14 @@ export type FavoriteTablesQuantity = {
   currentFavoriteId: string,
   quantity: number
 };
+
+export type FavoriteAction =
+  { type: 'favorites/FETCH_REQUEST' }
+| { type: 'favorites/ADD_REQUEST', +payload: Favorite }
+| { type: 'favorites/REMOVE_REQUEST', +payload: IdString }
+| { type: 'favorites/SELECT_REQUEST', +payload: IdString }
+| { type: 'favorites/FILL', +payload: FavoriteNormalizePayload }
+| { type: 'favorites/SELECT', +payload: ?IdString }
+| { type: 'favorites/REMOVE', +payload: IdString }
+| { type: 'favorites/ADD_FAVORITE_TABLES_QUANTITY', +payload: FavoriteTablesQuantity }
+;

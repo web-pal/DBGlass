@@ -32,7 +32,7 @@ class MeasureCells extends Component {
     const { forMeasure, setMeasureWidth }: Props = this.props;
     return (
       <div>
-        {forMeasure.map((item) =>
+        {forMeasure.map((item) => (
           <Measure
             key={item.name}
             onResize={({ entry }) => setMeasureWidth({
@@ -41,7 +41,7 @@ class MeasureCells extends Component {
               key: item.name,
             })}
           >
-            {({ measureRef }) =>
+            {({ measureRef }) => (
               <div
                 ref={measureRef}
                 style={{ left: '-99999px', position: 'absolute' }}
@@ -50,9 +50,9 @@ class MeasureCells extends Component {
                   {item.value}
                 </Cell>
               </div>
-            }
-          </Measure>,
-        )}
+            )}
+          </Measure>
+        ))}
       </div>
     );
   }

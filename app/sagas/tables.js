@@ -1,17 +1,18 @@
+// @flow
 import storage from 'electron-json-storage';
 import { delay } from 'redux-saga';
-import { take, takeEvery, cps, put, select, fork } from 'redux-saga/effects';
+import { take, takeEvery, cps, put, select, fork } from 'redux-saga/es/effects';
 
 import {
   fillTables as fillTablesAction,
   selectTable as selectTableAction,
   setTableData as setTableDataAction,
-  fetchTableData as fetchTableDataAction,
+  fetchTableDataRequest as fetchTableDataRequestAction,
   dropTable as dropTableAction,
   resetSelectTable as resetSelectTableAction,
   truncateTable as truncateTableAction,
   setDataForMeasure as setDataForMeasureAction,
-  getTableSchema as getTableSchemaAction,
+  fetchTableSchemaRequest as fetchTableSchemaRequestAction,
   setTableSchema as setTableSchemaAction,
   setTablesForeignKeys as setTablesForeignKeysAction,
   setRowsCount as setRowsCountAction,
@@ -32,7 +33,7 @@ import {
 } from '../actions/ui';
 
 
-export function* fetchTablesRequest() {
+export function* fetchTablesRequest(): Generator<*, *, *> {
   while (true) {
     yield take('tables/FETCH_REQUEST');
     const query = `
@@ -76,54 +77,62 @@ export function* fetchTablesRequest() {
 
       const lastSelectedTables = yield cps(storage.get, 'lastSelectedTables');
       let selectTableName = (currentFavoriteId && lastSelectedTables[currentFavoriteId]) ?
-        lastSelectedTables[currentFavoriteId] : Object.values(tables)[0].tableName;
+        lastSelectedTables[currentFavoriteId] : tablesNames[0];
       if (!tables[selectTableName]) {
-        selectTableName = Object.values(tables)[0].tableName;
+        selectTableName = tablesNames[0];
       }
 
-      const tableData = tables[selectTableName];
       yield put(selectTableAction(selectTableName));
-      yield put(fetchTableDataAction({ table: tableData }));
-      yield put(getTableSchemaAction({ tableName: selectTableName }));
+      yield put(fetchTableDataRequestAction({
+        tableName: selectTableName,
+        startIndex: 0,
+        stopIndex: 100,
+      }));
+      yield put(fetchTableSchemaRequestAction({ tableName: selectTableName }));
     }
   }
 }
 
-function* fetchTableData({
-  payload: { table: { tableName }, startIndex = 0, resolve },
-}) {
-  yield put(toggleIsFetchedTablesDataAction(true));
-  const query = `
-    SELECT *
-    FROM ${tableName}
-    LIMIT 100 OFFSET ${startIndex}
-  `;
-  const result = yield cps(executeAndNormalizeSelectSQL, query, { startIndex });
-  // TODO: Measure not only first request
-  if (!startIndex) {
-    yield put(setDataForMeasureAction({
-      dataForMeasure: result.dataForMeasure,
-      tableName,
-    }));
-    yield delay(100); // This delay needs to measure cells
-  }
-  yield put(setTableDataAction({ data: result.data, tableName }));
-  yield put(toggleIsFetchedTablesDataAction(false));
-  if (resolve) {
-    resolve();
-  }
-}
-
-export function* fetchTableDataRequest() {
-  yield takeEvery('tables/FETCH_TABLE_DATA_REQUEST', fetchTableData);
-}
-
-export function* dropTable({
+function* fetchTableData(args: {
   payload: {
-    tableName,
-    isCascade,
-  },
-}) {
+    tableName: string,
+    startIndex: number,
+    stopIndex: number,
+    resolve?: Function
+  }
+}): Generator<*, *, *> {
+  yield put(toggleIsFetchedTablesDataAction(true));
+  try {
+    const { tableName, startIndex, stopIndex, resolve } = args.payload;
+    const limit = stopIndex - startIndex;
+    const query = `
+      SELECT *
+      FROM ${tableName}
+      LIMIT ${limit} OFFSET ${startIndex}
+    `;
+    const result = yield cps(executeAndNormalizeSelectSQL, query, { startIndex });
+    // TODO: Measure not only first request
+    if (!startIndex) {
+      yield put(setDataForMeasureAction({
+        dataForMeasure: result.dataForMeasure,
+        tableName,
+      }));
+      yield delay(1000); // TODO: It's a temporary, this delay needs to measure cells
+    }
+    yield put(setTableDataAction({ data: result.data, tableName }));
+    yield put(toggleIsFetchedTablesDataAction(false));
+    if (resolve) {
+      resolve();
+    }
+  } catch (error) {
+    console.log(`Error(fetchTableData), ${error.message}`);
+  }
+}
+
+export function* dropTable(args: {
+  payload: { tableName: string, isCascade: boolean }
+}): Generator<*, *, *> {
+  const { tableName, isCascade } = args.payload;
   const query = `
     DROP TABLE IF EXISTS "public"."${tableName}"
     ${isCascade ? 'CASCADE' : ''}
@@ -140,17 +149,14 @@ export function* dropTable({
   }
 }
 
-export function* dropTableRequest() {
-  yield takeEvery('tables/DROP_TABLE_REQUEST', dropTable);
-}
-
-export function* truncateTable({
+export function* truncateTable(args: {
   payload: {
-    tableName,
-    isCascade,
-    restartIdentity,
-  },
-}) {
+    tableName: string,
+    isCascade: boolean,
+    restartIdentity: boolean
+  }
+}): Generator<*, *, *> {
+  const { tableName, isCascade, restartIdentity } = args.payload;
   const query = `
     TRUNCATE "public"."${tableName}"
     ${restartIdentity ? 'RESTART IDENTITY' : ''}
@@ -165,11 +171,11 @@ export function* truncateTable({
   }
 }
 
-export function* truncateTableRequest() {
-  yield takeEvery('tables/TRUNCATE_TABLE_REQUEST', truncateTable);
-}
 
-export function* getTableSchema({ payload: { tableName } }) {
+export function* fetchTableSchema(args: {
+  payload: { tableName: string }
+}): Generator<*, *, *> {
+  const { tableName } = args.payload;
   const query = `select *
     from information_schema.columns where table_name = '${tableName}'`;
 
@@ -177,11 +183,8 @@ export function* getTableSchema({ payload: { tableName } }) {
   yield put(setTableSchemaAction({ tableName, schema: result.rows }));
 }
 
-export function* getTableSchemaRequest() {
-  yield takeEvery('tables/GET_TABLE_SCHEMA_REQUEST', getTableSchema);
-}
 
-export function* getTablesForeignKeys() {
+export function* getTablesForeignKeys(): Generator<*, *, *> {
   const query = `
     SELECT
     tc.constraint_name,
@@ -230,7 +233,7 @@ function* getRowsCount() {
   yield put(setRowsCountAction(rowsCounts));
 }
 
-export function* saveLastSelectedTable() {
+export function* saveLastSelectedTable(): Generator<*, *, *> {
   const currentFavoriteId = yield select(state => state.favorites.meta.currentFavoriteId);
   const currentTableName = yield select(state => state.tables.meta.currentTableName);
   const lastSelectedTables = yield cps(storage.get, 'lastSelectedTables');
@@ -239,4 +242,20 @@ export function* saveLastSelectedTable() {
     lastSelectedTables[currentFavoriteId] = currentTableName;
     yield cps(storage.set, 'lastSelectedTables', lastSelectedTables);
   }
+}
+
+export function* fetchTableDataRequest(): Generator<*, *, *> {
+  yield takeEvery('tables/FETCH_TABLE_DATA_REQUEST', fetchTableData);
+}
+
+export function* dropTableRequest(): Generator<*, *, *> {
+  yield takeEvery('tables/DROP_TABLE_REQUEST', dropTable);
+}
+
+export function* truncateTableRequest(): Generator<*, *, *> {
+  yield takeEvery('tables/TRUNCATE_TABLE_REQUEST', truncateTable);
+}
+
+export function* fetchTableSchemaRequest(): Generator<*, *, *> {
+  yield takeEvery('tables/GET_TABLE_SCHEMA_REQUEST', fetchTableSchema);
 }

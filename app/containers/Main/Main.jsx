@@ -19,7 +19,7 @@ type Props = {
   currentTable: ?string
 };
 
-const Main = ({ currentTable }: Props) =>
+const Main = ({ currentTable }: Props) => (
   <MainContainer>
     <Sidebar />
     <FavoritesSwitcher />
@@ -28,7 +28,8 @@ const Main = ({ currentTable }: Props) =>
     <TruncateTableModal />
     <ErrorDisplayModal />
     { currentTable && <MainContent /> }
-  </MainContainer>;
+  </MainContainer>
+);
 
 function mapStateToProps(state: State) {
   return {

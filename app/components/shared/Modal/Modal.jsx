@@ -14,7 +14,7 @@ type Props = {
   children: React.Element<*>
 };
 
-const BaseModal = ({ children, onHide }: Props) =>
+const BaseModal = ({ children, onHide }: Props) => (
   <Modal>
     <Backdrop onClick={onHide} />
     <Container>
@@ -24,6 +24,7 @@ const BaseModal = ({ children, onHide }: Props) =>
         </Content>
       </Window>
     </Container>
-  </Modal>;
+  </Modal>
+);
 
 export default BaseModal;

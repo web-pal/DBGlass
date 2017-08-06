@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { Grid, AutoSizer, ScrollSync, InfiniteLoader } from 'react-virtualized';
 
 import type { Connector } from 'react-redux';
-import type { State, Table } from '../../../types';
+import type { State } from '../../../types';
 import { getTableValue } from '../../../utils/helpers';
 import * as tablesActions from '../../../actions/tables';
 
@@ -35,16 +35,14 @@ type Props = {
   fields: Array<string>,
   rows: { [number]: any },
   dataForMeasure: Object,
-  table: Table,
   rowsCount: number,
-  fetchTableData: ({
-    table: Table,
+  fetchTableDataRequest: ({
+    tableName: string,
     startIndex: number,
+    stopIndex: number,
     resolve: Function
   }) => void,
-  currentTableName: string,
-  clearCurrentTable: (string) => void,
-  getTableSchema: (Table) => void,
+  currentTableName: ?string,
   isContent: boolean
 };
 
@@ -52,13 +50,16 @@ type Props = {
 class MainContent extends Component {
   props: Props;
   grid: { scrollToCell: Function };
+  infinite: { resetLoadMoreRowsCache: Function };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.currentTableName !== nextProps.currentTableName && this.grid) {
+      this.infinite.resetLoadMoreRowsCache();
       this.grid.scrollToCell({ columnIndex: 0, rowIndex: 0 });
     }
   }
-  cellRenderer = ({ columnIndex, key, rowIndex, style }) =>
+
+  cellRenderer = ({ columnIndex, key, rowIndex, style }) => (
     <Cell
       key={key}
       style={{
@@ -69,14 +70,15 @@ class MainContent extends Component {
     >
       <CellContainer>
         {
-          this.props.rows[rowIndex]
-          ? <CellText>
-            {getTableValue(this.props.rows[rowIndex][this.props.fields[columnIndex]])}
-          </CellText>
-          : <PlaceHolder />
+          this.props.rows[rowIndex] ?
+            <CellText>
+              {getTableValue(this.props.rows[rowIndex][this.props.fields[columnIndex]])}
+            </CellText> :
+            <PlaceHolder />
         }
       </CellContainer>
-    </Cell>;
+    </Cell>
+  )
 
   headerRenderer = ({ columnIndex, key, style }) => (
     <ColumnName
@@ -85,20 +87,16 @@ class MainContent extends Component {
     >
       {this.props.fields[columnIndex]}
     </ColumnName>
-  );
-
+  )
 
   render() {
     const {
       fields,
       rows,
       dataForMeasure,
-      table,
       rowsCount,
       currentTableName,
-      clearCurrentTable,
-      getTableSchema,
-      fetchTableData,
+      fetchTableDataRequest,
       isContent,
     }: Props = this.props;
     return (
@@ -108,7 +106,7 @@ class MainContent extends Component {
             {
               isContent ?
                 <AutoSizer>
-                  {({ height, width }) =>
+                  {({ height, width }) => (
                     <div>
                       <TableHeader>
                         <Grid
@@ -126,12 +124,24 @@ class MainContent extends Component {
                       <TableContent>
                         <InfiniteLoader
                           rowCount={rowsCount * fields.length}
-                          loadMoreRows={({ startIndex }) => new Promise(resolve => {
+                          loadMoreRows={({ startIndex, stopIndex }) => new Promise(resolve => {
                             const start = Math.ceil(startIndex / fields.length);
-                            fetchTableData({ table, startIndex: start, resolve });
+                            const stop = Math.ceil(stopIndex / fields.length);
+                            if (currentTableName) {
+                              fetchTableDataRequest({
+                                tableName: currentTableName,
+                                startIndex: start,
+                                stopIndex: stop,
+                                resolve,
+                              });
+                            }
                           })}
                           isRowLoaded={({ index }) => !!rows[Math.ceil(index / fields.length)]}
-                          threshold={20}
+                          minimumBatchSize={101 * fields.length}
+                          threshold={20 * fields.length}
+                          ref={(inifinite) => {
+                            this.infinite = inifinite;
+                          }}
                         >
                           {({ onRowsRendered, registerChild }) => (
                             <Grid
@@ -164,18 +174,12 @@ class MainContent extends Component {
                         </InfiniteLoader>
                       </TableContent>
                     </div>
-                  }
+                  )}
                 </AutoSizer>
                 :
                 <Structure />
             }
-            <Footer
-              currentTableName={currentTableName}
-              clearCurrentTable={clearCurrentTable}
-              getTableSchema={getTableSchema}
-              table={table}
-              fetchTableData={fetchTableData}
-            />
+            <Footer />
           </ContentWrapper>
         )}
       </ScrollSync>
@@ -198,7 +202,7 @@ function mapStateToProps(state: State) {
     rows: getCurrentTableRows({ tables: state.tables }),
     dataForMeasure: getDataForMeasure({ tables: state.tables }),
     currentTableName: state.tables.meta.currentTableName,
-    rowsCount: getCurrentTableRowsCount({ tables: state.tables }) || 0,
+    rowsCount: getCurrentTableRowsCount({ tables: state.tables }) || 100,
     isContent: state.tables.meta.isContent,
   };
 }

@@ -86,7 +86,8 @@ export const getCurrentTable = createSelector(
 export const getCurrentTableSchema = createSelector(
   [getTableName, getTablesMap],
   (name, map) => {
-    const tableStructure = Object.values(map).filter(item => item.tableName === name)[0].structureTable;
+    const tableStructure =
+      Object.values(map).filter(item => item.tableName === name)[0].structureTable;
     return tableStructure ? tableStructure['0'].table_schema : '';
   },
 );

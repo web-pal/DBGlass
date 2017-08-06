@@ -1,7 +1,8 @@
-import { fork } from 'redux-saga/effects';
+import { all, fork } from 'redux-saga/effects';
 
 import {
-  fetchFavorites, selectFavorite,
+  fetchFavorites, selectLastSelectedFavorite,
+  fetchFavoritesRequest, selectFavorite,
   saveFavorite, removeFavorite,
   saveFavouriteTablesQuantity,
 } from './favorites';
@@ -10,19 +11,22 @@ import {
   fetchTableDataRequest,
   dropTableRequest,
   truncateTableRequest,
-  getTableSchemaRequest,
+  fetchTableSchemaRequest,
 } from './tables';
-import { startConnect, appQuit, onDisconnect } from './connect';
+import { connectRequest, appQuit, onDisconnect } from './connect';
+
 
 export default function* root() {
-  yield [
-    fork(fetchFavorites),
+  yield fork(fetchFavorites);
+  yield fork(selectLastSelectedFavorite);
+  yield all([
+    fork(fetchFavoritesRequest),
     fork(saveFavorite),
     fork(removeFavorite),
     fork(selectFavorite),
     fork(saveFavouriteTablesQuantity),
 
-    fork(startConnect),
+    fork(connectRequest),
     fork(onDisconnect),
     fork(appQuit),
 
@@ -30,6 +34,6 @@ export default function* root() {
     fork(fetchTableDataRequest),
     fork(dropTableRequest),
     fork(truncateTableRequest),
-    fork(getTableSchemaRequest),
-  ];
+    fork(fetchTableSchemaRequest),
+  ]);
 }

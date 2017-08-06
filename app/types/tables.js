@@ -1,5 +1,9 @@
 // @flow
-import type { IdString, RowsIds, RowsIndexedMap, FieldsIds, FieldsIndexedMap } from './';
+import type {
+  IdString, RowsIds,
+  RowsIndexedMap, FieldsIds,
+  FieldsIndexedMap, TableDataNormalizedPayload,
+} from './';
 
 export type TablesNames = Array<IdString>;
 export type ForeignKey = {
@@ -24,9 +28,9 @@ export type Table = {
   fieldsIds: [] | FieldsIds,
   fields: {} | FieldsIndexedMap,
   isFetched: boolean,
-  structureTable: ?{},
+  structureTable?: {},
   dataForMeasure: {} | DataForMeasure,
-  rowsCount: ?number,
+  rowsCount?: number,
   foreignKeys: Array<ForeignKey>
 };
 
@@ -70,7 +74,7 @@ export type ColumnSchema = {
   column_default: ?string,
   column_name: string,
   data_type: ?string,
-  datetime_precision: ?string,
+  datetime_precision: ?number,
   domain_catalog: ?string,
   domain_name: ?string,
   domain_schema: ?string,
@@ -106,3 +110,34 @@ export type ColumnSchema = {
 };
 
 export type ColumnsArray = Array<ColumnSchema>;
+
+export type TableAction =
+  { type: 'tables/FETCH_REQUEST' }
+| { type: 'tables/FILL', +payload: TableNormalizePayload }
+| { type: 'tables/CLEAR_TABLES' }
+| { type: 'tables/SET_TABLENAME_SEARCH_KEY', +payload: ?IdString }
+| {
+  type: 'tables/FETCH_TABLE_DATA_REQUEST',
+  +payload: {
+    tableName: string,
+    startIndex: number,
+    stopIndex: number,
+    resolve?: Function
+  }
+}
+| { type: 'tables/SELECT_TABLE', +payload: string }
+| { type: 'tables/SET_TABLE_DATA', +payload: { data: TableDataNormalizedPayload, tableName: IdString } }
+| { type: 'tables/RESET_SELECT_TABLE' }
+| { type: 'tables/DROP_TABLE_REQUEST', +payload: { tableName: string, isCascade: boolean } }
+| { type: 'tables/DROP_TABLE', +payload: { tableName: IdString } }
+| { type: 'tables/TRUNCATE_TABLE_REQUEST', +payload: Object }
+| { type: 'tables/TRUNCATE_TABLE', +payload: IdString }
+| { type: 'tables/SET_DATA_FOR_MEASURE', +payload: { dataForMeasure: DataForMeasure, tableName: string } }
+| { type: 'tables/SET_MEASURE_WIDTH', +payload: { tableName: IdString, width: number, key: string } }
+| { type: 'tables/GET_TABLE_SCHEMA', +payload: Table }
+| { type: 'tables/SET_TABLE_SCHEMA', +payload: { tableName: IdString, schema: ColumnsArray } }
+| { type: 'tables/SET_TABLES_FOREIGN_KEYS', +payload: Array<ForeignKey> }
+| { type: 'tables/SET_ROWS_COUNT', +payload: RowsCount }
+| { type: 'tables/CLEAR_CURRENT_TABLE', +payload: string }
+| { type: 'tables/CHANGE_VIEW_MODE', +payload: boolean }
+;

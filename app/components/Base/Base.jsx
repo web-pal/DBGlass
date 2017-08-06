@@ -8,9 +8,10 @@ type Props = {
   store: {}
 };
 
-const Base = ({ store }: Props) =>
+const Base = ({ store }: Props) => (
   <Provider store={store}>
     <App />
-  </Provider>;
+  </Provider>
+);
 
 export default Base;

@@ -21,7 +21,9 @@ export const RenderRadio = ({ input, label, type, disabled }) => ( // eslint-dis
   </RadioContainer>
 );
 
-export const RenderField = ({ input, label, disabled, placeholder, type, meta: { touched, error, warning } }) => // eslint-disable-line
+export const RenderField = ({
+  input, label, disabled, placeholder, type, meta: { touched, error, warning }, // eslint-disable-line
+}) => (
   <Input
     {...input}
     disabled={disabled}
@@ -29,7 +31,8 @@ export const RenderField = ({ input, label, disabled, placeholder, type, meta: {
     touched={touched}
     placeholder={placeholder}
     type={type}
-  />;
+  />
+);
 
 export const RenderSlider = ({ input, label, type, disabled }) => ( // eslint-disable-line
   <SliderContainer>

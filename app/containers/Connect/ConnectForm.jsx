@@ -52,7 +52,7 @@ type Props = {
   changeField: (string, string) => void,
   addFavoriteRequest: (Favorite) => void,
   removeFavoriteRequest: (IdString) => void,
-  startSubmitRequest: (?Favorite) => void,
+  startSubmitRequest: (Favorite) => void,
   setConnectionError: (string) => void,
   favoritesLength: number,
   currentValues: ?Favorite,
@@ -120,7 +120,9 @@ class ConnectForm extends Component {
 
   submit = (event) => {
     event.preventDefault();
-    this.props.startSubmitRequest(this.props.currentValues);
+    if (this.props.currentValues) {
+      this.props.startSubmitRequest(this.props.currentValues);
+    }
   }
 
   onSSHAuthTypeChange = (event) => {

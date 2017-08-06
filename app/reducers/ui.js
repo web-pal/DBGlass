@@ -1,7 +1,7 @@
 // @flow
-import type { uiState, Action } from '../types';
+import type { UiState, Action } from '../types';
 
-const initialState: uiState = {
+const initialState: UiState = {
   isConnected: false,
   isMenuOpen: false,
   isLoading: false,
@@ -10,7 +10,7 @@ const initialState: uiState = {
   isTablesDataFetched: false,
 };
 
-export default function ui(state: uiState = initialState, action: Action) {
+export default function ui(state: UiState = initialState, action: Action) {
   switch (action.type) {
     case 'ui/SET_CONNECTED_STATE':
       return {

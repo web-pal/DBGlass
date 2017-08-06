@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
@@ -35,7 +35,6 @@ import type { IdString, Favorites, Dispatch, State } from '../../types';
 
 
 type Props = {
-  fetchFavoritesRequest: () => void,
   selectFavoriteRequest: (?IdString) => void,
   setConnectionError: (string) => void,
   currentFavoriteId: ?IdString,
@@ -43,66 +42,63 @@ type Props = {
 };
 
 
-class Connect extends Component {
-  props: Props;
+const Connect = ({
+  favorites,
+  currentFavoriteId,
+  selectFavoriteRequest,
+  setConnectionError,
+}: Props) => (
+  <ConnectContainer>
+    <SidebarColumn>
+      <SidebarHeader>
+        Favorites
+      </SidebarHeader>
+      <SidebarContent>
+        <Ul>
+          {favorites.map(favorite => (
+            <Li
+              key={favorite.id}
+              active={currentFavoriteId === favorite.id}
+              onClick={() => {
+                selectFavoriteRequest(favorite.id);
+                setConnectionError('');
+              }}
+            >
+              <I className="fa fa-database" />
+              <span>{favorite.connectionName}</span>
+            </Li>
+          ))}
+        </Ul>
+        <SidebarBottom>
+          <NewConnectionButton
+            onClick={() => {
+              selectFavoriteRequest(null);
+              setConnectionError('');
+            }}
+          >
+            <I className="fa fa-plus" />
+            NEW CONNECTION
+          </NewConnectionButton>
+        </SidebarBottom>
+      </SidebarContent>
+    </SidebarColumn>
 
-  componentDidMount() {
-    this.props.fetchFavoritesRequest();
-  }
-
-  selectFavorite = (id) => {
-    this.props.selectFavoriteRequest(id);
-    this.props.setConnectionError('');
-  }
-
-  render() {
-    const { favorites, currentFavoriteId, selectFavoriteRequest } : Props = this.props;
-    return (
-      <ConnectContainer>
-        <SidebarColumn>
-          <SidebarHeader>
-            Favorites
-          </SidebarHeader>
-          <SidebarContent>
-            <Ul>
-              {favorites.map(favorite =>
-                <Li
-                  key={favorite.id}
-                  active={currentFavoriteId === favorite.id}
-                  onClick={() => this.selectFavorite(favorite.id)}
-                >
-                  <I className="fa fa-database" />
-                  <span>{favorite.connectionName}</span>
-                </Li>,
-              )}
-            </Ul>
-            <SidebarBottom>
-              <NewConnectionButton onClick={() => selectFavoriteRequest(null)}>
-                <I className="fa fa-plus" />
-                NEW CONNECTION
-              </NewConnectionButton>
-            </SidebarBottom>
-          </SidebarContent>
-        </SidebarColumn>
-
-        <MainColumn>
-          <MainHeader os={window.navigator.platform}>
-            <Img alt="" role="presentation" src={logo} />
-          </MainHeader>
-          <MainContent>
-            <FormContainer>
-              <ConnectForm />
-            </FormContainer>
-          </MainContent>
-          <MainFooter>
-            <CompanyImg alt="" role="presentation" src={companyLogo} />
-            <MadeBy>designed by</MadeBy>
-          </MainFooter>
-        </MainColumn>
-      </ConnectContainer>
-    );
-  }
-}
+    <MainColumn>
+      <MainHeader os={window.navigator.platform}>
+        <Img alt="" role="presentation" src={logo} />
+      </MainHeader>
+      <MainContent>
+        <FormContainer>
+          <ConnectForm />
+        </FormContainer>
+      </MainContent>
+      <MainFooter>
+        <CompanyImg alt="" role="presentation" src={companyLogo} />
+        <MadeBy>designed by</MadeBy>
+      </MainFooter>
+    </MainColumn>
+  </ConnectContainer>
+);
 
 function mapDispatchToProps(dispatch: Dispatch): {[key: string]: Function} {
   return bindActionCreators({ ...favoritesActions, ...uiActions }, dispatch);

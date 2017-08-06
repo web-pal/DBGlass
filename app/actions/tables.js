@@ -1,8 +1,8 @@
 // @flow
 import type {
   Action, IdString,
-  Table, TableNormalizePayload, TableDataNormalizedPayload,
-  DataForMeasure, ForeignKey, RowsCount, ColumnsNamedMap,
+  TableNormalizePayload, TableDataNormalizedPayload,
+  DataForMeasure, ForeignKey, RowsCount, ColumnSchema,
 } from '../types';
 
 export const fetchTablesRequest = (): Action =>
@@ -26,10 +26,11 @@ export const setTableNameSearchKey = (payload: ?IdString): Action =>
     payload,
   });
 
-export const fetchTableData = (payload: {
-  table: Table,
-  startIndex: ?number,
-  resolve: ?Function
+export const fetchTableDataRequest = (payload: {
+  tableName: string,
+  startIndex: number,
+  stopIndex: number,
+  resolve?: Function
 }): Action =>
   ({
     type: 'tables/FETCH_TABLE_DATA_REQUEST',
@@ -103,13 +104,16 @@ export const setMeasureWidth = (payload: {
     payload,
   });
 
-export const getTableSchema = (payload: { tableName: IdString }): Action =>
+export const fetchTableSchemaRequest = (payload: { tableName: IdString }): Action =>
   ({
     type: 'tables/GET_TABLE_SCHEMA_REQUEST',
     payload,
   });
 
-export const setTableSchema = (payload: { tableName: IdString, schema: ColumnsNamedMap }): Action =>
+export const setTableSchema = (payload: {
+  tableName: IdString,
+  schema: Array<ColumnSchema>
+}): Action =>
   ({
     type: 'tables/SET_TABLE_SCHEMA',
     payload,

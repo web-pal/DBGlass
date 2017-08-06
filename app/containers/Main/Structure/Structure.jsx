@@ -1,12 +1,10 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
 import { AutoSizer, Table, Column } from 'react-virtualized';
 import type { State } from '../../../types';
 
-import * as tablesActions from '../../../actions/tables';
 import {
   getCurrentTableSchema,
   getCurrentTableStructureRows,
@@ -31,7 +29,7 @@ import {
 } from './styled';
 
 type Props = {
-  tableName: string,
+  tableName: ?string,
   tableSchema: string,
   rows: Array<any>,
   tableConstraints: ?{}
@@ -123,7 +121,7 @@ class Structure extends Component {
         </StructureHeader>
         <StructureContent>
           <AutoSizer disableHeight>
-            {({ height, width }) =>
+            {({ height, width }) => (
               <Table
                 width={width}
                 height={height}
@@ -167,20 +165,12 @@ class Structure extends Component {
                   dataKey="default_value"
                 />
               </Table>
-            }
+            )}
           </AutoSizer>
         </StructureContent>
       </StructureWrapper>
     );
   }
-}
-
-function mapDispatchToProps(dispatch: Dispatch): {[key: string]: Function} {
-  return bindActionCreators(
-    {
-      ...tablesActions,
-    }, dispatch,
-  );
 }
 
 function mapStateToProps(state: State) {
@@ -194,7 +184,6 @@ function mapStateToProps(state: State) {
 
 const connector: Connector<{}, Props> = connect(
   mapStateToProps,
-  mapDispatchToProps,
 );
 
 export default connector(Structure);

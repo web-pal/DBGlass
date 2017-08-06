@@ -80,15 +80,15 @@ class FavoritesSwitcher extends Component {
         </TitleWrapper>
         <Favourites>
           {
-            favorites.map(favorite =>
+            favorites.map(favorite => (
               <Favorite
                 key={favorite.id}
                 onClick={() => this.connectToDB(favorite)}
               >
                 <Icon className="fa fa-database" />
                 <span>{favorite.connectionName}</span>
-              </Favorite>,
-            )
+              </Favorite>
+            ))
           }
         </Favourites>
         <SwitcherFooter>

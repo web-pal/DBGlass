@@ -107,7 +107,7 @@ function itemsByName(state: TablesIndexedMap = {}, action: Action) {
     case 'CLEAR_ALL_REDUCERS':
       return {};
     case 'tables/DROP_TABLE': {
-      return _.omit(state, action.payload);
+      return _.omit(state, action.payload.tableName);
     }
     case 'tables/TRUNCATE_TABLE':
       return {
