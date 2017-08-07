@@ -35,9 +35,13 @@ export const getFiltredTables = createSelector(
 
 export const getTableName = ({ tables }) => tables.meta.currentTableName;
 export const getCurrentTableFieldsIds = ({ tables }) =>
-  tables.byName[tables.meta.currentTableName].fieldsIds;
+  tables.byName[tables.meta.currentTableName] ?
+    tables.byName[tables.meta.currentTableName].fieldsIds :
+    [];
 export const getCurrentTableFields = ({ tables }) =>
-  tables.byName[tables.meta.currentTableName].fields;
+  tables.byName[tables.meta.currentTableName] ?
+    tables.byName[tables.meta.currentTableName].fields :
+    [];
 
 export const getTableFields = createSelector(
   [getCurrentTableFieldsIds, getCurrentTableFields],
@@ -45,12 +49,17 @@ export const getTableFields = createSelector(
 );
 
 export const getCurrentTableRowsIds = ({ tables }) =>
-  tables.byName[tables.meta.currentTableName].rowsIds;
+  tables.byName[tables.meta.currentTableName] ?
+    tables.byName[tables.meta.currentTableName].rowsIds :
+    [];
 export const getCurrentTableRows = ({ tables }) =>
-  tables.byName[tables.meta.currentTableName].rows;
+  tables.byName[tables.meta.currentTableName] ?
+    tables.byName[tables.meta.currentTableName].rows :
+    [];
 export const getCurrentTableRowsCount = ({ tables }) =>
-  tables.byName[tables.meta.currentTableName].rowsCount;
-
+  tables.byName[tables.meta.currentTableName] ?
+    tables.byName[tables.meta.currentTableName].rowsCount :
+    null;
 export const getDataForMeasure = createSelector(
   [getTableName, getTablesMap],
   (name, map) => {

@@ -2,6 +2,7 @@ export const capitalizeFirstLetter = (string) => (
   string.charAt(0).toUpperCase() + string.slice(1)
 );
 
+// TODO: Refactor with switch
 export const getTableValue = (value) => {
   const isNullValue = value === null
   ? 'null'

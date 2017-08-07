@@ -13,7 +13,6 @@ import {
   getTableFields,
   getCurrentTableRows,
   getDataForMeasure,
-  getCurrentTable,
   getCurrentTableRowsCount,
 } from '../../../selectors/tables';
 
@@ -36,6 +35,7 @@ type Props = {
   rows: { [number]: any },
   dataForMeasure: Object,
   rowsCount: number,
+  isFetched: boolean,
   fetchTableDataRequest: ({
     tableName: string,
     startIndex: number,
@@ -98,6 +98,7 @@ class MainContent extends Component {
       currentTableName,
       fetchTableDataRequest,
       isContent,
+      isFetched,
     }: Props = this.props;
     return (
       <ScrollSync>
@@ -113,7 +114,7 @@ class MainContent extends Component {
                           columnWidth={({ index }) => dataForMeasure[fields[index]].width}
                           columnCount={fields.length}
                           height={height}
-                          overscanColumnCount={20}
+                          overscanRowCount={10 * fields.length}
                           cellRenderer={this.headerRenderer}
                           rowHeight={60}
                           rowCount={1}
@@ -159,8 +160,10 @@ class MainContent extends Component {
                                 this.grid = grid;
                                 registerChild(grid);
                               }}
-                              columnWidth={({ index }) => dataForMeasure[fields[index]].width}
-                              columnCount={fields.length}
+                              columnWidth={({ index }) =>
+                                isFetched ? dataForMeasure[fields[index]].width : 100
+                              }
+                              columnCount={isFetched ? fields.length : 15}
                               height={height - 109}
                               overscanRowCount={10}
                               cellRenderer={this.cellRenderer}
@@ -196,12 +199,14 @@ function mapDispatchToProps(dispatch: Dispatch): { [key: string]: Function } {
 }
 
 function mapStateToProps(state: State) {
+  const currentTableName = state.tables.meta.currentTableName;
+  const currentTable = currentTableName ? state.tables.byName[currentTableName] : null;
   return {
-    table: getCurrentTable({ tables: state.tables }),
     fields: getTableFields({ tables: state.tables }),
     rows: getCurrentTableRows({ tables: state.tables }),
     dataForMeasure: getDataForMeasure({ tables: state.tables }),
-    currentTableName: state.tables.meta.currentTableName,
+    currentTableName,
+    isFetched: currentTable ? currentTable.isFetched : false,
     rowsCount: getCurrentTableRowsCount({ tables: state.tables }) || 100,
     isContent: state.tables.meta.isContent,
   };
