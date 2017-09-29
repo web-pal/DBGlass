@@ -28,6 +28,7 @@
     "email": "mail.vpal@gmail.com",
     "url": "https://web-pal.com"
   },
+  "repository": "https://github.com/web-pal/DBGlass",
   "license": "MIT",
   "keywords": [
     "electron",
